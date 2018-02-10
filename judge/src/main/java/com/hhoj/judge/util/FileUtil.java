@@ -26,6 +26,9 @@ public final class FileUtil {
      * @param data
      */
 	public static boolean createFile(String filePath,String data){
+		if(StringUtil.isEmpty(filePath)){
+			return false;
+		}
 		PrintWriter pw=null;
 		try {
 			File file=new File(filePath);
@@ -62,6 +65,9 @@ public final class FileUtil {
 	 * @return
 	 */
 	public static String getCharsFromFile(String fileName){
+		if(StringUtil.isEmpty(fileName)){
+			return "";
+		}
 		BufferedReader reader=null;
 		String result="";
 		try {
@@ -87,4 +93,28 @@ public final class FileUtil {
 		}
 		return result;
 	}
+	
+	  /**
+	   * 
+	   * 比较两个文件内容是否相同
+	   */
+	  public static boolean compare(String standardOutPath,String userOutPath){
+		  if(StringUtil.isEmpty(standardOutPath)||StringUtil.isEmpty(userOutPath)){
+			  return false;
+		  }
+		  String standardOut=getCharsFromFile(standardOutPath);
+		  String userOut=getCharsFromFile(userOutPath);
+		  return standardOut.equals(userOut);
+	  }
+	  
+	  public static boolean rmdir(String dir){
+		  if(StringUtil.isEmpty(dir)){
+			  return false;
+		  }
+		  File file=new File(dir);
+		  if(file.exists()){
+			  file.delete();
+		  }
+		  return true;
+	  }
 }

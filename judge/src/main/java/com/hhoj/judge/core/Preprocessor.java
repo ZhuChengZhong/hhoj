@@ -14,6 +14,14 @@ import com.hhoj.judge.util.FileUtil;
  *
  */
 public  class Preprocessor {
+	/**
+	 * 准备工作
+	 * @param submit
+	 * @param pointList
+	 * @param codePath
+	 * @param testPointPath
+	 * @return
+	 */
 	public boolean prepare(Submit submit,List<TestPoint> pointList,String codePath,String testPointPath){
 		String codeDir=codePath+FileUtil.separator+submit.getSid();
 		if(!FileUtil.mkdir(codeDir)||!createCodeFile(submit,codePath)){
@@ -25,9 +33,12 @@ public  class Preprocessor {
 		}
 		return true;
 	}
-	/*
+	/**
 	 * 将用户提交的代码保存为对应的源代码文件用于之后的编译运行
-	 * */
+	 * @param submit
+	 * @param codeDir
+	 * @return
+	 */
 	private boolean createCodeFile(Submit submit,String codeDir){
 		String languageName=submit.getLanguage().getLanguageName();
 		String newFilePath;
