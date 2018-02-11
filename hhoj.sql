@@ -87,6 +87,7 @@ CREATE TABLE `t_submit` (
   `code` TEXT NOT NULL,
   `submitTime` BIGINT(20) NOT NULL,
   `languageId` INT(11) NOT NULL,
+  `judged` TINYINT NOT NULL DEFAULT '0',
   PRIMARY KEY (`sid`),
   KEY `fk_submit_user` (`uid`),
   KEY `fk_submit_problem` (`pid`),
