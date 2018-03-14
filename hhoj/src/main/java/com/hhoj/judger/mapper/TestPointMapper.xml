@@ -26,11 +26,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
    </select>
    
    
-   <select id="findTestPointTypes" resultMap="testPointMap" parameterType="Integer">
+   <select id="findTestPoints" resultMap="testPointMap" parameterType="Integer">
    		select * from t_testpoint  where pid=#{pid}
    </select>
    
-   <update id="updateTestPointType" parameterType="TestPoint">
+   <update id="updateTestPoint" parameterType="TestPoint">
    		update t_testpoint
    		<set>
    			<if test="input!=null and input !=''">
@@ -45,10 +45,10 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
    		</set>
    		where pointId=#{pointId}
    </update>
-   <delete id="removeTestPointType" parameterType="Integer">
+   <delete id="removeTestPoint" parameterType="Integer">
    		delete  from t_testpoint where pointId=#{pointId}
    </delete>
-   <insert id="addTestPointType" parameterType="TestPoint" useGeneratedKeys="true" keyProperty="pointId">
+   <insert id="addTestPoint" parameterType="TestPoint" useGeneratedKeys="true" keyProperty="pointId">
    		insert into t_testpoint (pointId,pid,input,output) values(null,#{pid},#{input},#{output})
    </insert>
 </mapper>

@@ -28,26 +28,26 @@ public interface TestPointMapper {
 	 * 获取某个 Problem的TestPoint列表
 	 * @return
 	 */
-	public List<TestPoint> findTestPointTypes(Integer pid);
+	public List<TestPoint> findTestPoints(Integer pid);
 	
 	/**
 	 * 更新TestPoint
 	 * @param testPoint
 	 * @return
 	 */
-	public Integer updateTestPointType(TestPoint testPoint);
+	public Integer updateTestPoint(TestPoint testPoint);
 	
 	/**
 	 * 删除TestPoint
 	 * @param pointId
 	 * @return
 	 */
-	public Integer removeTestPointType(Integer pointId);
+	public Integer removeTestPoint(Integer pointId);
 	
 	/**
 	 * 增加TestPoint
 	 * @param testPoint
 	 * @return
 	 */
-	public Integer addTestPointType(TestPoint testPoint);
+	public Integer addTestPoint(TestPoint testPoint);
 }

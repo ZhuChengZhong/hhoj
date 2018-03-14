@@ -163,6 +163,14 @@
             <artifactId>commons-codec</artifactId>  
             <version>1.9</version>  
         </dependency>  
+     <!-- https://mvnrepository.com/artifact/org.sonatype.sisu.inject/cglib -->
+<dependency>
+    <groupId>org.sonatype.sisu.inject</groupId>
+    <artifactId>cglib</artifactId>
+    <version>3.1.1</version>
+</dependency>
+
+        
         </dependencies>
   <build>
     <finalName>hhoj</finalName>

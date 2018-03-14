@@ -1,5 +1,6 @@
 package com.hhoj.judger.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -7,7 +8,7 @@ import java.util.Date;
  * @author zhu
  *
  */
-public class User {
+public class User implements Serializable{
 	//用户id
 	private Integer uid;
 	//用户名

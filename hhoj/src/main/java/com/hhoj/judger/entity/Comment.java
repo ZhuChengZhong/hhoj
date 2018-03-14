@@ -1,10 +1,13 @@
 package com.hhoj.judger.entity;
+
+import java.io.Serializable;
+
 /**
  * 评论实体类
  * @author zhu
  *
  */
-public class Comment {
+public class Comment implements Serializable{
 	//id
 	private Integer commentId;
 	//评论用户

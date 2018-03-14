@@ -33,7 +33,7 @@ public class TestPointMapperTest {
 	}
 	@Test
 	public void findTestPointsTest() {
-		System.out.println(testPointMapper.findTestPointTypes(2));
+		System.out.println(testPointMapper.findTestPoints(2));
 	}
 	@Test
 	public void updateTestPointTest() {
@@ -42,12 +42,12 @@ public class TestPointMapperTest {
 		testPoint.setInput("b");
 		testPoint.setPid(2);
 		testPoint.setPointId(1);
-		System.out.println(testPointMapper.updateTestPointType(testPoint));
+		System.out.println(testPointMapper.updateTestPoint(testPoint));
 	}
 	@Test
 	public void removeTestPointTest() {
 		
-		System.out.println(testPointMapper.removeTestPointType(2));
+		System.out.println(testPointMapper.removeTestPoint(2));
 	}
 	@Test
 	public void addTestPointTest() {
@@ -55,6 +55,6 @@ public class TestPointMapperTest {
 		testPoint.setInput("bzxv");
 		testPoint.setOutput("bxzc");
 		testPoint.setPid(2);
-		System.out.println(testPointMapper.addTestPointType(testPoint));
+		System.out.println(testPointMapper.addTestPoint(testPoint));
 	}
 }

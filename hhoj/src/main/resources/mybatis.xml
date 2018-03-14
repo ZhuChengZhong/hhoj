@@ -3,12 +3,29 @@
   PUBLIC "-//mybatis.org//DTD Config 3.0//EN"  
   "http://mybatis.org/dtd/mybatis-3-config.dtd">  
 <configuration> 
+  <settings>  
+        <setting name="cacheEnabled" value="true" />  
+        <setting name="lazyLoadingEnabled" value="true" />  
+        <setting name="aggressiveLazyLoading" value="false"/>
+        <setting name="multipleResultSetsEnabled" value="true" />  
+        <setting name="useColumnLabel" value="true" />  
+        <setting name="useGeneratedKeys" value="false" />  
+        <setting name="autoMappingBehavior" value="PARTIAL" />  
+        <setting name="defaultExecutorType" value="SIMPLE" />  
+        <setting name="defaultStatementTimeout" value="25" />  
+        <setting name="safeRowBoundsEnabled" value="false" />  
+        <setting name="mapUnderscoreToCamelCase" value="false" />  
+        <setting name="localCacheScope" value="SESSION" />  
+        <setting name="jdbcTypeForNull" value="OTHER" />  
+        <setting name="lazyLoadTriggerMethods" value="equals,clone,hashCode,toString" />  
+    </settings> 
   <typeAliases>
     	<package name="com.hhoj.judger.entity"/>
     </typeAliases> 
   	<typeHandlers>
   		<typeHandler handler="com.hhoj.judger.mapper.typehandler.DateToLongTypeHandler" javaType="java.util.Date" jdbcType="BIGINT"/>
   	</typeHandlers>
+  	
     <!-- 对事务的管理和连接池的配置 -->  
     <environments default="development">  
         <environment id="development">  
@@ -22,21 +39,7 @@
         </environment>  
     </environments>  
   
-<!--     <settings>  
-        <setting name="cacheEnabled" value="true" />  
-        <setting name="lazyLoadingEnabled" value="true" />  
-        <setting name="multipleResultSetsEnabled" value="true" />  
-        <setting name="useColumnLabel" value="true" />  
-        <setting name="useGeneratedKeys" value="false" />  
-        <setting name="autoMappingBehavior" value="PARTIAL" />  
-        <setting name="defaultExecutorType" value="SIMPLE" />  
-        <setting name="defaultStatementTimeout" value="25" />  
-        <setting name="safeRowBoundsEnabled" value="false" />  
-        <setting name="mapUnderscoreToCamelCase" value="false" />  
-        <setting name="localCacheScope" value="SESSION" />  
-        <setting name="jdbcTypeForNull" value="OTHER" />  
-        <setting name="lazyLoadTriggerMethods" value="equals,clone,hashCode,toString" />  
-    </settings> -->
+   
     <!-- mapping 文件路径配置 -->  
     <mappers>  
         <package name="com.hhoj.judger.mapper"/>

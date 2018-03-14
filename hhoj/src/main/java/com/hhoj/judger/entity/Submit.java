@@ -1,5 +1,6 @@
 package com.hhoj.judger.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -7,7 +8,7 @@ import java.util.Date;
  * @author zhu
  *
  */
-public class Submit {
+public class Submit implements Serializable{
 	// id
 	private Integer sid;
 	//提交用户
@@ -98,6 +99,20 @@ public class Submit {
 		return "Submit [sid=" + sid + ", user=" + user + ", problem=" + problem + ", result=" + result + ", useTime="
 				+ useTime + ", useMemary=" + useMemary + ", code=" + code + ", submitTime=" + submitTime + ", language="
 				+ language + ", judged=" + judged + "]";
+	}
+	public Submit(User user, Problem problem, String result, Integer useTime,
+			Integer useMemary, String code, Date submitTime, Language language,
+			Integer judged) {
+		super();
+		this.user = user;
+		this.problem = problem;
+		this.result = result;
+		this.useTime = useTime;
+		this.useMemary = useMemary;
+		this.code = code;
+		this.submitTime = submitTime;
+		this.language = language;
+		this.judged = judged;
 	}
 	
 }
