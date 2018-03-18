@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hhoj.judger.mapper.LanguageMapper">
+
+<cache ></cache>
+
+
+	<resultMap type="Language" id="languageMap">
+	 <id column="languageId" property="languageId"/>
+	 <result column="languageName" property="languageName"/>
+	 <result column="compileCommand" property="compileCommand"/>
+	<result column="runCommand" property="runCommand"/>
+	</resultMap>
+	
+	<sql id="fields">languageId,languageName,compileCommand,runCommand</sql>
+	
+	<select id="findLanguageById" resultMap="languageMap" parameterType="Integer">
+	 select <include refid="fields"></include> from t_language where languageId=#{languageId}
+	</select>
+   
+   
+   <select id="findCount" resultType="Integer">
+   	select count(*) from t_language
+   </select>
+   
+   
+   <select id="findLanguages" resultMap="languageMap" >
+   		select <include refid="fields"></include> from t_language 
+   </select>
+   
+   <update id="updateLanguage" parameterType="Language">
+   		update t_language
+   		<set>
+   			<if test="languageName!=null and languageName !=''">
+   				languageName=#{languageName},
+   			</if>
+   			<if test="compileCommand!=null and compileCommand !=''">
+   				compileCommand=#{compileCommand},
+   			</if>
+   			<if test="runCommand !=null and runCommand != '' ">
+   				runCommand=#{runCommand}
+   			</if>
+   		</set>
+   		where languageId=#{languageId}
+   </update>
+   
+   <delete id="removeLanguage" parameterType="Integer">
+   		delete  from t_language where languageId=#{languageId}
+   </delete>
+   
+   <insert id="addLanguage" parameterType="Language" useGeneratedKeys="true" keyProperty="languageId">
+   		insert into t_language (<include refid="fields"></include>) values(null,#{languageName},#{compileCommand},#{runCommand})
+   </insert>
+</mapper>

@@ -15,6 +15,7 @@
         <!-- log4j日志文件管理包版本 -->  
         <slf4j.version>1.7.7</slf4j.version>  
         <log4j.version>1.2.17</log4j.version>  
+        
     </properties>  
   
     <dependencies>  
@@ -76,6 +77,12 @@
             <artifactId>spring-test</artifactId>  
             <version>${spring.version}</version>  
         </dependency>  
+            <!-- https://mvnrepository.com/artifact/aspectj/aspectjweaver -->
+		<dependency>
+		    <groupId>aspectj</groupId>
+		    <artifactId>aspectjweaver</artifactId>
+		    <version>1.5.4</version>
+		</dependency>
         <!-- mybatis核心包 -->  
         <dependency>  
             <groupId>org.mybatis</groupId>  
@@ -170,9 +177,27 @@
     <version>3.1.1</version>
 </dependency>
 
+        <!-- https://mvnrepository.com/artifact/javax.servlet/jstl -->
+<dependency>
+    <groupId>javax.servlet</groupId>
+    <artifactId>jstl</artifactId>
+    <version>1.2</version>
+</dependency>
         
         </dependencies>
+ 
+
   <build>
+  	
     <finalName>hhoj</finalName>
+    <plugins>
+    <plugin>
+    <artifactId>maven-compiler-plugin</artifactId>
+    <configuration>
+        <source>1.8</source>
+        <target>1.8</target>
+    </configuration>
+	</plugin>
+	</plugins>
   </build>
 </project>
