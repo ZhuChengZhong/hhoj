@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hhoj.judger.mapper.TestPointMapper">
+
+<cache ></cache>
+
+
+	<resultMap type="TestPoint" id="testPointMap">
+	 <id column="pointId" property="pointId"/>
+	 <result column="input" property="input"/>
+	 <result column="output" property="output"/>
+	<result column="pid" property="pid"/>
+	</resultMap>
+	
+	
+	
+	<select id="findTestPointById" resultMap="testPointMap" parameterType="Integer">
+	 select * from t_testpoint where pointId=#{pointId}
+	</select>
+   
+   
+   <select id="findCount" resultType="Integer" parameterType="Integer">
+   	select count(*) from t_testpoint where pid=#{pid}
+   </select>
+   
+   
+   <select id="findTestPoints" resultMap="testPointMap" parameterType="Integer">
+   		select * from t_testpoint  where pid=#{pid}
+   </select>
+   
+   <update id="updateTestPoint" parameterType="TestPoint">
+   		update t_testpoint
+   		<set>
+   			<if test="input!=null and input !=''">
+   				input=#{input},
+   			</if>
+   			<if test="output!=null and output !=''">
+   				output=#{output},
+   			</if>
+   			<if test="pid !=null">
+   				pid=#{pid}
+   			</if>
+   		</set>
+   		where pointId=#{pointId}
+   </update>
+   <delete id="removeTestPoint" parameterType="Integer">
+   		delete  from t_testpoint where pointId=#{pointId}
+   </delete>
+   <insert id="addTestPoint" parameterType="TestPoint" useGeneratedKeys="true" keyProperty="pointId">
+   		insert into t_testpoint (pointId,pid,input,output) values(null,#{pid},#{input},#{output})
+   </insert>
+</mapper>

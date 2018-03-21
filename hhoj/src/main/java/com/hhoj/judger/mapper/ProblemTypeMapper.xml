@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hhoj.judger.mapper.ProblemTypeMapper">
+
+<cache ></cache>
+
+
+	<resultMap type="ProblemType" id="problemTypeMap">
+	 <id column="typeId" property="typeId"/>
+	 <result column="typeName" property="typeName"/>
+	</resultMap>
+	
+	
+	
+	<select id="findProblemTypeById" resultType="ProblemType" parameterType="Integer">
+	 select * from t_problem_type where typeId=#{typeId}
+	</select>
+   
+   
+   <select id="findCount" resultType="Integer">
+   	select count(*) from t_problem_type
+   </select>
+   
+   
+   <select id="findProblemTypes" resultMap="problemTypeMap">
+   		select * from t_problem_type
+   </select>
+   
+   <update id="updateProblemType" parameterType="ProblemType">
+   		update t_problem_type set typeName=#{typeName} where typeId=#{typeId}
+   </update>
+   <delete id="removeProblemType" parameterType="Integer">
+   		delete  from t_problem_type where typeId=#{typeId}
+   </delete>
+   <insert id="addProblemType" parameterType="ProblemType" useGeneratedKeys="true" keyProperty="typeId">
+   		insert into t_problem_type (typeId,typeName) values(null,#{typeName})
+   </insert>
+</mapper>

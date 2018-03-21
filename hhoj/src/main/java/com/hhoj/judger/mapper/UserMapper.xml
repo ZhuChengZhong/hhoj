@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hhoj.judger.mapper.UserMapper">
+
+<cache ></cache>
+
+<resultMap type="User" id="userMap">
+	<id column="uid" property="uid"/>
+	<result column="userName" property="userName"/>
+	<result column="password" property="password"/>
+	<result column="email" property="email"/>
+	<result column="role" property="role"/>
+	<result column="accepted" property="accepted"/>
+	<result column="submited" property="submited"/>
+	<result column="solved" property="solved"/>
+	<result column="registTime" property="registTime" javaType="java.util.Date" jdbcType="BIGINT"/>
+	<result column="lastLoginTime" property="lastLoginTime" javaType="java.util.Date" jdbcType="BIGINT"/>
+	<result column="sign" property="sign"/>
+</resultMap>
+
+<sql id="info">
+ uid,userName,password,email,role,accepted,submited,solved,registTime,lastLoginTime,sign
+</sql>
+	
+	<select id="findUsers" parameterType="User" resultMap="userMap" >
+		
+		select <include refid="info"></include> from t_user
+		<where>
+			<if test="user.uid!=null" >
+				and uid=#{uid} 
+			</if>
+			<if test="user.userName!=null and user.userName!=''">
+    		and userName like #{userName}
+	    	</if>
+	    	
+	    	<if test="user.email!=null and user.email!=''">
+	    		and email=#{email}
+	    	</if>
+	    	<if test="user.role!=null">
+	    		and role=#{role}
+	    	</if>
+		</where>
+		<if test="pageBean!=null">
+			limit #{pageBean.start},#{pageBean.size}
+		</if>
+	</select>
+    <select id="findUserById" parameterType="Integer" resultMap="userMap"  >
+        select <include refid="info"></include> from t_user where uid=#{userId}  
+    </select>
+    
+    <select id="findCount" resultType="Integer" parameterType="User">
+  
+    	select count(*) from t_user
+    	<where>
+			<if test="uid!=null" >
+				and uid=#{uid} 
+			</if>
+			<if test="userName!=null and userName!=''">
+    		and userName like #{userName}
+	    	</if>
+	    	
+	    	<if test="email!=null and email!=''">
+	    		and email=#{email}
+	    	</if>
+	    	<if test="role!=null">
+	    		and role=#{role}
+	    	</if>
+		</where>
+    </select>
+    
+    <insert id="addUser" parameterType="User" useGeneratedKeys="true" keyProperty="uid">
+    	insert into t_user ( <include refid="info"></include>)values(null,#{userName},#{password},#{email},#{role},#{accepted},#{submited},#{solved},#{registTime,typeHandler=com.hhoj.judger.mapper.typehandler.DateToLongTypeHandler},#{lastLoginTime,typeHandler=com.hhoj.judger.mapper.typehandler.DateToLongTypeHandler},#{sign})
+    </insert>
+    
+    <update id="updateUser" parameterType="User">
+    	update t_user  
+    	<set>
+    	
+    		<if test="userName!=null and userName!=''">
+    		 userName=#{userName},
+	    	</if>
+	    	<if test="password!=null and password!=''">
+	    		password=#{password},
+	    	</if>
+	    	<if test="email!=null and email!=''">
+	    		email=#{email},
+	    	</if>
+	    	<if test="role!=null">
+	    		role=#{role},
+	    	</if>
+	    	<if test="accepted!=null ">
+	    		accepted=#{accepted},
+	    	</if>
+	    	<if test="submited!=null ">
+	    		submited=#{submited},
+	    	</if>
+	    	<if test="solved!=null">
+	    		solved=#{solved},
+	    	</if>
+	    	<if test="registTime!=null">
+	    		registTime=#{registTime,typeHandler=com.hhoj.judger.mapper.typehandler.DateToLongTypeHandler},
+	    	</if>
+	    	<if test="lastLoginTime!=null">
+	    		lastLoginTime=#{lastLoginTime,typeHandler=com.hhoj.judger.mapper.typehandler.DateToLongTypeHandler},
+	    	</if>
+	    		<if test="sign!=null and sign!=''">
+	    		sign=#{sign},
+	    	</if>
+    	</set>
+    	
+    	where uid=#{uid}
+    </update>
+   <delete id="removeUser" parameterType="Integer">
+   		delete from t_user where uid=#{userId}
+   </delete>
+   
+   <select id="findUserByUserNameOrEmail" resultMap="userMap" parameterType="User">
+   		select <include refid="info"></include> from t_user
+   		where userName=#{userName} or email=#{email}
+   </select>
+</mapper>
