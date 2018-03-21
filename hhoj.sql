@@ -1,4 +1,4 @@
-DROP DATABASE IF EXISTS hhoj;
+/*DROP DATABASE IF EXISTS hhoj;*/
 CREATE DATABASE `hhoj` 
 
 
@@ -35,20 +35,19 @@ DROP TABLE IF EXISTS `t_problem`;
 CREATE TABLE `t_problem` (
   `pid` INT(11) NOT NULL AUTO_INCREMENT,
   `title` VARCHAR(100) NOT NULL,
-  `desc` TEXT NOT NULL,
+  `pDesc` TEXT NOT NULL,
   `inputExample` TEXT NOT NULL,
   `outputExample` TEXT NOT NULL,
   `hint` VARCHAR(250) NOT NULL,
   `source` VARCHAR(100) NOT NULL,
   `timeLimit` INT(11) NOT NULL DEFAULT '1000',
   `memaryLimit` INT(11) NOT NULL DEFAULT '65535',
-  `creteTime` BIGINT(20) NOT NULL,
+  `createTime` BIGINT(20) NOT NULL,
   `accepted` INT(11) NOT NULL DEFAULT '0',
   `submited` INT(11) NOT NULL DEFAULT '0',
   `typeId` INT(11) NOT NULL,
   PRIMARY KEY (`pid`),
-  KEY `fk_problem_type` (`typeId`),
-  CONSTRAINT `fk_problem_type` FOREIGN KEY (`typeId`) REFERENCES `t_problem_type` (`typeId`)
+  KEY `fk_problem_type` (`typeId`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8;
 
 
@@ -59,9 +58,9 @@ CREATE TABLE t_testpoint(
    `pid` INT NOT NULL,
    `input` TEXT NOT NULL,
    `output` TEXT NOT NULL,
-   PRIMARY KEY(`pointId`),
-   CONSTRAINT fk_problem_point FOREIGN KEY(`pid`) REFERENCES t_problem(`pid`)
-)
+   PRIMARY KEY(`pointId`)
+
+)ENGINE=INNODB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `t_language`;
 /*编程语言表*/
@@ -91,10 +90,8 @@ CREATE TABLE `t_submit` (
   PRIMARY KEY (`sid`),
   KEY `fk_submit_user` (`uid`),
   KEY `fk_submit_problem` (`pid`),
-  KEY `fk_submit_language` (`languageId`),
-  CONSTRAINT `fk_submit_user` FOREIGN KEY (`uid`) REFERENCES `t_user` (`uid`),
-  CONSTRAINT `fk_submit_problem` FOREIGN KEY (`pid`) REFERENCES `t_problem` (`pid`),
-  CONSTRAINT `fk_submit_language` FOREIGN KEY (`languageId`) REFERENCES `t_language` (`languageId`)
+  KEY `fk_submit_language` (`languageId`)
+
 ) ENGINE=INNODB DEFAULT CHARSET=utf8;
 
 
@@ -108,9 +105,7 @@ CREATE TABLE `t_comment` (
   `pid` INT(11) NOT NULL,
   PRIMARY KEY (`commentId`),
   KEY `fk_comment_user` (`uid`),
-  KEY `fk_comment_problem` (`pid`),
-  CONSTRAINT `fk_comment_user` FOREIGN KEY (`uid`) REFERENCES `t_user` (`uid`),
-  CONSTRAINT `fk_comment_problem` FOREIGN KEY (`pid`) REFERENCES `t_problem` (`pid`)
+  KEY `fk_comment_problem` (`pid`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8;
 
 
@@ -128,8 +123,7 @@ CREATE TABLE `t_contest` (
   `contestPassword` VARCHAR(200) NOT NULL,
   `initiator` INT(11) DEFAULT NULL,
   PRIMARY KEY (`contestId`),
-  KEY `fk_contest_user` (`initiator`),
-  CONSTRAINT `fk_contest_user` FOREIGN KEY (`initiator`) REFERENCES `t_user` (`uid`)
+  KEY `fk_contest_user` (`initiator`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8;
 
 
@@ -142,8 +136,7 @@ CREATE TABLE `t_contest_problem` (
   `contestId` INT(11) NOT NULL,
   `accepted` INT(11) NOT NULL,
   `submited` INT(11) NOT NULL,
-  PRIMARY KEY (`pid`,`contestId`),
-  CONSTRAINT `fk_contest_problem` FOREIGN KEY (`pid`) REFERENCES `t_problem` (`pid`)
+  PRIMARY KEY (`pid`,`contestId`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8;
 
 
@@ -155,9 +148,7 @@ CREATE TABLE `t_contest_user` (
   `uid` INT(11) NOT NULL,
   `contestId` INT(11) NOT NULL,
   PRIMARY KEY (`uid`,`contestId`),
-  KEY `fk_contest` (`contestId`),
-  CONSTRAINT `fk_user` FOREIGN KEY (`uid`) REFERENCES `t_user` (`uid`),
-  CONSTRAINT `fk_contest` FOREIGN KEY (`contestId`) REFERENCES `t_contest` (`contestId`)
+  KEY `fk_contest` (`contestId`)
 ) ENGINE=INNODB DEFAULT CHARSET=utf8;
 
 
