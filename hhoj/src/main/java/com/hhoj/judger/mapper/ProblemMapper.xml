@@ -19,11 +19,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<result column="createTime" property="createTime" javaType="java.util.Date" jdbcType="BIGINT"/>
 	<result column="accepted" property="accepted"/>
 	<result column="submited" property="submited"/>
+	<result column="publish" property="publish"/>
 	<association property="typeId" column="type" select=""></association>
+	
 </resultMap>
 
 <sql id="info">
- pid,title,pDesc,inputExample,outputExample,hint,source,timeLimit,memaryLimit,createTime,accepted,submited,typeId
+ pid,title,pDesc,inputExample,outputExample,hint,source,timeLimit,memaryLimit,createTime,accepted,submited,typeId,publish
 </sql>
 	
 	<select id="findProblems" resultMap="problemMap" >
@@ -31,12 +33,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		select <include refid="info"></include> from t_problem
 		<where>
 			<if test="problem.pid!=null" >
-				and pid=#{pid} 
+				and pid=#{problem.pid} 
 			</if>
 			<if test="problem.title!=null and problem.title!=''">
     		and title like #{title}
 	    	</if>
-	  
+	  		<if test="problem.publish!=null">
+	  			and publish =#{problem.publish}
+	  		</if>
 		</where>
 		<if test="pageBean!=null">
 			limit #{pageBean.start},#{pageBean.size}
@@ -54,14 +58,16 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 				and pid=#{pid} 
 			</if>
 			<if test="title!=null and title!=''">
-    		and title like #{pattern_title}
+    		and title like #{title}
 	    	</if>
-	  
+	  		<if test="publish!=null">
+	  			and publish =#{publish}
+	  		</if>
 		</where>
     </select>
     
     <insert id="addProblem" parameterType="Problem" useGeneratedKeys="true" keyProperty="pid">
-    	insert into t_problem ( <include refid="info"></include> ) values (null,#{title},#{desc},#{inputExample},#{outputExample},#{hint},#{source},#{timeLimit},#{memaryLimit},#{createTime,typeHandler=com.hhoj.judger.mapper.typehandler.DateToLongTypeHandler},#{accepted},#{submited},#{type.typeId})
+    	insert into t_problem  ( <include refid="info"></include> ) values (null,#{title},#{desc},#{inputExample},#{outputExample},#{hint},#{source},#{timeLimit},#{memaryLimit},#{createTime,typeHandler=com.hhoj.judger.mapper.typehandler.DateToLongTypeHandler},#{accepted},#{submited},#{type.typeId},#{publish})
     </insert>
     
     <update id="updateProblem" parameterType="Problem">
@@ -104,6 +110,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	    	<if test="type!=null and type.typeId">
 	    		typeId=#{type.typeId},
 	    	</if>
+	    	<if test="publish!=null">
+	  			publish =#{publish}
+	  		</if>
     	</set>
     	
     	where pid=#{pid}

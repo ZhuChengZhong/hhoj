@@ -20,7 +20,7 @@
         <div class="am-fl am-cf">
           <div class="am-btn-toolbar am-fl">
             <div class="am-btn-group am-btn-group-xs">
-              <button type="button" class="am-btn am-btn-default"><span class="am-icon-plus"></span> 新增</button>
+              <button  type="button"  class="am-btn am-btn-default" onclick="pre_add()"><span class="am-icon-plus"></span> 新增</button>
               <button type="button" class="am-btn am-btn-default"><span class="am-icon-save"></span> 保存</button>
               <button type="button" class="am-btn am-btn-default"><span class="am-icon-archive"></span> 审核</button>
               <button type="button" class="am-btn am-btn-default"><span class="am-icon-trash-o"></span> 删除</button>
@@ -106,6 +106,7 @@
 </body>
 
 <script type="text/javascript">
+
 	function removeUser(uid) {
 		if(confirm("你确定要删除该用户吗？")){
 			var url="/hhoj/user/remove/"+uid;
@@ -124,5 +125,8 @@
             }); 
 		}
 	}
+	
+	
+	
 </script>
 </html>

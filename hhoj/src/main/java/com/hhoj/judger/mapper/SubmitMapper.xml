@@ -34,7 +34,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	  		<if test="submit.problem!=null and submit.problem.pid!=null">
 	  			and pid=#{submit.problem.pid}
 	  		</if>
-	  		<if test="submit.language!=null and submit.language.languageId!=null">
+	  		<if test="submit.language!=null and submit.language.languageId!=null"> 
 	  			and languageId=#{submit.language.languageId}
 	  		</if>
 	  		<if test="submit.judged!=null">
@@ -44,6 +44,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	  			and result=#{submit.result}
 	  		</if>
 		</where>
+		<if test="pageBean!=null">
+			limit #{pageBean.start},#{pageBean.size}
+		</if>
 	</select>
 	
     <select id="findSubmitById" parameterType="Integer" resultMap="submitMap"  >

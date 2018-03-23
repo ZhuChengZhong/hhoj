@@ -20,8 +20,8 @@
         <div class="am-fl am-cf">
           <div class="am-btn-toolbar am-fl">
             <div class="am-btn-group am-btn-group-xs">
-              <button type="button" class="am-btn am-btn-default"><span class="am-icon-plus"></span> 新增</button>
-              <button type="button" class="am-btn am-btn-default"><span class="am-icon-save"></span> 保存</button>
+              <button type="button" class="am-btn am-btn-default" onclick="pre_add()"><span class="am-icon-plus"></span> 新增</button>
+              <button type="button" class="am-btn am-btn-default" ><span class="am-icon-save"></span> 保存</button>
               <button type="button" class="am-btn am-btn-default"><span class="am-icon-archive"></span> 审核</button>
               <button type="button" class="am-btn am-btn-default"><span class="am-icon-trash-o"></span> 删除</button>
             </div>
@@ -58,6 +58,7 @@
                 <th class="table-set">submited</th>
                 <th class="table-set">类型</th>
                 <th class="table-set">创建时间</th>
+                <th class="table-set">发布状态</th>
               </tr>
           </thead>
           <tbody>
@@ -73,11 +74,12 @@
                <td>${problem.submited}</td>
                 <td>${problem.type.typeName}</td>             
               <td> <fmt:formatDate value="${problem.createTime }" pattern="yyyy-MM-dd hh:mm:ss"/></td>
+               <td>${problem.publish}</td>  
               <td>
                 <div class="am-btn-toolbar">
                   <div class="am-btn-group am-btn-group-xs">
-                    <button class="am-btn am-btn-default am-btn-xs am-text-secondary"><span class="am-icon-pencil-square-o"></span> 编辑</button>
-                    <button class="am-btn am-btn-default am-btn-xs"><span class="am-icon-copy"></span> 复制</button>
+                    <button type="button" class="am-btn am-btn-default"  onclick="updateUser(${problem.pid})"><span class="am-icon-save"></span> 编辑</button>
+                     <button type="button" class="am-btn am-btn-default"  onclick="test_point_list(${problem.pid})"><span class="am-icon-save"></span> 测试用例</button>
                     <button class="am-btn am-btn-default am-btn-xs" onclick="removeUser(${problem.pid})"><span class="am-icon-trash-o"></span>删除</button>
                   </div>
                 </div>
@@ -124,5 +126,19 @@
             }); 
 		}
 	}
+	
+	
+
+function pre_add(){
+	//alert("asd");
+	window.location.href="/hhoj/problem/add";
+}
+ 
+function updateUser(pid){
+	window.location.href="/hhoj/problem/update/"+pid;
+}
+function test_point_list(pid){
+	window.location.href="/hhoj/testpoint/list/"+pid;
+}
 </script>
 </html>

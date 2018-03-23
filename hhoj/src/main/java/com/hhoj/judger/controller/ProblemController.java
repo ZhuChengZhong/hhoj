@@ -1,5 +1,6 @@
 package com.hhoj.judger.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -11,11 +12,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hhoj.judger.entity.PageBean;
 import com.hhoj.judger.entity.Problem;
+import com.hhoj.judger.entity.ProblemType;
 import com.hhoj.judger.entity.Submit;
 import com.hhoj.judger.service.ProblemService;
 import com.hhoj.judger.service.SubmitService;
@@ -34,6 +38,24 @@ public class ProblemController {
 	
 	private static Logger logger=LoggerFactory.getLogger(ProblemController.class);
 	
+	@RequestMapping(value="/add",method= {RequestMethod.GET})
+	public ModelAndView preAdd() {
+		ModelAndView mav=new ModelAndView();
+		mav.addObject("mainPage", "problem/add.jsp");
+		mav.setViewName("manager");
+		return mav;
+	}
+	
+
+	@RequestMapping(value="/update/{pid}",method= {RequestMethod.GET})
+	public ModelAndView preUpdate(@PathVariable(value="pid")Integer pid) {
+		ModelAndView mav=new ModelAndView();
+		Problem problem=problemService.findProblemById(pid);
+		mav.addObject("problem", problem);
+		mav.addObject("mainPage", "problem/add.jsp");
+		mav.setViewName("manager");
+		return mav;
+	}
 	@RequestMapping("/list/{page}")
 	public ModelAndView list(Problem problem, @PathVariable(value = "page") Integer page, HttpServletRequest request) {
 		ModelAndView mav=new ModelAndView();
@@ -53,12 +75,27 @@ public class ProblemController {
 		return mav;
 	}
 	
-	@RequestMapping("/add")
-	public ModelAndView addProblem(Problem problem) {
-		ModelAndView mav=new ModelAndView();
-		Integer result=problemService.addProblem(problem);
-		mav.setViewName("redirect:list");
-		return mav;
+	@RequestMapping(value="/save",method= {RequestMethod.POST})
+	public void addProblem(Problem problem,HttpServletResponse response,@RequestParam(value="typeId")String typeId) {
+		Date date=new Date();
+		problem.setCreateTime(date);
+		ProblemType type=new ProblemType();
+		type.setTypeId(Integer.parseInt(typeId));
+		problem.setType(type);
+		problem.setPublish(0);
+		Integer result;
+		if(problem.getPid()!=null) {
+			result=problemService.updateProblem(problem);
+		}else {
+			result=problemService.addProblem(problem);
+		}
+		JSONObject o=new JSONObject();
+		if(result>0) {
+			o.put("result", "success");
+		}else {
+			o.put("result", "error");
+		}
+		ResponseUtil.write(o, response);
 	}
 	
 	@RequestMapping("/remove/{pid}")

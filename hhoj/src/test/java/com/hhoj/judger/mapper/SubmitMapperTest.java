@@ -49,7 +49,7 @@ public class SubmitMapperTest {
 		Submit submit=new Submit();
 		submit.setJudged(1);
 		submit.setResult("accepted");
-		System.out.println(submitMapper.findSubmits(submit));
+		System.out.println(submitMapper.findSubmits(submit,null));
 	}
 	
 	@Test

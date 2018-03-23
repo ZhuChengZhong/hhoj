@@ -30,11 +30,20 @@ public class Problem implements Serializable{
 	// 创建时间
 	private Date createTime;
 	// 该题通过次数
-	private int accepted;
+	private Integer accepted;
 	// 该题提交次数
-	private int submited;
+	private Integer submited;
 	// 题目类型
 	private ProblemType type;
+	//该题是否发布（0未发布 1发布）
+	private Integer publish;
+	
+	public Integer getPublish() {
+		return publish;
+	}
+	public void setPublish(Integer publish) {
+		this.publish = publish;
+	}
 	public Integer getPid() {
 		return pid;
 	}
@@ -95,16 +104,17 @@ public class Problem implements Serializable{
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
 	}
-	public int getAccepted() {
+
+	public Integer getAccepted() {
 		return accepted;
 	}
-	public void setAccepted(int accepted) {
+	public void setAccepted(Integer accepted) {
 		this.accepted = accepted;
 	}
-	public int getSubmited() {
+	public Integer getSubmited() {
 		return submited;
 	}
-	public void setSubmited(int submited) {
+	public void setSubmited(Integer submited) {
 		this.submited = submited;
 	}
 	public ProblemType getType() {

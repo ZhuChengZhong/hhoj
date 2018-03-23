@@ -1,6 +1,7 @@
 package com.hhoj.judger.controller;
 
 import java.util.List;
+import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,6 +22,7 @@ import com.hhoj.judger.entity.Submit;
 import com.hhoj.judger.service.SubmitService;
 import com.hhoj.judger.util.PageUtil;
 import com.hhoj.judger.util.ResponseUtil;
+import com.hhoj.judger.util.StringUtil;
 
 @Controller
 @RequestMapping("/submit")
@@ -33,28 +35,26 @@ public class SubmitController {
 	private static Logger logger=LoggerFactory.getLogger(SubmitController.class);
 	
 	@RequestMapping("/list/{page}")
-	public ModelAndView list(Submit submit,@RequestParam(required=false,value="pid") Integer pid,@PathVariable(value="page") Integer page,HttpServletRequest result) {
+	public ModelAndView list(Submit submit,@RequestParam(required=false,value="pid") Integer pid,@PathVariable(value="page") Integer page,HttpServletRequest request) {
 		ModelAndView mav=new ModelAndView();
-		if(page==null) {
+		if(Objects.isNull(page)) {
 			page=1;
 		}
-		Problem problem=new Problem();
-		problem.setPid(pid);
-		submit.setProblem(problem);
+		if(Objects.nonNull(pid)) {
+			Problem problem=new Problem();
+			problem.setPid(pid);
+			submit.setProblem(problem);
+		}
 		int count=submitService.findCount(submit);
 		PageBean pageBean=new PageBean(10, page, count);
-		
-		List<Submit>list=submitService.findSubmits(submit);
+		List<Submit>list=submitService.findSubmits(submit,pageBean);
 		mav.addObject("submitList", list);
-		if(page==null) {
-			page=1;
-		}
-		PageBean pageBean=new PageBean(10,page, count);
-		String url="submit/list";
+		String contextPath=request.getContextPath();
+		String url=contextPath+"/submit/list";
 		String pagination=PageUtil.getPagination(url, pageBean);
 		mav.addObject("pagination", pagination);
-		mav.addObject("mainPage", "/WEB-INF/jsp/submit/list.jsp");
-		mav.setViewName("index");
+		mav.addObject("mainPage", "submit/list.jsp");
+		mav.setViewName("manager");
 		return mav;
 	}
 	

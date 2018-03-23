@@ -79,7 +79,7 @@
                   <div class="am-btn-group am-btn-group-xs">
                     <button class="am-btn am-btn-default am-btn-xs am-text-secondary"><span class="am-icon-pencil-square-o"></span> 编辑</button>
                     <button class="am-btn am-btn-default am-btn-xs"><span class="am-icon-copy"></span> 复制</button>
-                    <button class="am-btn am-btn-default am-btn-xs" onclick="removeUser(${submit.pid})"><span class="am-icon-trash-o"></span>删除</button>
+                    <button class="am-btn am-btn-default am-btn-xs" onclick="removeUser(${submit.sid})"><span class="am-icon-trash-o"></span>删除</button>
                   </div>
                 </div>
               </td>

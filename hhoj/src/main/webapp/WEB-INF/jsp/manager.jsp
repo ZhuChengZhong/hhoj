@@ -70,6 +70,7 @@
         <ul class="am-list am-collapse admin-sidebar-sub am-in" id="collapse-nav">
          <li><a href="${pageContext.request.contextPath }/user/list/1"><span class="am-icon-table"></span> 用户管理</a></li>
          <li><a href="${pageContext.request.contextPath }/problem/list/1"><span class="am-icon-table"></span> 题目管理</a></li>
+          <li><a href="${pageContext.request.contextPath }/submit/list/1"><span class="am-icon-table"></span> 提交管理</a></li>
           <li><a href="admin-404.html"><span class="am-icon-bug"></span> 404</a></li>
         </ul>
       </li>
@@ -79,10 +80,7 @@
   <!-- sidebar end -->
 
   <!-- content start -->
- <!--  <div class="admin-content"> -->
 		<jsp:include page="${mainPage}"></jsp:include>
-   
- <!--  </div> -->
   <!-- content end -->
 
 </div>

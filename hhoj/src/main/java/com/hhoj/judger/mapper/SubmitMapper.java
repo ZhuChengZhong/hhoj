@@ -26,7 +26,7 @@ public interface SubmitMapper {
 	 * @param submit 条件，为null时表示无限制条件查找
 	 * @return
 	 */
-	public List<Submit> findSubmits(@Param("submit") Submit submit,@Param("submit")PageBean pageBean);
+	public List<Submit> findSubmits(@Param("submit") Submit submit,@Param("pageBean")PageBean pageBean);
 	
 	/**
 	 * 添加Submit
