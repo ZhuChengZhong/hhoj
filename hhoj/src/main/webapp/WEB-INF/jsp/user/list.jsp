@@ -109,7 +109,7 @@
 
 	function removeUser(uid) {
 		if(confirm("你确定要删除该用户吗？")){
-			var url="/hhoj/user/remove/"+uid;
+			var url="/hhoj/manager/user/remove/"+uid;
 			/* $.post(url, {}, function(result){
 				
 				//document.location.reload();

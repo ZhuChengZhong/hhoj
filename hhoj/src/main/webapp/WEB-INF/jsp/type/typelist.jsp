@@ -20,7 +20,7 @@
         <div class="am-fl am-cf">
           <div class="am-btn-toolbar am-fl">
             <div class="am-btn-group am-btn-group-xs">
-              <button type="button" class="am-btn am-btn-default" onclick="pre_add()"><span class="am-icon-plus"></span> 新增</button>
+              <button type="button" class="am-btn am-btn-default" onclick="pre_add_type()"><span class="am-icon-plus"></span> 新增</button>
               <button type="button" class="am-btn am-btn-default" ><span class="am-icon-trash-o"></span> 删除</button>
             </div>
 
@@ -48,23 +48,20 @@
               <tr>
                 <th class="table-check"><input type="checkbox" /></th>
                 <th class="table-id">编号</th>
-                <th class="table-title">输入数据</th>
-                <th class="table-type">输出数据</th>
+                <th class="table-title">测试题类型</th>
               </tr>
           </thead>
           <tbody>
-         <input type="hidden" id="pid"  value="${pid }" />
- 	<c:forEach items="${testPointList}" var="testPoint">
+ 	<c:forEach items="${typeList}" var="type">
  		     <tr>
               <td><input type="checkbox" /></td>
-              <td>${testPoint.pointId}</td>
-              <td>${testPoint.input}</td>
-              <td>${testPoint.output }</td>
+              <td>${type.typeId}</td>
+              <td>${type.typeName}</td>
               <td>
                 <div class="am-btn-toolbar">
                   <div class="am-btn-group am-btn-group-xs">
-                      <button type="button" class="am-btn am-btn-default" onclick="update_test_point(${testPoint.pointId})"><span class="am-icon-plus"></span> 修改</button>
-              			<button type="button" class="am-btn am-btn-default"  onclick="remove_point(${testPoint.pointId})"><span class="am-icon-trash-o"></span> 删除</button>
+                      <button type="button" class="am-btn am-btn-default" onclick="update_problem_type(${type.typeId})"><span class="am-icon-plus"></span> 修改</button>
+              			<button type="button" class="am-btn am-btn-default"  onclick="remove_problem_type(${type.typeId})"><span class="am-icon-trash-o"></span> 删除</button>
                   </div>
                 </div>
               </td>
@@ -92,13 +89,9 @@
 </body>
 
 <script type="text/javascript">
-	function remove_point(pointId) {
-		if(confirm("你确定要删除该测试用例吗？")){
-			var url="/hhoj/manager/testpoint/remove/"+pointId;
-			/* $.post(url, {}, function(result){
-				
-				//document.location.reload();
-			}); */
+	function remove_problem_type(typeId) {
+		if(confirm("你确定要删除该类型吗？")){
+			var url="/hhoj/manager/type/remove/"+typeId;
 			 $.ajax({  
                 async:false,   //使用同步的Ajax请求  
                 type: "POST",  
@@ -111,14 +104,16 @@
 		}
 	}
 	
-	function pre_add(){
-		var pid=$('#pid').val();
-		window.location.href="/hhoj/manager/testpoint/add/"+pid;
+	
+	function update_problem_type(typeId){
+		if(typeId!=''){
+			window.location.href="/hhoj/manager/type/update/"+typeId;
+		}
+		
 	}
 	 
-	function update_test_point(pointId){
-		
-		window.location.href="/hhoj/manager/testpoint/update/"+pointId;
+	function pre_add_type(){
+			window.location.href="/hhoj/manager/type/add";
 	}
 </script>
 </html>

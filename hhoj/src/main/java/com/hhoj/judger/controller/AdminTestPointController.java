@@ -22,14 +22,14 @@ import com.hhoj.judger.util.ResponseUtil;
 import com.hhoj.judger.util.StringUtil;
 
 @Controller
-@RequestMapping("/testpoint")
-public class TestPointController {
+@RequestMapping("/manager/testpoint")
+public class AdminTestPointController {
 	
 	
 	@Autowired
 	private TestPointService testPointService;
 	
-	private static Logger logger=LoggerFactory.getLogger(TestPointController.class);
+	private static Logger logger=LoggerFactory.getLogger(AdminTestPointController.class);
 	
 	/**
 	 * 跳转到添加测试点页面

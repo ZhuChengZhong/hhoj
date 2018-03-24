@@ -182,7 +182,7 @@
 				problem_desc.trim()!=''&&problem_source.trim()!=''&&
 				problem_time_limit.trim()!=''&&problem_memary_limit.trim()!=''&&
 				problem_input.trim()!=''&&problem_output.trim()!=''){
-			var url="/hhoj/problem/save";
+			var url="/hhoj/manager/problem/save";
 			$.ajax({  
                 async:false,   //使用同步的Ajax请求  
                 type: "POST",  
@@ -200,7 +200,7 @@
                 	   typeId:problem_type
                 	   },  
                 success: function(result){  
-                	window.location.href="/hhoj/problem/list/1";
+                	window.location.href="/hhoj/manager/problem/list/1";
                 }  
             }); 
 		}else{

@@ -110,7 +110,7 @@
 <script type="text/javascript">
 	function removeUser(pid) {
 		if(confirm("你确定要删除该题目吗？")){
-			var url="/hhoj/problem/remove/"+pid;
+			var url="/hhoj/manager/problem/remove/"+pid;
 			/* $.post(url, {}, function(result){
 				
 				//document.location.reload();
@@ -131,14 +131,14 @@
 
 function pre_add(){
 	//alert("asd");
-	window.location.href="/hhoj/problem/add";
+	window.location.href="/hhoj/manager/problem/add";
 }
  
 function updateUser(pid){
-	window.location.href="/hhoj/problem/update/"+pid;
+	window.location.href="/hhoj/manager/problem/update/"+pid;
 }
 function test_point_list(pid){
-	window.location.href="/hhoj/testpoint/list/"+pid;
+	window.location.href="/hhoj/manager/testpoint/list/"+pid;
 }
 </script>
 </html>

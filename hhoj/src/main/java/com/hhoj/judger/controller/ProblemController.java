@@ -38,24 +38,13 @@ public class ProblemController {
 	
 	private static Logger logger=LoggerFactory.getLogger(ProblemController.class);
 	
-	@RequestMapping(value="/add",method= {RequestMethod.GET})
-	public ModelAndView preAdd() {
-		ModelAndView mav=new ModelAndView();
-		mav.addObject("mainPage", "problem/add.jsp");
-		mav.setViewName("manager");
-		return mav;
-	}
-	
-
-	@RequestMapping(value="/update/{pid}",method= {RequestMethod.GET})
-	public ModelAndView preUpdate(@PathVariable(value="pid")Integer pid) {
-		ModelAndView mav=new ModelAndView();
-		Problem problem=problemService.findProblemById(pid);
-		mav.addObject("problem", problem);
-		mav.addObject("mainPage", "problem/add.jsp");
-		mav.setViewName("manager");
-		return mav;
-	}
+	/**
+	 * 获取测试题列表
+	 * @param problem
+	 * @param page  
+	 * @param request
+	 * @return
+	 */
 	@RequestMapping("/list/{page}")
 	public ModelAndView list(Problem problem, @PathVariable(value = "page") Integer page, HttpServletRequest request) {
 		ModelAndView mav=new ModelAndView();
@@ -70,58 +59,23 @@ public class ProblemController {
 		String pagination=PageUtil.getPagination(url, pageBean);
 		mav.addObject("pagination", pagination);
 		mav.addObject("problemList", list);
-		mav.addObject("mainPage", "problem/list.jsp");
-		mav.setViewName("manager");
+		mav.addObject("mainPage", "foreground/problem/problem-list.jsp");
+		mav.setViewName("index");
 		return mav;
 	}
 	
-	@RequestMapping(value="/save",method= {RequestMethod.POST})
-	public void addProblem(Problem problem,HttpServletResponse response,@RequestParam(value="typeId")String typeId) {
-		Date date=new Date();
-		problem.setCreateTime(date);
-		ProblemType type=new ProblemType();
-		type.setTypeId(Integer.parseInt(typeId));
-		problem.setType(type);
-		problem.setPublish(0);
-		Integer result;
-		if(problem.getPid()!=null) {
-			result=problemService.updateProblem(problem);
-		}else {
-			result=problemService.addProblem(problem);
-		}
-		JSONObject o=new JSONObject();
-		if(result>0) {
-			o.put("result", "success");
-		}else {
-			o.put("result", "error");
-		}
-		ResponseUtil.write(o, response);
-	}
-	
-	@RequestMapping("/remove/{pid}")
-	public void removeUser(@PathVariable("pid")Integer pid,HttpServletResponse response){
-		Integer count=problemService.removeProblem(pid);
-		JSONObject result=new JSONObject();
-		result.put("success", true);
-		result.put("count", count);
-		ResponseUtil.write(result, response);
-	}
-	
-	@RequestMapping("/problem/submit")
-	public ModelAndView submit(Submit submit) {
+	/**
+	 * 根据pid获取具体的测试题信息
+	 * @param pid
+	 * @return
+	 */
+	@RequestMapping("/detail/{pid}")
+	public ModelAndView findProblem(@PathVariable("pid") Integer pid) {
 		ModelAndView mav=new ModelAndView();
-		Integer result=submitService.addSubmit(submit);
-		logger.info("new submit :"+submit);
-		mav.setViewName("redirect:/submit/list/"+submit.getProblem().getPid());
-		return mav;
-	}
-	
-	@RequestMapping("/problem/update")
-	public ModelAndView update(Problem problem) {
-		ModelAndView mav=new ModelAndView();
-		int result=problemService.updateProblem(problem);
-		logger.info("update problem :"+problem);
-		mav.setViewName("redirect:list");
+		Problem problem=problemService.findProblemById(pid);
+		mav.addObject("problem", problem);
+		mav.addObject("mainPage", "foreground/problem/problem-detail.jsp");
+		mav.setViewName("index");
 		return mav;
 	}
 }

@@ -20,31 +20,23 @@
 
   <div class="am-tabs am-margin" data-am-tabs>
     <ul class="am-tabs-nav am-nav am-nav-tabs">
-      <li class="am-active"><a href="#tab1">样例</a></li>
+      <li class="am-active"><a href="#tab1">基本信息</a></li>
     </ul>
 
     <div class="am-tabs-bd">
 
       <div class="am-tab-panel am-fade am-in am-active" id="tab1">
         <form class="am-form">
-         	<input type="hidden"  id="test_point_id" value="${testPoint.pointId}" />
+         	<input type="hidden"  id="problem_type_id" value="${problemType.typeId}" />
 			<div class="am-g am-margin-top-sm">
             <div class="am-u-sm-2 am-text-right">
-              样例输入
+              测试题类型
             </div>
             <div class="am-u-sm-10">
-              <textarea rows="10" cols="1" id="test_point_input">${testPoint.input}</textarea>
+            <input type="text"  id="problem_type_name"  value="${problemType.typeName}"/>
             </div>
           </div>
-               <div class="am-g am-margin-top-sm">
-            <div class="am-u-sm-2 am-text-right">
-              样例输出
-            </div>
-            <div class="am-u-sm-10">
-              <textarea rows="10" cols="1" id="test_point_output">${testPoint.output}</textarea>
-            </div>
-          </div>
-        
+             
 
         </form>
       </div>
@@ -54,7 +46,7 @@
 
   <div class="am-margin">
   	<div><font  color="red" id="error"></font></div>
-    <button type="button" onclick="add_test_point(${pid})" class="am-btn am-btn-primary am-btn-xs">提交保存</button>
+    <button type="button" onclick="save_problem_type()" class="am-btn am-btn-primary am-btn-xs">提交保存</button>
     <button type="button" class="am-btn am-btn-primary am-btn-xs">放弃保存</button>
   </div>
 </div>
@@ -65,26 +57,22 @@
  *
  * 		获取表单信息验证后发送请求
  */
-	function add_test_point(pid){
+	function save_problem_type(){
 	
-		var test_point_input=$('#test_point_input').val();
-		var test_point_output=$('#test_point_output').val();
-		var test_point_id=$('#test_point_id').val();
-		
-		var url="/hhoj/manager/testpoint/save";
-		if(test_point_input!=''&&test_point_output!=''){
+		var problem_type_id=$('#problem_type_id').val();
+		var problem_type_name=$('#problem_type_name').val();
+		var url="/hhoj/manager/type/save";
+		if(problem_type_name.trim()!=''){
 			$.ajax({  
                 async:false,   //使用同步的Ajax请求  
                 type: "POST",  
                 url: url,  
                 data: {
-                	  pointId:test_point_id,
-                	   pid:pid,
-                	   input:test_point_input,
-                	   output:test_point_output
+                		typeId:problem_type_id,
+                		typeName:problem_type_name
                 	   },  
                 success: function(result){  
-                	window.location.href="/hhoj/manager/testpoint/list/"+pid;
+                	window.location.href="/hhoj/manager/type/list";
                 }  
             }); 
 		}else{

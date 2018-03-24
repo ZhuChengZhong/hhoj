@@ -68,9 +68,10 @@
       <li class="admin-parent">
         <a class="am-cf" data-am-collapse="{target: '#collapse-nav'}"><span class="am-icon-file"></span> 管理 <span class="am-icon-angle-right am-fr am-margin-right"></span></a>
         <ul class="am-list am-collapse admin-sidebar-sub am-in" id="collapse-nav">
-         <li><a href="${pageContext.request.contextPath }/user/list/1"><span class="am-icon-table"></span> 用户管理</a></li>
-         <li><a href="${pageContext.request.contextPath }/problem/list/1"><span class="am-icon-table"></span> 题目管理</a></li>
-          <li><a href="${pageContext.request.contextPath }/submit/list/1"><span class="am-icon-table"></span> 提交管理</a></li>
+         <li><a href="${pageContext.request.contextPath }/manager/user/list/1"><span class="am-icon-table"></span> 用户管理</a></li>
+         <li><a href="${pageContext.request.contextPath }/manager/problem/list/1"><span class="am-icon-table"></span> 题目管理</a></li>
+          <li><a href="${pageContext.request.contextPath }/manager/submit/list/1"><span class="am-icon-table"></span> 提交管理</a></li>
+            <li><a href="${pageContext.request.contextPath }/manager/type/list"><span class="am-icon-table"></span> 题目类型管理</a></li>
           <li><a href="admin-404.html"><span class="am-icon-bug"></span> 404</a></li>
         </ul>
       </li>

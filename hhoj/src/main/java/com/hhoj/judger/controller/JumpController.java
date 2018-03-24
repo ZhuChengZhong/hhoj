@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/index")
 public class JumpController {
-	
+	@RequestMapping("/i")
 	public String redirectToIndex() {
-		return "redirect:index";
+		return "index";
 	}
 	
 	@RequestMapping("/manager")

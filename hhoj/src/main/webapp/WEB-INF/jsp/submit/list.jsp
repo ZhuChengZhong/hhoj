@@ -109,7 +109,7 @@
 <script type="text/javascript">
 	function removeUser(sid) {
 		if(confirm("你确定要删除该次提交吗？")){
-			var url="/hhoj/submit/remove/"+sid;
+			var url="/hhoj/manager/submit/remove/"+sid;
 			/* $.post(url, {}, function(result){
 				
 				//document.location.reload();

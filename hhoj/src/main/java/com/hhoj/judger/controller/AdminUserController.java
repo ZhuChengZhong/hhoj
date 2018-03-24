@@ -22,10 +22,10 @@ import com.hhoj.judger.util.PageUtil;
 import com.hhoj.judger.util.ResponseUtil;
 
 @Controller
-@RequestMapping("/user")
-public class UserController {
+@RequestMapping(value= "/manager/user")
+public class AdminUserController {
 	
-	private static Logger logger=LoggerFactory.getLogger(UserController.class);
+	private static Logger logger=LoggerFactory.getLogger(AdminUserController.class);
 	
 	@Resource
 	private UserService userService;
@@ -104,7 +104,7 @@ public class UserController {
 		Integer count=userService.findCount(user);
 		PageBean pageBean=new PageBean(10, page, count);
 		String contextPath=request.getContextPath();
-		String pagination=PageUtil.getPagination(contextPath+"/user/list", pageBean);
+		String pagination=PageUtil.getPagination(contextPath+"/manager/user/list", pageBean);
 		
 		List<User> userList=userService.findUsers(user,pageBean);
 		mav.addObject("pagination", pagination);

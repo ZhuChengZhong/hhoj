@@ -22,12 +22,12 @@ import com.hhoj.judger.util.PageUtil;
 import com.hhoj.judger.util.ResponseUtil;
 
 @Controller
-@RequestMapping("/language")
-public class LanguageController {
+@RequestMapping("/manager/language")
+public class AdminLanguageController {
 	
 	@Autowired
 	private LanguageService languageService;
-	private Logger logger=LoggerFactory.getLogger(LanguageController.class);
+	private Logger logger=LoggerFactory.getLogger(AdminLanguageController.class);
 	@RequestMapping("/list")
 	public ModelAndView list() {
 		ModelAndView mav=new ModelAndView();
