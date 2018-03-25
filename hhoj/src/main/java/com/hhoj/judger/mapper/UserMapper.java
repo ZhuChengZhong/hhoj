@@ -48,9 +48,17 @@ public interface UserMapper {
 	public Integer findCount(User user);
 	
 	/**
-	 * 通过用户名或者email查找用户
-	 * @param user
+	 * 通过用户名查找用户
+	 * @param userName 
 	 * @return
 	 */
-	public User findUserByUserNameOrEmail(User user);
+	public User findUserByUserName(String userName);
+	
+	
+	/**
+	 * 通过email
+	 * @param email
+	 * @return
+	 */
+	public User findUserByEmail(String email);
 }

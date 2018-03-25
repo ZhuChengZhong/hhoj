@@ -30,9 +30,9 @@ public class JavaMailUtil {
      * @param emailContentType 邮件内容的类型,支持纯文本:"text/plain;charset=utf-8";,带有Html格式的内容:"text/html;charset=utf-8"  
      * @return 
      */  
-    public static int sendEmail(String mailServer,final String loginAccount,final String loginAuthCode,String sender,String[] recipients,  
+    public static boolean sendEmail(String mailServer,final String loginAccount,final String loginAuthCode,String sender,String[] recipients,  
             String emailSubject,String emailContent,String emailContentType){  
-        int res=0;  
+        boolean res=false;  
           
        try {  
             //跟smtp服务器建立一个连接  
@@ -87,22 +87,27 @@ public class JavaMailUtil {
             msg.setContent(emailContent,emailContentType);//发html格式的文本  
             //发送动作  
             Transport.send(msg);  
-            System.out.println("邮件发送成功");  
-            res=1;  
+            res=true;  
               
         } catch (Exception e) {  
-            System.out.println("邮件发送失败: "+e.getMessage());  
-            res=0;  
+            res=false;  
         }  
         return res;  
     }  
       
+    
+    public static boolean sendActiveInfo(String mailServer,final String loginAccount,final String loginAuthCode,String sender,String[] recipients,  
+            String emailSubject,String emailContent,String emailContentType) {
+    	return sendEmail(mailServer, loginAccount, loginAuthCode, sender, recipients, emailSubject, emailContent, emailContentType);
+    }
     public static void main(String[] args) throws Exception {  
-          
+       /*   
         int res=sendEmail("smtp.qq.com", "lp995968535@qq.com", "pyonipdgzluobfgc", "lp995968535@qq.com", new String[]{  
                 "956281507@qq.com" 
         }, "节日祝福", "祝你国庆节快乐,欢迎来我的blog: <a href='http://blog.csdn.net/u013871100'>我的blog</a>,祝您生活愉快!","text/html;charset=utf-8");  
           
-        System.out.println("\n发送结果:"+res);  
+        System.out.println("\n发送结果:"+res);  */
     }  
+    
+    
 }

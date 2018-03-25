@@ -47,9 +47,29 @@ public interface UserService {
 	public boolean addUser(User user);
 	
 	/**
-	 * 通过用户名或者email查找用户
-	 * @param user
+	 * 通过用户名来查找用户
+	 * 当传入参数不合法或未找到
+	 * 时返回null
+	 * @param userName 
 	 * @return
 	 */
-	public User findUserByUserNameOrEmail(User user);
+	public User findUserByUserName(String userName);
+	
+	
+	/**
+	 * 通过Email来查找用户
+	 * 当传入参数不合法或未找到
+	 * 时返回null
+	 * @return
+	 */
+	public User findUserByEmail(String email);
+	
+	
+	/**
+	 * 通过uid来查找用户
+	 * 当传入参数不合法或未找到
+	 * 时返回null
+	 * @return
+	 */
+	public User findUserByUid(Integer uid);
 }

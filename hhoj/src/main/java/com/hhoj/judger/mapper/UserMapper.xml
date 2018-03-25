@@ -116,8 +116,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
    		delete from t_user where uid=#{userId}
    </delete>
    
-   <select id="findUserByUserNameOrEmail" resultMap="userMap" parameterType="User">
+   <select id="findUserByUserName" resultMap="userMap" parameterType="String">
    		select <include refid="info"></include> from t_user
-   		where userName=#{userName} or email=#{email}
+   		where userName=#{userNameOrEmail}
+   </select>
+    <select id="findUserByEmail" resultMap="userMap" parameterType="String">
+   		select <include refid="info"></include> from t_user
+   		where  email=#{userNameOrEmail}
    </select>
 </mapper>

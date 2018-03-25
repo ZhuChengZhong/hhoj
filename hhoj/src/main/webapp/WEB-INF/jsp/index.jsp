@@ -94,7 +94,7 @@
         -->
       </li>
        <li class="am-dropdown" data-am-dropdown>
-        <a  href='admin-register.html' class="am-dropdown-toggle" data-am-dropdown-toggle href="javascript:;">
+        <a  href="${pageContext.request.contextPath}/user/register" class="am-dropdown-toggle" data-am-dropdown-toggle href="javascript:;">
           <span class="am-icon-users"></span> 注册
         </a>
         </li>

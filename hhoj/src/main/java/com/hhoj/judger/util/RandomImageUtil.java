@@ -13,7 +13,7 @@ import javax.imageio.ImageIO;
 
 public final class RandomImageUtil {
 
-	private static String randomcode;
+	private static String randomcode="";
 	
 	private RandomImageUtil() { };
 	public static BufferedImage createRandImage(int width,int height){  //创建验证码图片
@@ -43,7 +43,9 @@ public final class RandomImageUtil {
 	}
 	
     public static String getRandomcode() {
-		return randomcode;
+    	String s=randomcode;
+    	randomcode="";
+		return s;
 	}
 	
 //先用一个main函数测试能后生成我们需要的图片

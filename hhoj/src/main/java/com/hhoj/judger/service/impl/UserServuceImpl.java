@@ -12,6 +12,7 @@ import com.hhoj.judger.entity.PageBean;
 import com.hhoj.judger.entity.User;
 import com.hhoj.judger.mapper.UserMapper;
 import com.hhoj.judger.service.UserService;
+import com.hhoj.judger.util.StringUtil;
 
 @Service("userService")
 public class UserServuceImpl implements UserService{
@@ -47,9 +48,11 @@ public class UserServuceImpl implements UserService{
 	@Override
 	@Transactional(isolation=Isolation.READ_COMMITTED,propagation=Propagation.REQUIRED)
 	public boolean addUser(User user) {
-		User u=userMapper.findUserByUserNameOrEmail(user);
-		//当前已存在用户
-		if(u!=null) {
+		/**
+		 * 通过用户名和邮件查找用户是否已经存在
+		 */
+		if(userMapper.findUserByUserName(user.getUserName())!=null||
+				userMapper.findUserByEmail(user.getEmail())!=null) {
 			return false;
 		}
 		int n=userMapper.addUser(user);
@@ -57,16 +60,36 @@ public class UserServuceImpl implements UserService{
 			return true;
 		}
 		return false;
-		
+	}
+
+	
+	
+	@Override
+	public User findUserByUserName(String userName) {
+		if(StringUtil.isEmpty(userName)) {
+			return null;
+		}
+		return userMapper.findUserByUserName(userName);
+	}
+
+	
+	@Override
+	public User findUserByEmail(String email) {
+		if(StringUtil.isEmpty(email)) {
+			return null;
+		}
+		return userMapper.findUserByEmail(email);
 	}
 
 
 	@Override
-	public User findUserByUserNameOrEmail(User user) {
-		if(user.getUserName()==null && user.getEmail()==null) {
+	public User findUserByUid(Integer uid) {
+		if(uid==null) {
 			return null;
 		}
-		return userMapper.findUserByUserNameOrEmail(user);
+		return userMapper.findUserById(uid);
 	}
+
+
 
 }
