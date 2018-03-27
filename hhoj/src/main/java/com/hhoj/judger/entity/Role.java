@@ -13,13 +13,13 @@ public interface Role {
 	/**
 	 * 普通账户
 	 */
-	public static Integer COMMON=1;
+	public static final int COMMON=1;
 	/**
 	 * 管理员
 	 */
-	public static Integer MANAGER=2;
+	public static final int MANAGER=2;
 	/**
 	 * 系统管理员
 	 */
-	public static Integer ROOT=3;
+	public static final int ROOT=3;
 }

@@ -34,4 +34,16 @@
  		<mvc:resources mapping="/assets/**" location="/assets/" />
  		<mvc:resources mapping="/bootstrap/**" location="/bootstrap/" />
  		<mvc:resources mapping="/*.html" location="/" />
+ 		
+ 		<mvc:interceptors>
+ 			<mvc:interceptor>
+ 				<mvc:mapping path="/manager/**"/>
+ 				<mvc:exclude-mapping path="/manager"/>
+ 				<bean class="com.hhoj.judger.filter.SecurityInterceptor"></bean>
+ 			</mvc:interceptor>
+ 			<mvc:interceptor>
+ 				<mvc:mapping path="/**"/>
+ 				<bean class="com.hhoj.judger.filter.SaveHttpObjectFilter"></bean>
+ 			</mvc:interceptor>
+ 		</mvc:interceptors>
 </beans>

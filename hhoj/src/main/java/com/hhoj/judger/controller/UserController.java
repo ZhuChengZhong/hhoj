@@ -76,15 +76,13 @@ public class UserController {
 		JSONObject result=new JSONObject();
 		if(isSuccess) {
 			logger.info("user register success :"+user);
-			user.setPassword(null);
-			request.getSession().setAttribute("currentUser", user);
-			result.put("redirect", "/hhoj/index/i");
+			result.put("redirect", "/hhoj/user/remind");
 			result.put("success", true);
 			/**
 			 * 向用户发送激活邮件
 			 */
 			String url="http://localhost:8080/hhoj/user/active/"+user.getUid();
-			String content="欢迎使用HHOJ<br> <a href='"+url+"'>点击链接激活帐号</a>";
+			String content="欢迎使用HHOJ   点击链接激活帐号<br> <a href='"+url+"'>"+url+"</a>";
 			boolean sendSuccess=JavaMailUtil.sendActiveInfo(PropertiesUtil.getParam("emial.mailServer"), 
 					PropertiesUtil.getParam("email.loginAccount"), PropertiesUtil.getParam("email.loginAuthCode"),
 					PropertiesUtil.getParam("email.loginAccount"), new String[] {user.getEmail()}, "HHOJ帐号激活",
@@ -102,6 +100,10 @@ public class UserController {
 		ResponseUtil.write(result, response);
 	}
 	
+	@RequestMapping("/remind")
+	public String s() {
+		return "user/active";
+	}
 	
 	/**
 	 * 激活账户
@@ -109,7 +111,7 @@ public class UserController {
 	 * @return
 	 */
 	@RequestMapping("/active/{uid}")
-	public ModelAndView activeUser(@PathVariable("uid")Integer uid) {
+	public ModelAndView activeUser(@PathVariable("uid")Integer uid,HttpServletRequest request) {
 		ModelAndView mav=new ModelAndView();
 		User user=userService.findUserByUid(uid);
 		if(user!=null&&user.getRole()==Role.NOT_ACTIVE) {
@@ -117,6 +119,8 @@ public class UserController {
 			activeUser.setUid(user.getUid());
 			activeUser.setRole(Role.COMMON);
 			userService.updateUser(activeUser);
+			user.setPassword(null);
+			request.getSession().setAttribute("currentUser", user);
 		}
 		mav.setViewName("index");
 		return mav;
@@ -134,24 +138,49 @@ public class UserController {
 	
 	
 	/**
-	 * 用户登录
+	 * 跳转到登录界面
+	 * @return
+	 */
+	@RequestMapping(value="/login",method= {RequestMethod.GET})
+	public String preLogin() {
+		return "user/login";
+	}
+	
+	/**
+	 * 用户登录(可通过用户名或者邮箱登录)
 	 * @param user
 	 * @param redirect
 	 * @param request
 	 * @return
 	 */
-	public ModelAndView login(User user,@RequestParam("redirect")String redirect,HttpServletRequest request){
+	@RequestMapping(value="/login",method= {RequestMethod.POST})
+	public ModelAndView login(@RequestParam("randomcode") String randomcode,User user,HttpServletRequest request){
+		User currentUser=null;
 		ModelAndView mav=new ModelAndView();
-		User u=userService.findUserByUserName(user.getUserName());
-		if(u !=null) {
-			mav.addObject("mainPage", "/WEB-INF/jsp/user/"+redirect+".jsp");
-			mav.setViewName("redirect:index");
-			request.getSession().setAttribute("currentUser", u);
-			logger.info("user logining :"+u);
-		}else {
+		if(randomcode==null||!randomcode.equals(request.getSession().getAttribute("randomcode"))) {
+			mav.addObject("message", "用户名不存在");
+			mav.setViewName("user/login");
+			return mav;
+		}
+		currentUser=userService.findUserByUserName(user.getUserName());
+		if(currentUser==null) {
+			currentUser=userService.findUserByEmail(user.getUserName());
+		}
+		if(currentUser==null||currentUser.getRole()==Role.NOT_ACTIVE) {
+			mav.addObject("message", "用户名不存在");
+			mav.setViewName("user/login");
+		}else if(!currentUser.getPassword().equals(user.getPassword())){
 			mav.addObject("message", "用户名或密码错误");
-			mav.addObject("mainPage", "/WEB-INF/jsp/user/login.jsp");
-			mav.setViewName("/user/index");
+			mav.setViewName("user/login");
+		}else {
+			request.getSession().setAttribute("currentUser", currentUser);
+			logger.info("user logining :"+currentUser);
+			String path=(String)request.getSession().getAttribute("redirect");
+			if(StringUtil.isNotEmpty(path)) {
+				mav.setViewName("redirect:"+path);
+			}else {
+				mav.setViewName("index");
+			}
 		}
 		return mav;
 	}
@@ -161,6 +190,7 @@ public class UserController {
 	 * @param request
 	 * @return
 	 */
+	@RequestMapping(value="/logout",method= {RequestMethod.GET})
 	public ModelAndView logout(HttpServletRequest request){
 		ModelAndView mav=new ModelAndView();
 		User user=(User)request.getSession().getAttribute("currentUser");
@@ -168,7 +198,7 @@ public class UserController {
 			request.getSession().removeAttribute("currentUser");
 			logger.info("user logout success :"+user);
 		}
-		mav.setViewName("/user/index");
+		mav.setViewName("index");
 		return mav;
 	}
 	

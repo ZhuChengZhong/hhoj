@@ -72,4 +72,5 @@ public interface UserService {
 	 * @return
 	 */
 	public User findUserByUid(Integer uid);
+	
 }

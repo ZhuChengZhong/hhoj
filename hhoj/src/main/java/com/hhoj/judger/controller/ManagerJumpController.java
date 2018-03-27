@@ -4,14 +4,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-public class JumpController {
-	@RequestMapping("/index")
-	public String redirectToIndex() {
-		return "index";
-	}
+public class ManagerJumpController {
 	
-	@RequestMapping("/manager")
+	/*@RequestMapping("/admin")
 	public String redirectToManager() {
 		return "manager";
-	}
+	}*/
 }

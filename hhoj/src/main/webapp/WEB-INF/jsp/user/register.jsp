@@ -116,7 +116,8 @@
 		 $.ajax({  
              async:false,   //使用同步的Ajax请求  
              type: "POST",  
-             url: url,  
+             url: url, 
+             dataType:"json",
              data: {
             	 userName:userName,
             	 password:password,
@@ -124,8 +125,12 @@
             	 sign:sign,
             	 randomcode:randomcode
              },  
-             success: function(result){  
-             	document.location.reload();
+             success: function(result){ 
+            	 if(result.success){
+            		 window.location.href=result.redirect;
+            	 }else{
+            		 $('#message').html(message);
+            	 }
              }  
          }); 
 	}

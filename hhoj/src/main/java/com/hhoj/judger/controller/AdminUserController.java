@@ -15,7 +15,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hhoj.judger.annotation.ValidatePermission;
 import com.hhoj.judger.entity.PageBean;
+import com.hhoj.judger.entity.Role;
 import com.hhoj.judger.entity.User;
 import com.hhoj.judger.service.UserService;
 import com.hhoj.judger.util.PageUtil;
@@ -31,6 +33,7 @@ public class AdminUserController {
 	private UserService userService;
 	
 
+	@ValidatePermission(role=Role.ROOT)
 	@RequestMapping("/list/{page}")
 	public ModelAndView userList(@PathVariable("page") Integer page,HttpServletRequest request){
 		if(page==null) {

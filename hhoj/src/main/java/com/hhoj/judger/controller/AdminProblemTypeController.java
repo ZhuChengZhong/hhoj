@@ -40,7 +40,6 @@ public class AdminProblemTypeController {
 	@RequestMapping("/list")
 	public ModelAndView list() {
 		ModelAndView mav=new ModelAndView();
-	
 		int count=problemTypeService.findCount();
 		List<ProblemType>list=problemTypeService.findProblemTypes();
 		mav.addObject("typeList", list);
