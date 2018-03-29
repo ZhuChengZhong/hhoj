@@ -8,7 +8,7 @@ import java.util.Date;
  *
  */
 public class Contest {
-	private int contestId;
+	private Integer contestId;
 	private String title;
 	private String desc;
 	private Date startTime;
@@ -17,10 +17,10 @@ public class Contest {
 	private Date endJoinTime;
 	private String contestPassword;
 	private User initiator;
-	public int getContestId() {
+	public Integer getContestId() {
 		return contestId;
 	}
-	public void setContestId(int contestId) {
+	public void setContestId(Integer contestId) {
 		this.contestId = contestId;
 	}
 	public String getTitle() {
@@ -70,6 +70,12 @@ public class Contest {
 	}
 	public void setInitiator(User initiator) {
 		this.initiator = initiator;
+	}
+	@Override
+	public String toString() {
+		return "Contest [contestId=" + contestId + ", title=" + title + ", desc=" + desc + ", startTime=" + startTime
+				+ ", endTime=" + endTime + ", startJoinTime=" + startJoinTime + ", endJoinTime=" + endJoinTime
+				+ ", contestPassword=" + contestPassword + ", initiator=" + initiator + "]";
 	}
 	
 }

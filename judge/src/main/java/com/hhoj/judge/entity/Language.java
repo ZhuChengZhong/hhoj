@@ -6,7 +6,7 @@ package com.hhoj.judge.entity;
  */
 public class Language {
 	// id
-	private int languageId;
+	private Integer languageId;
 	// 编程语言名称
 	private String languageName;
 	//编译命令
@@ -26,10 +26,10 @@ public class Language {
 	public void setRunCommand(String runCommand) {
 		this.runCommand = runCommand;
 	}
-	public int getLanguageId() {
+	public Integer getLanguageId() {
 		return languageId;
 	}
-	public void setLanguageId(int languageId) {
+	public void setLanguageId(Integer languageId) {
 		this.languageId = languageId;
 	}
 	public String getLanguageName() {
@@ -42,4 +42,10 @@ public class Language {
 		super();
 		// TODO Auto-generated constructor stub
 	}
+	@Override
+	public String toString() {
+		return "Language [languageId=" + languageId + ", languageName=" + languageName + ", compileCommand="
+				+ compileCommand + ", runCommand=" + runCommand + "]";
+	}
+	
 }

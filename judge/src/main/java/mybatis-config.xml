@@ -39,6 +39,8 @@
     <!-- mapping 文件路径配置 -->  
     <mappers>  
         <mapper resource="com/hhoj/judge/mapper/SubmitMapper.xml" />  
-        <mapper resource="com/hhoj/judge/mapper/LanguageMapper.xml" /> 
+   		<!-- <mapper resource="com/hhoj/judge/mapper/TestPointMapper.xml" />   -->
+       <!--  <package name="com.hhoj.judge.mapper"/> -->
     </mappers>
+    
 </configuration>

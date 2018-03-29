@@ -9,7 +9,7 @@ import java.util.Date;
  */
 public class Problem {
 	// 问题id
-	private int pid;
+	private Integer pid;
 	//标题
 	private String title;
 	// 题目描述
@@ -23,9 +23,9 @@ public class Problem {
 	// 来源
 	private String source;
 	// 时间限制
-	private String timeLimit;
+	private Integer timeLimit;
 	//内存限制
-	private String memaryLimit;
+	private Integer memaryLimit;
 	// 创建时间
 	private Date createTime;
 	// 该题通过次数
@@ -34,10 +34,10 @@ public class Problem {
 	private int submited;
 	// 题目类型
 	private ProblemType type;
-	public int getPid() {
+	public Integer getPid() {
 		return pid;
 	}
-	public void setPid(int pid) {
+	public void setPid(Integer pid) {
 		this.pid = pid;
 	}
 	public String getTitle() {
@@ -76,16 +76,16 @@ public class Problem {
 	public void setSource(String source) {
 		this.source = source;
 	}
-	public String getTimeLimit() {
+	public Integer getTimeLimit() {
 		return timeLimit;
 	}
-	public void setTimeLimit(String timeLimit) {
+	public void setTimeLimit(Integer timeLimit) {
 		this.timeLimit = timeLimit;
 	}
-	public String getMemaryLimit() {
+	public Integer getMemaryLimit() {
 		return memaryLimit;
 	}
-	public void setMemaryLimit(String memaryLimit) {
+	public void setMemaryLimit(Integer memaryLimit) {
 		this.memaryLimit = memaryLimit;
 	}
 	public Date getCreateTime() {
@@ -115,6 +115,13 @@ public class Problem {
 	public Problem() {
 		super();
 		// TODO Auto-generated constructor stub
+	}
+	@Override
+	public String toString() {
+		return "Problem [pid=" + pid + ", title=" + title + ", desc=" + desc + ", inputExample=" + inputExample
+				+ ", outputExample=" + outputExample + ", hint=" + hint + ", source=" + source + ", timeLimit="
+				+ timeLimit + ", memaryLimit=" + memaryLimit + ", createTime=" + createTime + ", accepted=" + accepted
+				+ ", submited=" + submited + ", type=" + type + "]";
 	}
 	
 }

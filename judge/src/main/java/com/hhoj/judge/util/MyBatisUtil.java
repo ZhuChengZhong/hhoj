@@ -11,10 +11,8 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 
 public final class MyBatisUtil {
-	
-	private MyBatisUtil(){
-		//不允许实例化
-	}
+	//不允许实例化
+	private MyBatisUtil() { }
 	
    private static ThreadLocal<SqlSession> sqlSessionHolder=new ThreadLocal<SqlSession>();
    private static SqlSessionFactory sqlSessionFactory;

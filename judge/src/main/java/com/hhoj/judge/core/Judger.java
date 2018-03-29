@@ -6,6 +6,8 @@ import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import com.hhoj.judge.constant.ConfigConstant;
+import com.hhoj.judge.constant.ResultConstant;
+import com.hhoj.judge.entity.Problem;
 import com.hhoj.judge.entity.Submit;
 import com.hhoj.judge.entity.TestPoint;
 import com.hhoj.judge.handler.Handler;
@@ -25,14 +27,20 @@ public class Judger implements Runnable{
 		this.testPointMapper=testPointMapper;
 	}
 	public void run() {
-		while(true){
+		while (true) {
 			try {
+				//从队列中获取要处理的提交
 				int submitId=submitIdQueue.take();
+				//从数据库中查找提交
 				Submit submit=submitMapper.findById(submitId);
+				if(submit==null) {
+					continue ;
+				}
+				//获取测试点
 				List<TestPoint> pointList=testPointMapper.findPointListByProblemId(submit.getProblem().getPid());
 				Map<String,Object> map=new HashMap<String, Object>();
-				
-				
+				//
+				submitMapper.update(submit);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

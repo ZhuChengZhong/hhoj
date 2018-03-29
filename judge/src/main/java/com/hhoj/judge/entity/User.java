@@ -9,7 +9,7 @@ import java.util.Date;
  */
 public class User {
 	//用户id
-	private int uid;
+	private Integer uid;
 	//用户名
 	private String userName;
 	//密码
@@ -30,10 +30,10 @@ public class User {
 	private Date lastLoginTime;
 	//个性签名
 	private String sign;
-	public int getUid() {
+	public Integer getUid() {
 		return uid;
 	}
-	public void setUid(int uid) {
+	public void setUid(Integer uid) {
 		this.uid = uid;
 	}
 	public String getUserName() {
@@ -99,6 +99,12 @@ public class User {
 	public User() {
 		super();
 		// TODO Auto-generated constructor stub
+	}
+	@Override
+	public String toString() {
+		return "User [uid=" + uid + ", userName=" + userName + ", password=" + password + ", email=" + email + ", role="
+				+ role + ", accepted=" + accepted + ", submited=" + submited + ", solved=" + solved + ", registTime="
+				+ registTime + ", lastLoginTime=" + lastLoginTime + ", sign=" + sign + "]";
 	}
 	
 }

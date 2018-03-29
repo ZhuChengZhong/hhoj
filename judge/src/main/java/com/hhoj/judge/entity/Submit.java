@@ -9,7 +9,7 @@ import java.util.Date;
  */
 public class Submit {
 	// id
-	private int sid;
+	private Integer sid;
 	//提交用户
 	private User user;
 	//被提交试题
@@ -17,19 +17,28 @@ public class Submit {
 	//运行结果
 	private String result;
 	//运行使用时间
-	private int useTime;
+	private Integer useTime;
 	//运行使用内存
-	private int useMemary;
+	private Integer useMemary;
 	//提交的代码
 	private String code;
 	//提交时间
 	private Date submitTime;
 	//使用语言
 	private Language language;
-	public int getSid() {
+	//记录该提交是否被评测过    1 已评测 0 未评测
+	private Integer judged;
+	
+	public Integer getJudged() {
+		return judged;
+	}
+	public void setJudged(Integer judged) {
+		this.judged = judged;
+	}
+	public Integer getSid() {
 		return sid;
 	}
-	public void setSid(int sid) {
+	public void setSid(Integer sid) {
 		this.sid = sid;
 	}
 	public User getUser() {
@@ -50,16 +59,16 @@ public class Submit {
 	public void setResult(String result) {
 		this.result = result;
 	}
-	public int getUseTime() {
+	public Integer getUseTime() {
 		return useTime;
 	}
-	public void setUseTime(int useTime) {
+	public void setUseTime(Integer useTime) {
 		this.useTime = useTime;
 	}
-	public int getUseMemary() {
+	public Integer getUseMemary() {
 		return useMemary;
 	}
-	public void setUseMemary(int useMemary) {
+	public void setUseMemary(Integer useMemary) {
 		this.useMemary = useMemary;
 	}
 	public String getCode() {
@@ -83,6 +92,12 @@ public class Submit {
 	public Submit() {
 		super();
 		// TODO Auto-generated constructor stub
+	}
+	@Override
+	public String toString() {
+		return "Submit [sid=" + sid + ", user=" + user + ", problem=" + problem + ", result=" + result + ", useTime="
+				+ useTime + ", useMemary=" + useMemary + ", code=" + code + ", submitTime=" + submitTime + ", language="
+				+ language + ", judged=" + judged + "]";
 	}
 	
 }

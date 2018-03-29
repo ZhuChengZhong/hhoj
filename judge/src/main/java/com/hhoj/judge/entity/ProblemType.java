@@ -6,13 +6,13 @@ package com.hhoj.judge.entity;
  */
 public class ProblemType {
 	//id
-	private int typeId;
+	private Integer typeId;
 	// 类型名称
 	private String typeName;
-	public int getTypeId() {
+	public Integer getTypeId() {
 		return typeId;
 	}
-	public void setTypeId(int typeId) {
+	public void setTypeId(Integer typeId) {
 		this.typeId = typeId;
 	}
 	public String getTypeName() {
@@ -24,6 +24,10 @@ public class ProblemType {
 	public ProblemType() {
 		super();
 		// TODO Auto-generated constructor stub
+	}
+	@Override
+	public String toString() {
+		return "ProblemType [typeId=" + typeId + ", typeName=" + typeName + "]";
 	}
 	
 }

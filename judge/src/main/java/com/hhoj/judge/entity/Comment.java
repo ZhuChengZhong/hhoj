@@ -6,7 +6,7 @@ package com.hhoj.judge.entity;
  */
 public class Comment {
 	//id
-	private int commentId;
+	private Integer commentId;
 	//评论用户
 	private User user;
 	// 评论类型
@@ -15,10 +15,10 @@ public class Comment {
 	private String content;
 	// 被评论的试题
 	private Problem problem;
-	public int getCommentId() {
+	public Integer getCommentId() {
 		return commentId;
 	}
-	public void setCommentId(int commentId) {
+	public void setCommentId(Integer commentId) {
 		this.commentId = commentId;
 	}
 	public User getUser() {
@@ -44,6 +44,11 @@ public class Comment {
 	}
 	public void setProblem(Problem problem) {
 		this.problem = problem;
+	}
+	@Override
+	public String toString() {
+		return "Comment [commentId=" + commentId + ", user=" + user + ", type=" + type + ", content=" + content
+				+ ", problem=" + problem + "]";
 	}
 	
 }

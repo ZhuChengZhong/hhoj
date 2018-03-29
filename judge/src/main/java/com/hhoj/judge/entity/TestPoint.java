@@ -2,24 +2,25 @@ package com.hhoj.judge.entity;
 
 public class TestPoint {
 	//id
-	private int pointId;
+	private Integer pointId;
 	//测试点所属试题
-	private int Problem;
+	private Problem problem;
 	//输入
 	private String input;
 	//输出
 	private String output;
-	public int getPointId() {
+	public Integer getPointId() {
 		return pointId;
 	}
-	public void setPointId(int pointId) {
+	public void setPointId(Integer pointId) {
 		this.pointId = pointId;
 	}
-	public int getProblem() {
-		return Problem;
+	
+	public Problem getProblem() {
+		return problem;
 	}
-	public void setProblem(int problem) {
-		Problem = problem;
+	public void setProblem(Problem problem) {
+		this.problem = problem;
 	}
 	public String getInput() {
 		return input;
@@ -32,6 +33,11 @@ public class TestPoint {
 	}
 	public void setOutput(String output) {
 		this.output = output;
+	}
+	@Override
+	public String toString() {
+		return "TestPoint [pointId=" + pointId + ", problem=" + problem + ", input=" + input + ", output=" + output
+				+ "]";
 	}
 	
 }
