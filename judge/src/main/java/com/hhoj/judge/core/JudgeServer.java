@@ -7,12 +7,16 @@ import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.ibatis.session.SqlSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import com.hhoj.judge.listener.SubmitListener;
 import com.hhoj.judge.mapper.SubmitMapper;
 import com.hhoj.judge.mapper.TestPointMapper;
 import com.hhoj.judge.util.MyBatisUtil;
 
 public class JudgeServer extends Thread{
+	private Logger logger=LoggerFactory.getLogger(SubmitListener.class);
 	//提交实体类映射器
 	private SubmitMapper submitMapper;
 	//测试点实体类映射器
@@ -35,8 +39,9 @@ public class JudgeServer extends Thread{
 		while (!Thread.currentThread().isInterrupted()) {
 			try {
 				int submitId = submitIdQueue.take();
-				Judger judger = new Judger(submitId, submitMapper, testPointMapper);
+				Judger judger = new Judger(submitId);
 				executor.execute(judger);
+				logger.info("创建判定提交任务："+judger);
 			} catch (InterruptedException e) {
 				Thread.currentThread().interrupt();
 			}

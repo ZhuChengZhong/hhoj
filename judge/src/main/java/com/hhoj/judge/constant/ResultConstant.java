@@ -2,7 +2,7 @@ package com.hhoj.judge.constant;
 
 public interface ResultConstant {
 	//通过
-   public static final String AC="Accept";
+   public static final String AC="Accepted";
    //结果错误
    public static final String WA="Wrong Answer";
    //编译错误
@@ -17,5 +17,5 @@ public interface ResultConstant {
    
 	public static final int YES=1;
 	
-	public static final int NO=1;
+	public static final int NO=0;
 }

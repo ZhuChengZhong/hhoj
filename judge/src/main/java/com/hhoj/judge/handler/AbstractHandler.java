@@ -71,7 +71,6 @@ public abstract class AbstractHandler implements Handler {
 	 */
 	public abstract String getRunCommand(Submit submit, String fileName);
 
-	
 	/**
 	 * 编译程序
 	 */
@@ -86,16 +85,16 @@ public abstract class AbstractHandler implements Handler {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * 运行程序
 	 */
 	public boolean run(Submit submit, String fileName, List<TestPoint> pointList) {
-		String commandLine=this.getRunCommand(submit, fileName);
+		String commandLine = this.getRunCommand(submit, fileName);
 		int usedTime = 0;
 		int usedMemory = 0;
-		int timeLimit=submit.getProblem().getTimeLimit();
-		int memaryLimit=submit.getProblem().getMemaryLimit();
+		int timeLimit = submit.getProblem().getTimeLimit();
+		int memaryLimit = submit.getProblem().getMemaryLimit();
 		for (int i = 0; i < pointList.size(); i++) {
 			String inputFilePath = dataFileDir + FileUtil.separator + submit.getSid() + "/in/"
 					+ pointList.get(i).getPointId() + ".in";
@@ -113,17 +112,17 @@ public abstract class AbstractHandler implements Handler {
 		}
 		submit.setUseTime(usedTime);
 		submit.setUseMemary(usedMemory);
-		if(usedTime>timeLimit) {
+		if (usedTime > timeLimit) {
 			submit.setResult(ResultConstant.TLE);
 			return false;
 		}
-		if(usedMemory>timeLimit) {
+		if (usedMemory > timeLimit) {
 			submit.setResult(ResultConstant.MLE);
 			return false;
 		}
 		return true;
 	}
-	
+
 	/**
 	 * 比较结果
 	 */
