@@ -5,46 +5,52 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.hhoj.judge.constant.ConfigConstant;
 import com.hhoj.judge.constant.ResultConstant;
 import com.hhoj.judge.entity.Problem;
 import com.hhoj.judge.entity.Submit;
 import com.hhoj.judge.entity.TestPoint;
+import com.hhoj.judge.exception.HandlerException;
 import com.hhoj.judge.handler.Handler;
+import com.hhoj.judge.handler.HandlerFactory;
 import com.hhoj.judge.mapper.SubmitMapper;
 import com.hhoj.judge.mapper.TestPointMapper;
-//提交处理类 （消费者）
+//提交处理任务
 public class Judger implements Runnable{
-	  // 存放待处理的 提交 id
-	private LinkedBlockingQueue<Integer>submitIdQueue;
+	private static Logger logger=LoggerFactory.getLogger(Judger.class);
+	private int submitId;
 	private SubmitMapper submitMapper;
 	private TestPointMapper testPointMapper;
-	private Handler handler;
-	public Judger(LinkedBlockingQueue<Integer>submitIdQueue,SubmitMapper submitMapper,TestPointMapper testPointMapper,Handler handler){
-		this.submitIdQueue=submitIdQueue;
+	public Judger(int submitId,SubmitMapper submitMapper,TestPointMapper testPointMapper){
+		this.submitId=submitId;
 		this.submitMapper=submitMapper;
-		this.handler=handler;
 		this.testPointMapper=testPointMapper;
 	}
+
 	public void run() {
-		while (true) {
-			try {
-				//从队列中获取要处理的提交
-				int submitId=submitIdQueue.take();
-				//从数据库中查找提交
-				Submit submit=submitMapper.findById(submitId);
-				if(submit==null) {
-					continue ;
-				}
-				//获取测试点
-				List<TestPoint> pointList=testPointMapper.findPointListByProblemId(submit.getProblem().getPid());
-				Map<String,Object> map=new HashMap<String, Object>();
-				//
-				submitMapper.update(submit);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
+
+		// 从数据库中查找提交
+		Submit submit = submitMapper.findById(submitId);
+		if (submit == null) {
+			return;
 		}
+		// 获取测试点
+		List<TestPoint> pointList = testPointMapper.findPointListByProblemId(submit.getProblem().getPid());
+		Handler handler;
+		try {
+			// 根据不同的语言获取不同的处理类
+			handler = HandlerFactory.getHandler(submit.getLanguage().getLanguageName());
+			// 调用Handler进行处理
+			handler.handlerSubmit(submit, pointList);
+			// 更新提交
+			submitMapper.update(submit);
+		} catch (HandlerException e) {
+			logger.error("处理提交失败", e);
+		}
+
 	}
 
 }

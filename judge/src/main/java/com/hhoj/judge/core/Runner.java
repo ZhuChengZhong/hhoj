@@ -41,8 +41,19 @@ public  class Runner {
 		Map<String,Object>map=runner.runCommand(commandLine, null, null, inputFilePath, outputFilePath, timeLimit, memoryLimit);
 		System.out.println(map);
 	}
+	public static void compileJava() {
+		Runner runner=new Runner();
+		String inputFilePath="";
+		String outputFilePath="";
+		int timeLimit=10000;
+		int memoryLimit=10000000;
+		String commandLine="javac /home/zhu/program/111/Test.java";
+		Map<String,Object>map=runner.runCommand(commandLine, null, null, inputFilePath, outputFilePath, timeLimit, memoryLimit);
+		System.out.println(map);
+	}
 	public static void main(String[] args) {
 		//compile();
-		run();
+		//run();
+		compileJava();
 	}
 }

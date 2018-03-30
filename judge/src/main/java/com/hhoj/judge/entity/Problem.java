@@ -34,6 +34,15 @@ public class Problem {
 	private int submited;
 	// 题目类型
 	private ProblemType type;
+	//该题是否发布（0未发布 1发布）
+	private Integer publish;
+	
+	public Integer getPublish() {
+		return publish;
+	}
+	public void setPublish(Integer publish) {
+		this.publish = publish;
+	}
 	public Integer getPid() {
 		return pid;
 	}

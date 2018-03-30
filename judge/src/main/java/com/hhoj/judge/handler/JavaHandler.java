@@ -20,74 +20,11 @@ public class JavaHandler extends AbstractHandler{
 	public JavaHandler(String dataFileDir, String programFileDir) {
 		super(dataFileDir, programFileDir);
 	}
-
+	
 	/**
-	 * 调用本地方法进行编译运行的类
+	 * 为用户提交的java代码创建源码文件
 	 */
-	private Runner runner=new Runner();
-
-	public String prepare(Submit submit, List<TestPoint> pointList) {
-		String inFileDir=dataFileDir+FileUtil.separator+submit.getSid()+"/in";
-		String outFileDir=dataFileDir+FileUtil.separator+submit.getSid()+"/out";
-		String userOutFileDir=dataFileDir+FileUtil.separator+submit.getSid()+"/userout";
-		String detailProgramFileDir=programFileDir+FileUtil.separator+submit.getSid();
-		FileUtil.mkdir(inFileDir);
-		FileUtil.mkdir(outFileDir);
-		FileUtil.mkdir(userOutFileDir);
-		FileUtil.mkdir(detailProgramFileDir);
-		createTestDataFiles(submit,pointList,inFileDir,outFileDir);
-		return createCodeFile(submit,programFileDir);
-	}
-	
 	@Override
-	public boolean compile(Submit submit, String fileName) {
-		String programFilePath=programFileDir+FileUtil.separator+submit.getSid()+FileUtil.separator+fileName+".java";
-		String commandLine="javac "+programFilePath;
-		Map<String, Object>map=runner.runCommand(commandLine, null, null, null, null, 0, 0);
-		Integer exitCode=(Integer)map.get("exitCode");
-		if(exitCode!=0) {
-			submit.setResult(ResultConstant.CE);
-			return false;
-		}
-		return true;
-	}
-	
-	@Override
-	public boolean run(Submit submit, String fileName,List<TestPoint> pointList) {
-		String detailProgramFileDir=programFileDir+FileUtil.separator+submit.getSid();
-		String commandLine="java -cp "+detailProgramFileDir+"   "+fileName;
-		int usedTime=0;
-		int usedMemory=0;
-		for(int i=0;i<pointList.size();i++) {
-			String inputFilePath=dataFileDir+FileUtil.separator+submit.getSid()+"/in/"+pointList.get(i).getPointId()+".in";
-			String outputFilePath=dataFileDir+FileUtil.separator+submit.getSid()+"/userout/"+pointList.get(i).getPointId()+".out";
-			Map<String,Object>map=runner.runCommand(commandLine, null, null, inputFilePath, outputFilePath, submit.getProblem().getTimeLimit(), submit.getProblem().getMemaryLimit());
-			Integer exitCode=(Integer)map.get("exitCode");
-			if(exitCode!=0) {
-				submit.setResult(ResultConstant.RE);
-				return false;
-			}
-			usedTime+=(Integer)map.get("usedTime");
-			usedMemory+=(Integer)map.get("usedMemory");
-		}
-		submit.setUseTime(usedTime);
-		submit.setUseMemary(usedMemory);
-		return true;
-	}
-
-	public boolean compare(Submit submit,List<TestPoint> pointList) {
-		for(int i=0;i<pointList.size();i++) {
-			String standardOutputFilePath=dataFileDir+FileUtil.separator+submit.getSid()+"/out/"+pointList.get(i).getPointId()+".out";
-			String userOutputFilePath=dataFileDir+FileUtil.separator+submit.getSid()+"/userout/"+pointList.get(i).getPointId()+".out";
-			boolean failed=FileUtil.compare(standardOutputFilePath, userOutputFilePath);
-			if(!failed) {
-				submit.setResult(ResultConstant.WA);
-				return failed;
-			}
-		}
-		return true;
-	}
-	
 	public String createCodeFile(Submit submit, String codeDir) {
 	    String className=findClassName(submit.getCode());
 	    if(className==null)
@@ -103,12 +40,34 @@ public class JavaHandler extends AbstractHandler{
 	 */
 	public String findClassName(String code){
 		String className="";
-		Pattern pattern=Pattern.compile("(public)?\\s+\\S*\\s+class\\s+(\\S+)");
+		Pattern pattern=Pattern.compile("public\\s+(\\S*\\s+)?class\\s+([^\\s{]+)");
 		Matcher matcher=pattern.matcher(code);
 		if(matcher.find()){
 			className=matcher.group(2);
 		}
 		return className;
+	}
+
+
+	/**
+	 * 获取Java语言的编译命令
+	 */
+	@Override
+	public String getCompileCommand(Submit submit,String fileName) {
+		String programFilePath=programFileDir+FileUtil.separator+submit.getSid()+FileUtil.separator+fileName+".java";
+		String commandLine="javac "+programFilePath;
+		return commandLine;
+	}
+
+
+	/**
+	 * 获取Java语言的运行命令
+	 */
+	@Override
+	public String getRunCommand(Submit submit,String fileName) {
+		String detailProgramFileDir=programFileDir+FileUtil.separator+submit.getSid();
+		String commandLine="java -cp "+detailProgramFileDir+"   "+fileName;
+		return commandLine;
 	}
 
 }
