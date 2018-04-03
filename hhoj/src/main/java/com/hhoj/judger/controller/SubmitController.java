@@ -3,6 +3,7 @@ package com.hhoj.judger.controller;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.LinkedBlockingQueue;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,9 +17,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.alibaba.fastjson.JSONObject;
+import com.hhoj.judger.annotation.ValidatePermission;
 import com.hhoj.judger.entity.Language;
 import com.hhoj.judger.entity.PageBean;
 import com.hhoj.judger.entity.Problem;
+import com.hhoj.judger.entity.Role;
 import com.hhoj.judger.entity.Submit;
 import com.hhoj.judger.entity.User;
 import com.hhoj.judger.service.ProblemService;
@@ -30,14 +34,16 @@ import com.hhoj.judger.util.ResponseUtil;
 @RequestMapping("/submit")
 public class SubmitController {
 	
+	private static Logger logger=LoggerFactory.getLogger(SubmitController.class);
+	
+	@Autowired
+	private LinkedBlockingQueue<Integer>submitIdQueue;
 	
 	@Autowired
 	private SubmitService submitService;
 	
 	@Autowired
 	private ProblemService problemService;
-	
-	private static Logger logger=LoggerFactory.getLogger(SubmitController.class);
 	
 	
 	/**
@@ -81,8 +87,10 @@ public class SubmitController {
 	 * @param submit 
 	 * @return
 	 */
+	
+	@ValidatePermission(role=Role.COMMON)
 	@RequestMapping("/problem/{pid}/add")
-	public void addSubmit(Submit submit,@PathVariable("pid")Integer pid,@RequestParam("languageId")Integer languageId , HttpServletResponse response) {
+	public void addSubmit(Submit submit,@PathVariable("pid")Integer pid,@RequestParam("languageId")Integer languageId ,HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView mav=new ModelAndView();
 		/**
 		 * 设置所属题目
@@ -101,10 +109,8 @@ public class SubmitController {
 		/**
 		 * 设置提交用户
 		 */
-		User user=new User();
-		user.setUid(1);
+		User user=(User)request.getSession().getAttribute("currentUser");
 		submit.setUser(user);
-		
 		/**
 		 * 设置基本初始化信息
 		 */
@@ -115,6 +121,17 @@ public class SubmitController {
 		submit.setResult(" ");
 		Integer result=submitService.addSubmit(submit);
 		logger.info("create new submit :"+submit);
-		ResponseUtil.write(new Object(), response);
+		/**
+		 * 将提交号发送给判题机进行判定
+		 */
+		sendToJudge(submit.getSid());
+		
+		JSONObject jsonObject=new JSONObject();
+		jsonObject.put("success", true);
+		ResponseUtil.write(jsonObject, response);
+	}
+	
+	public void sendToJudge(int submitId) {
+		submitIdQueue.add(submitId);
 	}
 }

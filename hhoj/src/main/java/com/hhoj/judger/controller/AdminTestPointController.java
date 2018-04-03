@@ -14,8 +14,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hhoj.judger.annotation.ValidatePermission;
 import com.hhoj.judger.entity.Problem;
 import com.hhoj.judger.entity.ProblemType;
+import com.hhoj.judger.entity.Role;
 import com.hhoj.judger.entity.TestPoint;
 import com.hhoj.judger.service.TestPointService;
 import com.hhoj.judger.util.ResponseUtil;
@@ -36,6 +38,7 @@ public class AdminTestPointController {
 	 * @param pid
 	 * @return
 	 */
+	@ValidatePermission(role=Role.MANAGER)
 	@RequestMapping(value="/add/{pid}",method= {RequestMethod.GET})
 	public ModelAndView preAdd(@PathVariable(value="pid")Integer pid) {
 		ModelAndView mav=new ModelAndView();
@@ -50,6 +53,7 @@ public class AdminTestPointController {
 	 * @param pointId
 	 * @return
 	 */
+	@ValidatePermission(role=Role.MANAGER)
 	@RequestMapping(value="/update/{pointId}",method= {RequestMethod.GET})
 	public ModelAndView preUpdate(@PathVariable(value="pointId")Integer pointId) {
 		ModelAndView mav=new ModelAndView();
@@ -66,6 +70,7 @@ public class AdminTestPointController {
 	 * @param testPoint
 	 * @return
 	 */
+	@ValidatePermission(role=Role.MANAGER)
 	@RequestMapping(value="/save",method= {RequestMethod.POST})
 	public ModelAndView save(TestPoint testPoint) {
 		ModelAndView mav=new ModelAndView();
@@ -84,6 +89,7 @@ public class AdminTestPointController {
 	 * @param pid
 	 * @return
 	 */
+	@ValidatePermission(role=Role.MANAGER)
 	@RequestMapping(value="/list/{pid}",method= {RequestMethod.GET})
 	public ModelAndView list(@PathVariable("pid")Integer pid) {
 		ModelAndView mav=new ModelAndView();
@@ -100,6 +106,8 @@ public class AdminTestPointController {
 	 * @param pointId
 	 * @param response
 	 */
+	
+	@ValidatePermission(role=Role.MANAGER)
 	@RequestMapping("/remove/{pointId}")
 	public void removeProblemType(@PathVariable("pointId")Integer pointId,HttpServletResponse response){
 		Integer count=testPointService.removeTestPoint(pointId);

@@ -16,13 +16,13 @@ import com.hhoj.judger.annotation.ValidatePermission;
 import com.hhoj.judger.entity.User;
 import com.hhoj.judger.util.HttpObjectHolder;
 
-//@Aspect
+@Aspect
 public class PermissionAspect {
 
-	//@Pointcut(value="@annotation(com.hhoj.judger.annotation.ValidatePermission)")
+	@Pointcut(value="@annotation(com.hhoj.judger.annotation.ValidatePermission)")
 	public void validate() {}
 	
-	//@Around(value="validate()")
+	@Around(value="validate()")
 	public Object around(ProceedingJoinPoint pjp) throws Throwable{
 		Method method=getSourceMethod(pjp);
 		if(method!=null) {
@@ -32,7 +32,12 @@ public class PermissionAspect {
 			HttpServletResponse response=HttpObjectHolder.getCurrentResponse();
 			User user=(User)request.getSession().getAttribute("currentUser");
 			if(user==null||user.getRole()<role) {
-				response.sendRedirect("/");
+				/**
+				 * 权限不足直接跳转到提醒页面
+				 */
+				String path=request.getContextPath();
+				response.sendRedirect(path+"/authenticationFailure");
+				return null;
 			}
 		}
 		return pjp.proceed();

@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hhoj.judger.annotation.ValidatePermission;
 import com.hhoj.judger.entity.Language;
 import com.hhoj.judger.entity.PageBean;
 import com.hhoj.judger.entity.Problem;
+import com.hhoj.judger.entity.Role;
 import com.hhoj.judger.entity.Submit;
 import com.hhoj.judger.service.LanguageService;
 import com.hhoj.judger.util.PageUtil;
@@ -28,6 +30,8 @@ public class AdminLanguageController {
 	@Autowired
 	private LanguageService languageService;
 	private Logger logger=LoggerFactory.getLogger(AdminLanguageController.class);
+	
+	@ValidatePermission(role=Role.MANAGER)
 	@RequestMapping("/list")
 	public ModelAndView list() {
 		ModelAndView mav=new ModelAndView();
@@ -38,6 +42,7 @@ public class AdminLanguageController {
 		return mav;
 	}
 	
+	@ValidatePermission(role=Role.MANAGER)
 	@RequestMapping("/add")
 	public ModelAndView addLanguage(Language language) {
 		ModelAndView mav=new ModelAndView();
@@ -46,6 +51,7 @@ public class AdminLanguageController {
 		return mav;
 	}
 	
+	@ValidatePermission(role=Role.MANAGER)
 	@RequestMapping("/remove/{languageId}")
 	public void removeLanguage(@PathVariable("languageId")Integer languageId,HttpServletResponse response){
 		Integer count=languageService.removeLanguage(languageId);
@@ -57,7 +63,7 @@ public class AdminLanguageController {
 	}
 	
 
-	
+	@ValidatePermission(role=Role.MANAGER)
 	@RequestMapping("/update")
 	public ModelAndView update(Language language) {
 		ModelAndView mav=new ModelAndView();

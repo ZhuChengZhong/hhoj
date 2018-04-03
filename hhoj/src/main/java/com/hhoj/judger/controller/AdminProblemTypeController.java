@@ -15,8 +15,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hhoj.judger.annotation.ValidatePermission;
 import com.hhoj.judger.entity.PageBean;
 import com.hhoj.judger.entity.ProblemType;
+import com.hhoj.judger.entity.Role;
 import com.hhoj.judger.entity.TestPoint;
 import com.hhoj.judger.service.ProblemTypeService;
 import com.hhoj.judger.util.PageUtil;
@@ -52,6 +54,7 @@ public class AdminProblemTypeController {
 	 * 跳转测试题类型添加页面
 	 * @return
 	 */
+	@ValidatePermission(role=Role.MANAGER)
 	@RequestMapping(value="/add",method= {RequestMethod.GET})
 	public ModelAndView preAddProblemType() {
 		ModelAndView mav=new ModelAndView();
@@ -65,6 +68,7 @@ public class AdminProblemTypeController {
 	 * @param typeId
 	 * @return
 	 */
+	@ValidatePermission(role=Role.MANAGER)
 	@RequestMapping(value="/update/{typeId}",method= {RequestMethod.GET})
 	public ModelAndView preUpdateProblemType(@PathVariable("typeId")Integer typeId) {
 		ModelAndView mav=new ModelAndView();
@@ -81,6 +85,7 @@ public class AdminProblemTypeController {
 	 * @param typeId
 	 * @param response
 	 */
+	@ValidatePermission(role=Role.MANAGER)
 	@RequestMapping("/remove/{typeId}")
 	public void removeProblemType(@PathVariable("typeId")Integer typeId,HttpServletResponse response){
 		Integer count=problemTypeService.removeProblemType(typeId);
@@ -96,6 +101,7 @@ public class AdminProblemTypeController {
 	 * @param problemType
 	 * @return
 	 */
+	@ValidatePermission(role=Role.MANAGER)
 	@RequestMapping(value="/save",method= {RequestMethod.POST})
 	public ModelAndView saveProblemType(ProblemType problemType) {
 		ModelAndView mav=new ModelAndView();

@@ -17,9 +17,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hhoj.judger.annotation.ValidatePermission;
 import com.hhoj.judger.entity.PageBean;
 import com.hhoj.judger.entity.Problem;
 import com.hhoj.judger.entity.ProblemType;
+import com.hhoj.judger.entity.Role;
 import com.hhoj.judger.entity.Submit;
 import com.hhoj.judger.service.ProblemService;
 import com.hhoj.judger.service.SubmitService;
@@ -38,6 +40,7 @@ public class AdminProblemController {
 	
 	private static Logger logger=LoggerFactory.getLogger(AdminProblemController.class);
 	
+	@ValidatePermission(role=Role.MANAGER)
 	@RequestMapping(value="/add",method= {RequestMethod.GET})
 	public ModelAndView preAdd() {
 		ModelAndView mav=new ModelAndView();
@@ -47,6 +50,7 @@ public class AdminProblemController {
 	}
 	
 
+	@ValidatePermission(role=Role.MANAGER)
 	@RequestMapping(value="/update/{pid}",method= {RequestMethod.GET})
 	public ModelAndView preUpdate(@PathVariable(value="pid")Integer pid) {
 		ModelAndView mav=new ModelAndView();
@@ -56,6 +60,8 @@ public class AdminProblemController {
 		mav.setViewName("manager");
 		return mav;
 	}
+	
+	
 	@RequestMapping("/list/{page}")
 	public ModelAndView list(Problem problem, @PathVariable(value = "page") Integer page, HttpServletRequest request) {
 		ModelAndView mav=new ModelAndView();
@@ -75,6 +81,7 @@ public class AdminProblemController {
 		return mav;
 	}
 	
+	@ValidatePermission(role=Role.MANAGER)
 	@RequestMapping(value="/save",method= {RequestMethod.POST})
 	public void addProblem(Problem problem,HttpServletResponse response,@RequestParam(value="typeId")String typeId) {
 		Date date=new Date();
@@ -98,6 +105,8 @@ public class AdminProblemController {
 		ResponseUtil.write(o, response);
 	}
 	
+	
+	@ValidatePermission(role=Role.MANAGER)
 	@RequestMapping("/remove/{pid}")
 	public void removeUser(@PathVariable("pid")Integer pid,HttpServletResponse response){
 		Integer count=problemService.removeProblem(pid);
@@ -107,6 +116,7 @@ public class AdminProblemController {
 		ResponseUtil.write(result, response);
 	}
 	
+	@ValidatePermission(role=Role.MANAGER)
 	@RequestMapping("/problem/submit")
 	public ModelAndView submit(Submit submit) {
 		ModelAndView mav=new ModelAndView();
@@ -116,6 +126,7 @@ public class AdminProblemController {
 		return mav;
 	}
 	
+	@ValidatePermission(role=Role.MANAGER)
 	@RequestMapping("/problem/update")
 	public ModelAndView update(Problem problem) {
 		ModelAndView mav=new ModelAndView();

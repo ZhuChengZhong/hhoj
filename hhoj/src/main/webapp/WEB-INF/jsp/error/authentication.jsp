@@ -36,7 +36,7 @@
   <div class="admin-content">
 
     <div class="am-cf am-padding">
-      <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">register</strong> / <small></small></div>
+      <div class="am-fl am-cf"><strong class="am-text-primary am-text-lg">Failure</strong> / <small></small></div>
     </div>
 
     <div class="am-g">

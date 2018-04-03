@@ -4,7 +4,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.hhoj.judger.mapper.SubmitMapper">
 
-<cache ></cache>
+<!-- <cache ></cache> -->
 
 <resultMap type="Submit" id="submitMap">
 	<id column="sid" property="sid"/>
@@ -44,6 +44,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	  			and result=#{submit.result}
 	  		</if>
 		</where>
+		 order by submitTime desc 
 		<if test="pageBean!=null">
 			limit #{pageBean.start},#{pageBean.size}
 		</if>

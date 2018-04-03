@@ -178,6 +178,7 @@ public class UserController {
 			String path=(String)request.getSession().getAttribute("redirect");
 			if(StringUtil.isNotEmpty(path)) {
 				mav.setViewName("redirect:"+path);
+				request.getSession().removeAttribute("redirect");
 			}else {
 				mav.setViewName("index");
 			}
@@ -222,13 +223,5 @@ public class UserController {
 		return mav;
 	}
 	
-	
-	@RequestMapping("/remove/{uid}")
-	public void removeUser(@PathVariable("uid")Integer uid,HttpServletResponse response){
-		Integer count=userService.removeUser(uid);
-		JSONObject result=new JSONObject();
-		result.put("success", true);
-		result.put("count", count);
-		ResponseUtil.write(result, response);
-	}
+
 }

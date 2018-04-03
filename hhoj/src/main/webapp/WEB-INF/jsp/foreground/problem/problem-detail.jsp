@@ -49,14 +49,14 @@
               <!-- 选择语言 -->  
               <div  class="problem_language">   
                    <select class="form-control" name="problem_language"  id="problem_language"> 
-                        <option value="1">C/C++</option>
-                        <option value="2">JAVA</option>
+                        <option value="1">JAVA</option>
+                        <option value="2">C/C++</option>
 
                  </select>
                  
               </div>
      <textarea class="form-control" cols="20" rows="15" id="problem_code"></textarea>
-     <button class="btn btn-default" onclick="create_submit(${problem.pid})" >提交</button><div><font color="red" id="error"></font></div>
+     <button class="btn btn-default" onclick="create_submit(${problem.pid})">提交</button><div><font color="red" id="error"></font></div>
  
    </div>
 
@@ -84,13 +84,18 @@ function create_submit(pid){
 		$.ajax({  
             async:false,   //使用同步的Ajax请求  
             type: "POST",  
-            url: url,  
+            url: url,
+            dataType:"json",
             data: {
             	   languageId:problem_language,
             	   code:problem_code
             	   },  
-            success: function(result){  
-            	window.location.href="/hhoj/submit/problem/"+pid+"/list/1";
+            success: function(result){
+            	if(result.success){
+            		window.location.href="/hhoj/submit/problem/"+pid+"/list/1";
+            	}else{
+            		window.location.href="/hhoj/user/login";            		
+            	}
             }  
         }); 
 	}else{

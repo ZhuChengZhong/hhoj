@@ -12,12 +12,20 @@ public class Contest implements Serializable{
 	private Integer contestId;
 	private String title;
 	private String desc;
+	private Integer joinNumber;
 	private Date startTime;
 	private Date endTime;
 	private Date startJoinTime;
 	private Date endJoinTime;
 	private String contestPassword;
 	private User initiator;
+	
+	public Integer getJoinNumber() {
+		return joinNumber;
+	}
+	public void setJoinNumber(Integer joinNumber) {
+		this.joinNumber = joinNumber;
+	}
 	public Integer getContestId() {
 		return contestId;
 	}

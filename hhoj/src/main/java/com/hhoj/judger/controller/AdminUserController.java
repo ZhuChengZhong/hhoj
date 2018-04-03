@@ -54,7 +54,7 @@ public class AdminUserController {
 		return mav;
 	}
 	
-	
+	@ValidatePermission(role=Role.ROOT)
 	@RequestMapping("/remove/{uid}")
 	public void removeUser(@PathVariable("uid")Integer uid,HttpServletResponse response){
 		Integer count=userService.removeUser(uid);

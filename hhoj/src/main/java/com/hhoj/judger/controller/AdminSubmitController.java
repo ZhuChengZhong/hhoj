@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hhoj.judger.annotation.ValidatePermission;
 import com.hhoj.judger.entity.PageBean;
 import com.hhoj.judger.entity.Problem;
+import com.hhoj.judger.entity.Role;
 import com.hhoj.judger.entity.Submit;
 import com.hhoj.judger.service.SubmitService;
 import com.hhoj.judger.util.PageUtil;
@@ -58,6 +60,7 @@ public class AdminSubmitController {
 		return mav;
 	}
 	
+	@ValidatePermission(role=Role.MANAGER)
 	@RequestMapping("/add")
 	public ModelAndView addSubmit(Submit submit) {
 		ModelAndView mav=new ModelAndView();
@@ -67,6 +70,7 @@ public class AdminSubmitController {
 		return mav;
 	}
 	
+	@ValidatePermission(role=Role.MANAGER)
 	@RequestMapping("/remove/{sid}")
 	public void removeSubmit(@PathVariable("sid")Integer sid,HttpServletResponse response){
 		Integer count=submitService.removeSubmit(sid);
@@ -78,6 +82,7 @@ public class AdminSubmitController {
 	}
 	
 	
+	@ValidatePermission(role=Role.MANAGER)
 	@RequestMapping("/update")
 	public ModelAndView update(Submit submit) {
 		ModelAndView mav=new ModelAndView();
