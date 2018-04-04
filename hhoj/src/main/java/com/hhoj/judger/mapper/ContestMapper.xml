@@ -16,24 +16,25 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<result column="startJoinTime" property="startJoinTime" javaType="java.util.Date" jdbcType="BIGINT"/>
 	<result column="endJoinTime" property="endJoinTime"  javaType="java.util.Date" jdbcType="BIGINT"/>
 	<result column="contestPassword" property="contestPassword" />
+	<result column="status" property="status"/>
 	<association property="initiator" column="initiator" select="com.hhoj.judger.mapper.UserMapper.findUserById"></association>
 	
 </resultMap>
 
 <sql id="fields">
- contestId,title,contestDesc,joinNumber,startTime,endTime,startJoinTime,endJoinTime,contestPassword,initiator
+ contestId,title,contestDesc,joinNumber,startTime,endTime,startJoinTime,endJoinTime,contestPassword,initiator,status
 </sql>
 	
-	<select id="findContests" resultMap="contestMap" >
+	<select id="findContests" resultMap="contestMap" parameterType="PageBean">
 	
 		select <include refid="fields"></include> from t_contest
 		
 		order by startJoinTime desc 
-		<if test="pageBean!=null">
-			limit #{pageBean.start},#{pageBean.size}
+		<if test="start!=null and size!=null">
+			limit #{start},#{size}
 		</if>
 	</select>
-    <select id="findContestById" parameterType="Integer" resultMap="problemMap"  >
+    <select id="findContestById" parameterType="Integer" resultMap="contestMap"  >
         select <include refid="fields"></include> from t_contest where contestId=#{contestId}  
     </select>
     
@@ -50,7 +51,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     	#{endTime,typeHandler=com.hhoj.judger.mapper.typehandler.DateToLongTypeHandler},
     	#{startJoinTime,typeHandler=com.hhoj.judger.mapper.typehandler.DateToLongTypeHandler},
     	#{endJoinTime,typeHandler=com.hhoj.judger.mapper.typehandler.DateToLongTypeHandler},
-    	#{contestPassword},#{initiator.uid})
+    	#{contestPassword},#{initiator.uid},#{status})
     </insert>
     
     <update id="updateContest" parameterType="Contest">
@@ -83,6 +84,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	    	</if>
 	    	<if test="initiator!=null and initiator.uid!=null ">
 	    		initiator=#{createTime,typeHandler=com.hhoj.judger.mapper.typehandler.DateToLongTypeHandler},
+	    	</if>
+	    	<if test="status!=null">
+	    		status=#{status},
 	    	</if>
     	</set>
     	

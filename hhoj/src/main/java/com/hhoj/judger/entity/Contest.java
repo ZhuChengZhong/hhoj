@@ -19,7 +19,14 @@ public class Contest implements Serializable{
 	private Date endJoinTime;
 	private String contestPassword;
 	private User initiator;
+	private Integer status;  //比赛状态 0 未开始 1 正在进行 2结束
 	
+	public Integer getStatus() {
+		return status;
+	}
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
 	public Integer getJoinNumber() {
 		return joinNumber;
 	}
