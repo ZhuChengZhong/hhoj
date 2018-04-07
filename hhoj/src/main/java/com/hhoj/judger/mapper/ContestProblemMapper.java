@@ -2,6 +2,8 @@ package com.hhoj.judger.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.hhoj.judger.entity.ContestProblem;
 
 /**
@@ -44,4 +46,13 @@ public interface ContestProblemMapper {
 	 * @return
 	 */
 	public List<ContestProblem> findContestProblems(Integer contestId);
+	
+	/**
+	 * 查找竞赛试题
+	 * @param pid
+	 * @param contestId
+	 * @return
+	 */
+	public ContestProblem findContestProblemByPidAndContestId(
+			@Param("pid")Integer pid,@Param("contestId")Integer contestId);
 }

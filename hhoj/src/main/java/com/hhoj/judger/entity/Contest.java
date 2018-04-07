@@ -14,7 +14,7 @@ public class Contest implements Serializable{
 	private String desc;
 	private Integer joinNumber;
 	private Date startTime;
-	private Date endTime;
+	private Integer timeLimit;
 	private Date startJoinTime;
 	private Date endJoinTime;
 	private String contestPassword;
@@ -57,11 +57,12 @@ public class Contest implements Serializable{
 	public void setStartTime(Date startTime) {
 		this.startTime = startTime;
 	}
-	public Date getEndTime() {
-		return endTime;
+	
+	public Integer getTimeLimit() {
+		return timeLimit;
 	}
-	public void setEndTime(Date endTime) {
-		this.endTime = endTime;
+	public void setTimeLimit(Integer timeLimit) {
+		this.timeLimit = timeLimit;
 	}
 	public Date getStartJoinTime() {
 		return startJoinTime;
@@ -89,9 +90,11 @@ public class Contest implements Serializable{
 	}
 	@Override
 	public String toString() {
-		return "Contest [contestId=" + contestId + ", title=" + title + ", desc=" + desc + ", startTime=" + startTime
-				+ ", endTime=" + endTime + ", startJoinTime=" + startJoinTime + ", endJoinTime=" + endJoinTime
-				+ ", contestPassword=" + contestPassword + ", initiator=" + initiator + "]";
+		return "Contest [contestId=" + contestId + ", title=" + title + ", desc=" + desc + ", joinNumber=" + joinNumber
+				+ ", startTime=" + startTime + ", timeLimit=" + timeLimit + ", startJoinTime=" + startJoinTime
+				+ ", endJoinTime=" + endJoinTime + ", contestPassword=" + contestPassword + ", initiator=" + initiator
+				+ ", status=" + status + "]";
 	}
+	
 	
 }

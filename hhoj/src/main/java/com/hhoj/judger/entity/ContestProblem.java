@@ -1,11 +1,13 @@
 package com.hhoj.judger.entity;
 
+import java.io.Serializable;
+
 /**
  * 竞赛试题类
  * @author zhu
  *
  */
-public class ContestProblem {
+public class ContestProblem implements Serializable{
 	/**
 	 * id
 	 */
@@ -19,9 +21,9 @@ public class ContestProblem {
 	 */
 	private Integer contestId;
 	/**
-	 * 试题的提交实体
+	 * 试题的提交次数
 	 */
-	private Submit submit;
+	private Integer submited;
 	/**
 	 * 该竞赛试题通过次数
 	 */
@@ -44,11 +46,12 @@ public class ContestProblem {
 	public void setContestId(Integer contestId) {
 		this.contestId = contestId;
 	}
-	public Submit getSubmit() {
-		return submit;
+	
+	public Integer getSubmited() {
+		return submited;
 	}
-	public void setSubmit(Submit submit) {
-		this.submit = submit;
+	public void setSubmited(Integer submited) {
+		this.submited = submited;
 	}
 	public Integer getAccepted() {
 		return accepted;

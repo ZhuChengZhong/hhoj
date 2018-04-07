@@ -3,6 +3,7 @@ package com.hhoj.judger.service;
 import java.util.List;
 
 import com.hhoj.judger.entity.Contest;
+import com.hhoj.judger.entity.ContestProblem;
 import com.hhoj.judger.entity.PageBean;
 
 public interface ContestService {
@@ -41,4 +42,33 @@ public interface ContestService {
 	 * @return
 	 */
 	public Integer findCount();
+	
+	/**
+	 * 获取竞赛试题
+	 * @param contestId
+	 * @return
+	 */
+	public List<ContestProblem> findContestProblems(Integer contestId);
+	
+	/**
+	 * 添加竞赛试题
+	 * @param contestProblem
+	 * @return
+	 */
+	public Integer addContestProblem(ContestProblem contestProblem);
+	
+	
+	/**
+	 * 查找竞赛试题
+	 * @param pid
+	 * @param contestId
+	 * @return
+	 */
+	public ContestProblem findContestProblemByPidAndContestId(Integer pid,Integer contestId);
+	/**
+	 * 删除竞赛试题
+	 * @param cpId
+	 * @return
+	 */
+	public Integer removeContestProblem(Integer cpId);
 }

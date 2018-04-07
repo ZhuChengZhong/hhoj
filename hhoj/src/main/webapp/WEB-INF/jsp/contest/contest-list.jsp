@@ -20,7 +20,7 @@
         <div class="am-fl am-cf">
           <div class="am-btn-toolbar am-fl">
             <div class="am-btn-group am-btn-group-xs">
-              <button type="button" class="am-btn am-btn-default" onclick="pre_add()"><span class="am-icon-plus"></span> 新增</button>
+              <button type="button" class="am-btn am-btn-default" onclick="pre_add_contest()"><span class="am-icon-plus"></span> 新增</button>
               <button type="button" class="am-btn am-btn-default" ><span class="am-icon-save"></span> 保存</button>
               <button type="button" class="am-btn am-btn-default"><span class="am-icon-archive"></span> 审核</button>
               <button type="button" class="am-btn am-btn-default"><span class="am-icon-trash-o"></span> 删除</button>
@@ -53,7 +53,7 @@
                 <th class="table-title">标题</th>
                 <th class="table-type">参加人数</th>
                 <th class="table-author">开始时间</th>
-                <th class="table-date">结束时间</th>
+                <th class="table-date">比赛时长(分)</th>
                 <th class="table-set">报名时间</th>
                 <th class="table-set">报名截止</th>
                 <th class="table-set">比赛创建人</th>
@@ -68,7 +68,7 @@
               <td>${contest.title}</td>
               <td>${contest.joinNumber}</td>
               <td><fmt:formatDate value="${contest.startTime}" pattern="yyyy-MM-dd hh:mm:ss"/></td>
-              <td><fmt:formatDate value="${contest.endTime}" pattern="yyyy-MM-dd hh:mm:ss"/></td>
+              <td>${contest.timeLimit}</td>
                <td><fmt:formatDate value="${contest.startJoinTime}" pattern="yyyy-MM-dd hh:mm:ss"/></td>
                 <td><fmt:formatDate value="${contest.endJoinTime}" pattern="yyyy-MM-dd hh:mm:ss"/></td>             
                <td>${contest.initiator.userName}</td>  
@@ -76,9 +76,9 @@
               <td>
                 <div class="am-btn-toolbar">
                   <div class="am-btn-group am-btn-group-xs">
-                    <button type="button" class="am-btn am-btn-default"  onclick="updateUser(${contest.contestId})"><span class="am-icon-save"></span> 编辑</button>
-                     <button type="button" class="am-btn am-btn-default"  onclick="test_point_list(${contest.contestId})"><span class="am-icon-save"></span> 测试用例</button>
-                    <button class="am-btn am-btn-default am-btn-xs" onclick="removeUser(${contest.contestId})"><span class="am-icon-trash-o"></span>删除</button>
+                    <button type="button" class="am-btn am-btn-default"  onclick="update_contest(${contest.contestId})"><span class="am-icon-save"></span> 编辑</button>
+                     <button type="button" class="am-btn am-btn-default"  onclick="contest_problem_list(${contest.contestId})"><span class="am-icon-save"></span>题目管理</button>
+                    <button class="am-btn am-btn-default am-btn-xs" onclick="remove_contest(${contest.contestId})"><span class="am-icon-trash-o"></span>删除</button>
                   </div>
                 </div>
               </td>
@@ -106,13 +106,9 @@
 </body>
 
 <script type="text/javascript">
-	function removeUser(pid) {
-		if(confirm("你确定要删除该题目吗？")){
-			var url="/hhoj/manager/problem/remove/"+pid;
-			/* $.post(url, {}, function(result){
-				
-				//document.location.reload();
-			}); */
+	function remove_contest(contest_id) {
+		if(confirm("你确定要删除该竞赛吗？")){
+			var url="/hhoj/manager/contest/remove/"+contest_id;
 			 $.ajax({  
                 async:false,   //使用同步的Ajax请求  
                 type: "POST",  
@@ -127,15 +123,15 @@
 	
 	
 
-function pre_add(){
+function pre_add_contest(){
 	window.location.href="/hhoj/manager/contest/add";
 }
  
-function update_contest(pid){
-	window.location.href="/hhoj/manager/contest/update/"+pid;
+function update_contest(contest_id){
+	window.location.href="/hhoj/manager/contest/update/"+contest_id;
 }
-function contest_list(pid){
-	window.location.href="/hhoj/manager/contest/list/"+pid;
+function contest_problem_list(contest_id){
+	window.location.href="/hhoj/manager/contest/"+contest_id+"/problem/list";
 }
 </script>
 </html>
