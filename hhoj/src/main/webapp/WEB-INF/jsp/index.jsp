@@ -66,7 +66,7 @@
       <ul class="nav navbar-nav">
         <li ><a href="index.html"><span class="am-icon-home"></span>练习场 </a></li>
         <li><a href="admin-problemType.html"><span class="am-icon-pencil-square-o"></span>分类</a></li>
-        <li><a href="admin-contest.html"><span class="am-icon-th"></span>竞赛</a></li>
+        <li><a href="${pageContext.request.contextPath }/contest/list/1"><span class="am-icon-th"></span>竞赛</a></li>
         <li><a href="${pageContext.request.contextPath }/problem/list/1"><span class="am-icon-puzzle-piece">测试</a></li>
         <li><a href="#"><span class="am-icon-file"></span>运行</a></li>
         <c:if test="currentUser!=null&&currentUser.role>1">

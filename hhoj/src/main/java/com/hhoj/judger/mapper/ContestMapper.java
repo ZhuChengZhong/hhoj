@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.hhoj.judger.entity.Contest;
 import com.hhoj.judger.entity.PageBean;
+import com.hhoj.judger.entity.User;
 
 /**
  * 竞赛类 映射器
@@ -46,4 +47,11 @@ public interface ContestMapper {
 	 * @return
 	 */
 	public Integer findCount();
+	
+	/**
+	 * 查找某个用户参加的所有比赛
+	 * @param uid
+	 * @return
+	 */
+	public List<User> findContestsByUserId(Integer uid);
 }

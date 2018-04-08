@@ -2,9 +2,12 @@ package com.hhoj.judger.service;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.hhoj.judger.entity.Contest;
 import com.hhoj.judger.entity.ContestProblem;
 import com.hhoj.judger.entity.PageBean;
+import com.hhoj.judger.entity.User;
 
 public interface ContestService {
 	/**
@@ -71,4 +74,34 @@ public interface ContestService {
 	 * @return
 	 */
 	public Integer removeContestProblem(Integer cpId);
+	/**
+	 * 查找某个用户参加的所有比赛
+	 * @param uid
+	 * @return
+	 */
+	public List<User> findContestsByUserId(Integer uid);
+	
+	/**
+	 * 报名比赛
+	 * @param uid
+	 * @param contestId
+	 */
+	public Integer joinContest(Integer uid,Integer contestId);
+	
+	/**
+	 * 退出比赛
+	 * @param uid
+	 * @param contestId
+	 * @return
+	 */
+	public Integer exitContest(Integer uid,Integer contestId);
+	
+	/**
+	 * 查找某比赛是否有某用户
+	 * @param uid
+	 * @param contestId
+	 * @return
+	 */
+	public boolean existUser(Integer uid,Integer contestId);
+	
 }

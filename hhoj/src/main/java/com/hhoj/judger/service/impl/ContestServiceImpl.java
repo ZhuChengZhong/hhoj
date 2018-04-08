@@ -4,13 +4,17 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.hhoj.judger.entity.Contest;
 import com.hhoj.judger.entity.ContestProblem;
 import com.hhoj.judger.entity.PageBean;
 import com.hhoj.judger.entity.Problem;
+import com.hhoj.judger.entity.User;
 import com.hhoj.judger.mapper.ContestMapper;
 import com.hhoj.judger.mapper.ContestProblemMapper;
+import com.hhoj.judger.mapper.ContestUserMapper;
 import com.hhoj.judger.service.ContestService;
 import com.hhoj.judger.service.ProblemService;
 
@@ -22,6 +26,9 @@ public class ContestServiceImpl implements ContestService{
 	
 	@Autowired
 	private ContestProblemMapper contestProblemMapper;
+	
+	@Autowired
+	private ContestUserMapper contestUserMapper;
 	
 	@Autowired
 	private ProblemService problemService;
@@ -118,6 +125,62 @@ public class ContestServiceImpl implements ContestService{
 			contestProblem=contestProblemMapper.findContestProblemByPidAndContestId(pid, contestId);
 		}
 		return contestProblem;
+	}
+
+	@Override
+	public List<User> findContestsByUserId(Integer uid) {
+		List<User> list=null;
+		if(uid!=null) {
+			list=contestMapper.findContestsByUserId(uid);
+		}
+		return list;
+	}
+
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED)
+	public Integer joinContest(Integer uid, Integer contestId) {
+		if(uid==null||contestId==null) {
+			return -1;
+		}
+		if(this.existUser(uid, contestId)) {
+			return -1;
+		}
+		Contest contest=contestMapper.findContestById(contestId);
+		if(contest==null) {
+			return -1;
+		}
+		Contest newContest=new Contest();
+		newContest.setJoinNumber(contest.getJoinNumber()+1);
+		contestMapper.updateContest(newContest);
+		return contestUserMapper.joinContest(uid, contestId);
+	}
+
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED)
+	public Integer exitContest(Integer uid, Integer contestId) {
+		if(uid==null||contestId==null) {
+			return -1;
+		}
+		
+		if(!existUser(uid, contestId)) {
+			return -1;
+		}
+		Contest newContest=new Contest();
+		Contest contest=contestMapper.findContestById(contestId);
+		if(contest==null) {
+			return -1;
+		}
+		newContest.setJoinNumber(contest.getJoinNumber()-1);
+		contestMapper.updateContest(newContest);
+		return contestUserMapper.exitContest(uid, contestId);
+	}
+
+	@Override
+	public boolean existUser(Integer uid, Integer contestId) {
+		if(uid==null||contestId==null) {
+			return false;
+		}
+		return contestUserMapper.existUser(uid, contestId)>0?true:false;
 	}
 
 }

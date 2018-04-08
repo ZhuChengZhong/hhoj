@@ -61,4 +61,11 @@ public interface UserMapper {
 	 * @return
 	 */
 	public User findUserByEmail(String email);
+	
+	/**
+	 * 查找某个比赛的所有用户
+	 * @param contestId
+	 * @return
+	 */
+	public List<User> findUsersByContestId(Integer contestId);
 }

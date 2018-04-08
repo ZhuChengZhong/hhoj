@@ -124,4 +124,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
    		select <include refid="info"></include> from t_user
    		where  email=#{userNameOrEmail}
    </select>
+   <select id="findUsersByContestId" resultMap="userMap" parameterType="Integer">
+   		select <include refid="info"></include> from t_user
+   		where  uid in (select uid from t_contest_user where contestId=#{contestId})
+   </select>
 </mapper>
