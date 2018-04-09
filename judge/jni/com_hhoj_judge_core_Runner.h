@@ -2,8 +2,8 @@
 #include <jni.h>
 /* Header for class com_hhoj_judge_core_Runner */
 
-#ifndef _Included_com_hhoj_judge_core_Runner
-#define _Included_com_hhoj_judge_core_Runner
+#ifndef _Included_com_hhoj_judger_core_Runner
+#define _Included_com_hhoj_judger_core_Runner
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -12,7 +12,7 @@ extern "C" {
  * Method:    runCommand
  * Signature: (Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;II)Ljava/util/Map;
  */
-JNIEXPORT jobject JNICALL Java_com_hhoj_judge_core_Runner_runCommand
+JNIEXPORT jobject JNICALL Java_com_hhoj_judger_core_Runner_runCommand
   (JNIEnv *, jobject, jstring, jstring, jstring, jstring, jstring, jint, jint);
 
 #ifdef __cplusplus

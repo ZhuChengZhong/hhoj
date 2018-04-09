@@ -10,10 +10,10 @@
 		<setting name="defaultStatementTimeout" value="25" />
 	</settings>
 	<typeAliases>
-		<typeAlias type="com.hhoj.judge.entity.Submit" />
-		<typeAlias type="com.hhoj.judge.entity.Language" />
-		<typeAlias type="com.hhoj.judge.entity.TestPoint" />
-		<typeAlias type="com.hhoj.judge.entity.Problem" />
+		<typeAlias type="com.hhoj.judger.entity.Submit" />
+		<typeAlias type="com.hhoj.judger.entity.Language" />
+		<typeAlias type="com.hhoj.judger.entity.TestPoint" />
+		<typeAlias type="com.hhoj.judger.entity.Problem" />
 	</typeAliases>
 
 	<!-- 对事务的管理和连接池的配置 -->
@@ -42,10 +42,10 @@
 	<!-- mapping 文件路径配置 -->
 
 	<mappers>
-		<mapper resource="com/hhoj/judge/mapper/SubmitMapper.xml" />
-		<mapper resource="com/hhoj/judge/mapper/LanguageMapper.xml" />
-		<mapper resource="com/hhoj/judge/mapper/ProblemMapper.xml" />
-		<mapper resource="com/hhoj/judge/mapper/TestPointMapper.xml" />
+		<mapper resource="com/hhoj/judger/mapper/SubmitMapper.xml" />
+		<mapper resource="com/hhoj/judger/mapper/LanguageMapper.xml" />
+		<mapper resource="com/hhoj/judger/mapper/ProblemMapper.xml" />
+		<mapper resource="com/hhoj/judger/mapper/TestPointMapper.xml" />
 	</mappers>
 
 </configuration>

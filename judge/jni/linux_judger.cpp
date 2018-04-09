@@ -59,7 +59,7 @@ int killProcess(pid_t&);
  * @param  memoryLimit     - 程序执行内存限制(KB, 0为不限制)
  * @return 一个包含运行结果的Map<String, Object>对象
  */
-JNIEXPORT jobject JNICALL Java_com_hhoj_judge_core_Runner_runCommand(
+JNIEXPORT jobject JNICALL Java_com_hhoj_judger_core_Runner_runCommand(
     JNIEnv* jniEnv, jobject selfReference, jstring jCommandLine, jstring jUsername,
     jstring jPassword, jstring jInputFilePath, jstring jOutputFilePath, jint timeLimit, 
     jint memoryLimit) {
