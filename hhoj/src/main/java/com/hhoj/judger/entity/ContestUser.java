@@ -9,4 +9,7 @@ public class ContestUser {
 	private Integer accepted;
 	private Integer submited;
 	private Integer contestId;
+	private Integer useTotalTime;
+	private Integer useTotalMemary;
+	
 }
