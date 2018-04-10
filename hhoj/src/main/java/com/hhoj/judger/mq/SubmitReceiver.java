@@ -35,7 +35,7 @@ public class SubmitReceiver {
 	private MessageConsumer consumer = null;
 	private Connection connection=null;
 	private PooledConnectionFactory factory;
-	public SubmitReceiver() {
+	public SubmitReceiver() { 
 		ActiveMQConnectionFactory f=new ActiveMQConnectionFactory(user, password, url);
 		factory = new PooledConnectionFactory(f);
 	}

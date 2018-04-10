@@ -81,7 +81,7 @@ JNIEXPORT jobject JNICALL Java_com_hhoj_judger_core_Runner_runCommand(
     }
     // Setup I/O Redirection for Child Process
     if ( pid == 0 ) {
-        setupRunUser();
+        //setupRunUser();
         setupIoRedirection(inputFilePath, outputFilePath);
     }
     exitCode = runProcess(pid, sigset, commandLine, timeLimit, memoryLimit, usedTime, usedMemory);
@@ -140,15 +140,16 @@ void setupIoRedirection(
 }
 
 void setupRunUser() {
-    while ( setgid(1536) != 0 ) { 
+	std::cout <<  "set run user." << std::endl;
+    while ( setgid(1000) != 0 ) {
         std::cout <<  "[WARN] setgid(1000) failed." << std::endl;
         sleep(1); 
     }
-    while ( setuid(1536) != 0 ) { 
+    while ( setuid(1000) != 0 ) {
         std::cout <<  "[WARN] setuid(1000) failed." << std::endl;
         sleep(1); 
     }
-    while ( setresuid(1536, 1536, 1536) != 0 ) {
+    while ( setresuid(1000, 1000, 1000) != 0 ) {
         std::cout <<  "[WARN] setresuid(1000, 1000, 1000) failed." << std::endl;
         sleep(1);
     }

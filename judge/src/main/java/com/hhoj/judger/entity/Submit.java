@@ -12,9 +12,9 @@ public class Submit implements Serializable{
 	// id
 	private Integer sid;
 	//提交用户
-	private User user;
+	private transient User user;
 	//被提交试题
-	private Problem problem;
+	private transient Problem problem;
 	//运行结果
 	private String result;
 	//运行使用时间
@@ -26,7 +26,7 @@ public class Submit implements Serializable{
 	//提交时间
 	private Date submitTime;
 	//使用语言
-	private Language language;
+	private transient Language language;
 	//记录该提交是否被评测过    1 已评测 0 未评测
 	private Integer judged;
 	
@@ -99,6 +99,20 @@ public class Submit implements Serializable{
 		return "Submit [sid=" + sid + ", user=" + user + ", problem=" + problem + ", result=" + result + ", useTime="
 				+ useTime + ", useMemary=" + useMemary + ", code=" + code + ", submitTime=" + submitTime + ", language="
 				+ language + ", judged=" + judged + "]";
+	}
+	public Submit(User user, Problem problem, String result, Integer useTime,
+			Integer useMemary, String code, Date submitTime, Language language,
+			Integer judged) {
+		super();
+		this.user = user;
+		this.problem = problem;
+		this.result = result;
+		this.useTime = useTime;
+		this.useMemary = useMemary;
+		this.code = code;
+		this.submitTime = submitTime;
+		this.language = language;
+		this.judged = judged;
 	}
 	
 }

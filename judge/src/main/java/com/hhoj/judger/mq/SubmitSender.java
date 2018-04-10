@@ -29,7 +29,7 @@ public class SubmitSender {
 	private static String user = ActiveMQConnection.DEFAULT_USER;
 	private static String password = ActiveMQConnection.DEFAULT_PASSWORD;
 	private static String url = PropertiesUtil.getParam("activemq.url");
-	private static String subject = PropertiesUtil.getParam("activemq.tojudgequeue");
+	private static String subject = PropertiesUtil.getParam("activemq.towebqueue");
 
 	private PooledConnectionFactory factory;
 	public SubmitSender() {
@@ -60,7 +60,7 @@ public class SubmitSender {
 			producer.send(objectMessage);
 			session.commit();
 		} catch (JMSException e) {
-			logger.error("消息链接创建失败");
+			logger.error("发送判定结果异常");
 		} finally {
 			this.close(session, producer,connection);
 		}

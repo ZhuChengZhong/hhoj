@@ -19,13 +19,11 @@ public class SubmitMessageListener implements MessageListener{
 	
 	private static Logger logger = LoggerFactory.getLogger(SubmitMessageListener.class);
 
-	private SubmitReceiver receiver;
 	
 	private BlockingQueue<Integer>queue;
 	
-	public SubmitMessageListener(BlockingQueue<Integer>queue,SubmitReceiver receiver) {
+	public SubmitMessageListener(BlockingQueue<Integer>queue) {
 		this.queue=queue;
-		this.receiver=receiver;
 	}
 	public void onMessage(Message message) {
 		try {
@@ -34,10 +32,10 @@ public class SubmitMessageListener implements MessageListener{
 			if(submitId!=null) {
 				queue.put(submitId);
 			}
-			receiver.commit();
 			logger.info("成功从消息队列中获取submitId:"+submitId);
 		}catch(Exception e) {
-			logger.error("从mapMessage获取submitId失败");
+			logger.error("从mapMessage获取submitId失败",e);
+			
 		}
 	}
 	

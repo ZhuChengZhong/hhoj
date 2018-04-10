@@ -32,7 +32,7 @@ public class JudgeBoot {
 		judger.start();
 		// 创建消息接收者用于从服务器中获取需要判断的提交
 		SubmitReceiver receiver = new SubmitReceiver();
-		receiver.receiveSubmit(new SubmitMessageListener(submitIdQueue,receiver));
+		receiver.receiveSubmit(new SubmitMessageListener(submitIdQueue));
 		// 等待判题服务器关闭
 		judger.join();
 		submitSender.stop();

@@ -57,6 +57,7 @@ public class Judger implements Runnable{
 			handler.handlerSubmit(submit, pointList);
 			logger.info("判定成功: submit id:"+submit.getSid());
 			// 将判断后的提交发送给服务器
+			logger.info("将判定结果发送给服务器: submit id:"+submit.getSid());
 			submitSender.sendSubmit(submit);
 		} catch (HandlerException e) {
 			logger.error("判定失败: submit id："+submit.getSid(),e);
