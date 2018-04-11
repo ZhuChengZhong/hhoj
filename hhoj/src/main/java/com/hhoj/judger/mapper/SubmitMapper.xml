@@ -13,6 +13,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<result column="useMemary" property="useMemary"/>
 	<result column="code" property="code"/>
 	<result column="judged" property="judged"/>
+	<result column="isContest" property="isContest"/>
 	<result column="submitTime" property="submitTime" typeHandler="com.hhoj.judger.mapper.typehandler.DateToLongTypeHandler"/>
 	<association property="user" column="uid"   select="com.hhoj.judger.mapper.UserMapper.findUserById"></association>
 	<association property="problem" column="pid" select="com.hhoj.judger.mapper.ProblemMapper.findProblemById"></association>
@@ -20,7 +21,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 </resultMap>
 
 <sql id="fields">
- sid,uid,pid,result,useTime,useMemary,code,submitTime,languageId,judged
+ sid,uid,pid,result,useTime,useMemary,code,submitTime,languageId,judged,isContest
 </sql>
 	
 	<select id="findSubmits"  resultMap="submitMap" >
@@ -42,6 +43,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	  		</if>
 	  		<if test="submit.result!=null and submit.result!=''">
 	  			and result=#{submit.result}
+	  		</if>
+	  		<if test="submit.isContest!=null">
+	  			and isContest=#{submit.isContest}
 	  		</if>
 		</where>
 		 order by submitTime desc 
@@ -73,11 +77,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	  		<if test="result!=null and result!=''">
 	  			and result=#{result}
 	  		</if>
+	  		<if test="submit.isContest!=null">
+	  			and isContest=#{submit.isContest}
+	  		</if>
 		</where>
     </select>
     
     <insert id="addSubmit" parameterType="Submit" useGeneratedKeys="true" keyProperty="sid">
-    	insert into t_submit ( <include refid="fields"></include> ) values (null,#{user.uid},#{problem.pid},#{result},#{useTime},#{useMemary},#{code},#{submitTime,typeHandler=com.hhoj.judger.mapper.typehandler.DateToLongTypeHandler},#{language.languageId},#{judged})
+    	insert into t_submit ( <include refid="fields"></include> ) values (null,#{user.uid},#{problem.pid},#{result},#{useTime},#{useMemary},#{code},#{submitTime,typeHandler=com.hhoj.judger.mapper.typehandler.DateToLongTypeHandler},#{language.languageId},#{judged},#{isContest})
     </insert>
     
     <update id="updateSubmit" parameterType="Submit">

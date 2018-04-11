@@ -20,6 +20,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<result column="sign" property="sign"/>
 </resultMap>
 
+<resultMap type="ContestUser" id="contestUserMap">
+	<id property="cuId" column="cuId"/>
+	<result property="solved"  column="solved"/>
+	<result property="contestId" column="contestId"/>
+	<result property="useTotalTime" column="useTotalTime"/>
+	<result property="useTotalMemary" column="useTotalMemary"/>
+	<association property="user" column="uid" select="com.hhoj.judger.mapper.UserMapper.findUserById"></association>
+</resultMap>
 <sql id="info">
  uid,userName,password,email,role,accepted,submited,solved,registTime,lastLoginTime,sign
 </sql>
@@ -124,8 +132,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
    		select <include refid="info"></include> from t_user
    		where  email=#{userNameOrEmail}
    </select>
-   <select id="findUsersByContestId" resultMap="userMap" parameterType="Integer">
-   		select <include refid="info"></include> from t_user
-   		where  uid in (select uid from t_contest_user where contestId=#{contestId})
+   <select id="findUsersByContestId" resultMap="contestUserMap" parameterType="Integer">
+   		select cuId,uid,contestId,solved,useTotalTime,useTotalMemary from t_contest_user
+   		where  contestId=#{contestId}
    </select>
 </mapper>

@@ -2,6 +2,7 @@ package com.hhoj.judger.service;
 
 import java.util.List;
 
+import com.hhoj.judger.entity.ContestUser;
 import com.hhoj.judger.entity.PageBean;
 import com.hhoj.judger.entity.User;
 
@@ -73,4 +74,10 @@ public interface UserService {
 	 */
 	public User findUserByUid(Integer uid);
 	
+	/**
+	 * 查找某个比赛的所有用户
+	 * @param contestId
+	 * @return
+	 */
+	public List<ContestUser> findUsersByContestId(Integer contestId);
 }

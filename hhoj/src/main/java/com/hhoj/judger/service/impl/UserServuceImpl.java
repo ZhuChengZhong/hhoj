@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.hhoj.judger.entity.ContestUser;
 import com.hhoj.judger.entity.PageBean;
 import com.hhoj.judger.entity.User;
 import com.hhoj.judger.mapper.UserMapper;
@@ -88,6 +89,15 @@ public class UserServuceImpl implements UserService{
 			return null;
 		}
 		return userMapper.findUserById(uid);
+	}
+
+
+	@Override
+	public List<ContestUser> findUsersByContestId(Integer contestId) {
+		if(contestId==null) {
+			return null;
+		}
+		return userMapper.findUsersByContestId(contestId);
 	}
 
 

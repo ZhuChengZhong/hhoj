@@ -1,6 +1,5 @@
 package com.hhoj.judger.controller;
 
-import java.text.ParseException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,13 +17,14 @@ import com.alibaba.fastjson.JSONObject;
 import com.hhoj.judger.annotation.ValidatePermission;
 import com.hhoj.judger.entity.Contest;
 import com.hhoj.judger.entity.ContestProblem;
+import com.hhoj.judger.entity.ContestUser;
 import com.hhoj.judger.entity.PageBean;
 import com.hhoj.judger.entity.Problem;
 import com.hhoj.judger.entity.Role;
 import com.hhoj.judger.entity.User;
 import com.hhoj.judger.service.ContestService;
 import com.hhoj.judger.service.ProblemService;
-import com.hhoj.judger.util.DateUtil;
+import com.hhoj.judger.service.UserService;
 import com.hhoj.judger.util.PageUtil;
 import com.hhoj.judger.util.ResponseUtil;
 
@@ -37,6 +37,9 @@ public class ContestController {
 	
 	@Autowired
 	private ProblemService problemService;
+	
+	@Autowired
+	private UserService userService;
 	/**
 	 * 获取竞赛列表
 	 * @param page
@@ -56,9 +59,13 @@ public class ContestController {
 		//如何当前用户已登录则查询此用户每个比赛的报名状态
 		if(currentUser!=null) {
 			list.forEach((contest)->{
-				if(contest.getUsers().contains(currentUser)) {
-					//如果包含说明此用户已经报名该比赛
-					contest.setUserStatus(1);
+				List<ContestUser>contestUsers=contest.getContestUsers();
+				for(int i=0;i<contestUsers.size();i++) {
+					if(contestUsers.get(i).getUser().getUid()==currentUser.getUid()) {
+						//如果包含说明此用户已经报名该比赛
+						contest.setUserStatus(1);
+						break;
+					}
 				}
 			});
 		}
@@ -129,6 +136,7 @@ public class ContestController {
 		mav.setViewName("manager");
 		return mav;
 	}
+	
 	
 	
 	/**
