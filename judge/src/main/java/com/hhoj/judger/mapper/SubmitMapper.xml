@@ -10,12 +10,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<result column="useMemary" property="useMemary"/>
 		<result column="code" property="code"/>
 		<result column="judged" property="judged"/>
+		<result column="isContest" property="isContest"/>
 		<!-- <association property="user" column="uid"   select="com.hhoj.judger.mapper.UserMapper.findUserById"></association> -->
 		<association property="problem" column="pid" select="com.hhoj.judger.mapper.ProblemMapper.findProblemById"></association>
 		<association property="language" column="languageId" select="com.hhoj.judger.mapper.LanguageMapper.findLanguageById"></association>
 	</resultMap>
     <select id="findById" parameterType="Integer" resultMap="submitMap">
-        select sid,pid,result,useTime,useMemary,code,languageId,judged from t_submit where sid=#{id}
+        select sid,pid,result,useTime,useMemary,code,languageId,judged,isContest from t_submit where sid=#{id}
     </select>
     <select id="count" resultType="Integer">
     	select count(*) from t_submit;

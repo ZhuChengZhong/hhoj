@@ -32,6 +32,7 @@ public class SubmitMessageListener implements MessageListener{
 			if(submitId!=null) {
 				queue.put(submitId);
 			}
+			mapMessage.acknowledge();
 			logger.info("成功从消息队列中获取submitId:"+submitId);
 		}catch(Exception e) {
 			logger.error("从mapMessage获取submitId失败",e);

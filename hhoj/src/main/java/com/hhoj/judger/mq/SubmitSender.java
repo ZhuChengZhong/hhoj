@@ -51,13 +51,13 @@ public class SubmitSender {
 		try {
 			connection = factory.createConnection();
 			connection.start();
-			session = connection.createSession(true, Session.AUTO_ACKNOWLEDGE);
+			session = connection.createSession(false, Session.CLIENT_ACKNOWLEDGE);
 			Destination destination = session.createQueue(subject);
 			producer = session.createProducer(destination);
 			MapMessage mapMessage = session.createMapMessage();
 			mapMessage.setInt("submitId", submitId);
 			producer.send(mapMessage);
-			session.commit();
+			mapMessage.acknowledge();
 		} catch (JMSException e) {
 			logger.error("消息链接创建失败");
 		} finally {

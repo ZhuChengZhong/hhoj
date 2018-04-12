@@ -77,8 +77,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	  		<if test="result!=null and result!=''">
 	  			and result=#{result}
 	  		</if>
-	  		<if test="submit.isContest!=null">
-	  			and isContest=#{submit.isContest}
+	  		<if test="isContest!=null">
+	  			and isContest=#{isContest}
 	  		</if>
 		</where>
     </select>

@@ -28,6 +28,7 @@ public class SubmitMessageListener implements MessageListener{
 		ObjectMessage objectMessage=(ObjectMessage)message;
 		try {
 			Object o=objectMessage.getObject();
+			objectMessage.acknowledge();
 			if(o instanceof Submit) {
 				Submit submit=(Submit)o;
 				submitService.updateSubmit(submit);

@@ -50,11 +50,10 @@ public class SubmitReceiver {
 		try {
 			connection = factory.createConnection();
 			connection.start();
-			session = connection.createSession(true, Session.AUTO_ACKNOWLEDGE);
+			session = connection.createSession(false, Session.CLIENT_ACKNOWLEDGE);
 			Destination destination = session.createQueue(subject);
 			consumer = session.createConsumer(destination);
 			ObjectMessage objectMessage = session.createObjectMessage();
-			
 			consumer.setMessageListener(listener);
 		} catch (JMSException e) {
 			logger.error("消息链接创建失败");

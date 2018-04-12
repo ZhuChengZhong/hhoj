@@ -52,13 +52,13 @@ public class SubmitSender {
 		try {
 			connection = factory.createConnection();
 			connection.start();
-			session = connection.createSession(true, Session.AUTO_ACKNOWLEDGE);
+			session = connection.createSession(false, Session.CLIENT_ACKNOWLEDGE);
 			Destination destination = session.createQueue(subject);
 			producer = session.createProducer(destination);
 			ObjectMessage objectMessage = session.createObjectMessage();
 			objectMessage.setObject(submit);
 			producer.send(objectMessage);
-			session.commit();
+			objectMessage.acknowledge();
 		} catch (JMSException e) {
 			logger.error("发送判定结果异常");
 		} finally {

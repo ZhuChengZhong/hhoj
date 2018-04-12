@@ -30,7 +30,7 @@ public class JudgeServer extends Thread{
 	private LinkedBlockingQueue<Integer> submitIdQueue;
 	// 线程池
 	private ExecutorService executor = new ThreadPoolExecutor(2, 5, 1, TimeUnit.SECONDS,
-			new ArrayBlockingQueue<Runnable>(10));
+			new ArrayBlockingQueue<Runnable>(1000));
 
 	public JudgeServer(LinkedBlockingQueue<Integer> submitIdQueue,SubmitSender submitSender) {
 		this.submitIdQueue = submitIdQueue;
