@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
-import com.hhoj.judger.entity.ContestUser;
 import com.hhoj.judger.entity.PageBean;
 import com.hhoj.judger.entity.User;
 
@@ -68,5 +67,5 @@ public interface UserMapper {
 	 * @param contestId
 	 * @return
 	 */
-	public List<ContestUser> findUsersByContestId(Integer contestId);
+	public List<User> findUsersByContestId(Integer contestId);
 }

@@ -23,7 +23,8 @@ public interface ContestUserMapper {
 	
 	/**
 	 * 退出比赛
-	 * 
+	 * @param uid
+	 * @param contestId
 	 * @return
 	 */
 	public Integer exitContest(@Param("uid")Integer uid,@Param("contestId")Integer contestId);

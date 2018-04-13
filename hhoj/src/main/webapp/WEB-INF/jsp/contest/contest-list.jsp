@@ -78,7 +78,6 @@
                   <div class="am-btn-group am-btn-group-xs">
                     <button type="button" class="am-btn am-btn-default"  onclick="update_contest(${contest.contestId})"><span class="am-icon-save"></span> 编辑</button>
                      <button type="button" class="am-btn am-btn-default"  onclick="contest_problem_list(${contest.contestId})"><span class="am-icon-save"></span>题目管理</button>
-                     <button type="button" class="am-btn am-btn-default"  onclick="contest_user_list(${contest.contestId})"><span class="am-icon-save"></span>报名用户</button>
                     <button class="am-btn am-btn-default am-btn-xs" onclick="remove_contest(${contest.contestId})"><span class="am-icon-trash-o"></span>删除</button>
                   </div>
                 </div>
@@ -133,10 +132,6 @@ function update_contest(contest_id){
 }
 function contest_problem_list(contest_id){
 	window.location.href="/hhoj/manager/contest/"+contest_id+"/problem/list";
-}
-
-function contest_user_list(contest_id){
-	window.location.href="/hhoj/manager/contest/"+contest_id+"/user/list";
 }
 </script>
 </html>

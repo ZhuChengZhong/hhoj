@@ -122,7 +122,6 @@ public class SubmitController {
 		submit.setSubmitTime(new Date());
 		submit.setUseMemary(0);
 		submit.setUseTime(0);
-		submit.setIsContest(0);
 		submit.setResult(" ");
 		
 		/**

@@ -18,7 +18,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<result column="contestPassword" property="contestPassword" />
 	<result column="status" property="status"/>
 	<association property="initiator" column="initiator" select="com.hhoj.judger.mapper.UserMapper.findUserById"></association>
-	<collection property="contestUsers" column="contestId"  select="com.hhoj.judger.mapper.UserMapper.findUsersByContestId"></collection>
+	<collection property="users" column="contestId"  select="com.hhoj.judger.mapper.UserMapper.findUsersByContestId"></collection>
 </resultMap>
 
 <sql id="fields">
@@ -75,7 +75,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	    	<if test="startTime!=null and startTime!=''">
 	    		startTime=#{startTime,typeHandler=com.hhoj.judger.mapper.typehandler.DateToLongTypeHandler},
 	    	</if>
-	    	<if test="timeLimit!=null">
+	    	<if test="endTime!=null and endTime!=''">
 	    		timeLimit=#{timeLimit},
 	    	</if>
 	    	<if test="startJoinTime!=null and startJoinTime !='' ">
@@ -88,7 +88,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	    		contestPassword=#{contestPassword},
 	    	</if>
 	    	<if test="initiator!=null and initiator.uid!=null ">
-	    		initiator=#{initiator.uid},
+	    		initiator=#{createTime,typeHandler=com.hhoj.judger.mapper.typehandler.DateToLongTypeHandler},
 	    	</if>
 	    	<if test="status!=null">
 	    		status=#{status},

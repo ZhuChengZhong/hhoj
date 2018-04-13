@@ -18,14 +18,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.hhoj.judger.annotation.ValidatePermission;
 import com.hhoj.judger.entity.Contest;
 import com.hhoj.judger.entity.ContestProblem;
-import com.hhoj.judger.entity.ContestUser;
 import com.hhoj.judger.entity.PageBean;
 import com.hhoj.judger.entity.Problem;
 import com.hhoj.judger.entity.Role;
 import com.hhoj.judger.entity.User;
 import com.hhoj.judger.service.ContestService;
 import com.hhoj.judger.service.ProblemService;
-import com.hhoj.judger.service.UserService;
 import com.hhoj.judger.util.DateUtil;
 import com.hhoj.judger.util.PageUtil;
 import com.hhoj.judger.util.ResponseUtil;
@@ -39,9 +37,6 @@ public class AdminContestController {
 	
 	@Autowired
 	private ProblemService problemService;
-	
-	@Autowired
-	private UserService userService;
 	/**
 	 * 获取竞赛列表
 	 * @param page
@@ -158,23 +153,6 @@ public class AdminContestController {
 		return mav;
 	}
 	
-	
-	/**
-	 * 获取比赛用户列表
-	 * @param contestId
-	 * @return
-	 */
-	@RequestMapping(value="/{contestId}/user/list",method=RequestMethod.GET)
-	public ModelAndView contestUserList(
-			@PathVariable(value = "contestId") Integer contestId) {
-		ModelAndView mav=new ModelAndView();
-		List<ContestUser>list=userService.findUsersByContestId(contestId);
-		mav.addObject("contestUserList", list);
-		mav.addObject("contestId", contestId);
-		mav.addObject("mainPage", "contest/contest-user-list.jsp");
-		mav.setViewName("manager");
-		return mav;
-	}
 	
 	/**
 	 * 添加竞赛试题

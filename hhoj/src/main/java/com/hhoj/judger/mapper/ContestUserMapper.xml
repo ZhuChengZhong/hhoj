@@ -6,12 +6,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <insert id="joinContest" >
     	insert into t_contest_user 
-    	values (null,#{uid},#{contestId},0,0,0)
+    	values (#{uid},#{contestId})
     </insert>
   
    
    <delete id="exitContest" >
-   	delete from t_contest_user where  uid=#{uid} and contestId=#{contestId}
+   	delete from t_contest_user where  uid=#{uid} 
+   	and contestId=#{contestId}
    </delete>
    
    <select id="existUser" resultType="Integer">

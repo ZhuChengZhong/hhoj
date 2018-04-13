@@ -77,7 +77,7 @@ public class SubmitMapperTest {
 		problem.setPid(1);
 		Language language=new Language();
 		language.setLanguageId(1);
-		Submit submit=new Submit(user, problem, "ce", 0, 0, "public static class ....", new Date(), language, 0,0);
+		Submit submit=new Submit(user, problem, "ce", 0, 0, "public static class ....", new Date(), language, 0);
 		System.out.println(submitMapper.addSubmit(submit));
 	}
 }

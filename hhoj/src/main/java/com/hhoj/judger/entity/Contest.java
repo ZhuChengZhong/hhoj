@@ -21,7 +21,7 @@ public class Contest implements Serializable{
 	private String contestPassword;
 	private User initiator;
 	private Integer status;  //比赛状态 0 未开始 1 正在进行 2结束
-	private List<ContestUser>contestUsers;
+	private List<User>users;
 	private int userStatus;  //用户的状态 0 未报名  1已报名
 	
 	
@@ -31,12 +31,11 @@ public class Contest implements Serializable{
 	public void setUserStatus(int userStatus) {
 		this.userStatus = userStatus;
 	}
-	
-	public List<ContestUser> getContestUsers() {
-		return contestUsers;
+	public List<User> getUsers() {
+		return users;
 	}
-	public void setContestUsers(List<ContestUser> contestUsers) {
-		this.contestUsers = contestUsers;
+	public void setUsers(List<User> users) {
+		this.users = users;
 	}
 	public Integer getStatus() {
 		return status;
