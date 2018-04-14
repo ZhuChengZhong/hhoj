@@ -28,7 +28,7 @@ public class Initialization implements ServletContextListener{
 		ServletContext context=sce.getServletContext();
 		WebApplicationContext webApplicationContext=WebApplicationContextUtils.getWebApplicationContext(sce.getServletContext());
 		SubmitReceiver submitReceiver=(SubmitReceiver)webApplicationContext.getBean("submitReceiver");
-		SubmitMessageListener submitMessageListener=(SubmitMessageListener)webApplicationContext.getBean("submitReceiver");
+		SubmitMessageListener submitMessageListener=(SubmitMessageListener)webApplicationContext.getBean("submitMessageListener");
 		if(submitReceiver==null||submitMessageListener==null) {
 			logger.info("未找到消息接收者或消息监听器");
 			throw new NullPointerException();

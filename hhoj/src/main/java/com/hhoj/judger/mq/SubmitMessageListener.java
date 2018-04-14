@@ -28,13 +28,14 @@ public class SubmitMessageListener implements MessageListener{
 		ObjectMessage objectMessage=(ObjectMessage)message;
 		try {
 			Object o=objectMessage.getObject();
+			objectMessage.acknowledge();
 			if(o instanceof Submit) {
 				Submit submit=(Submit)o;
 				submitService.updateSubmit(submit);
 				logger.info("接收到判题机发回的判断结果并更新至数据库, submit id:"+submit.getSid());
 			}
 		} catch (JMSException e) {
-			logger.error("消息接收异常");
+			logger.error("消息接收异常",e);
 		}
 	}
 

@@ -35,7 +35,7 @@ public class SubmitReceiver {
 	private MessageConsumer consumer = null;
 	private Connection connection=null;
 	private PooledConnectionFactory factory;
-	public SubmitReceiver() {
+	public SubmitReceiver() { 
 		ActiveMQConnectionFactory f=new ActiveMQConnectionFactory(user, password, url);
 		factory = new PooledConnectionFactory(f);
 	}
@@ -50,11 +50,10 @@ public class SubmitReceiver {
 		try {
 			connection = factory.createConnection();
 			connection.start();
-			session = connection.createSession(true, Session.AUTO_ACKNOWLEDGE);
+			session = connection.createSession(false, Session.CLIENT_ACKNOWLEDGE);
 			Destination destination = session.createQueue(subject);
 			consumer = session.createConsumer(destination);
 			ObjectMessage objectMessage = session.createObjectMessage();
-			
 			consumer.setMessageListener(listener);
 		} catch (JMSException e) {
 			logger.error("消息链接创建失败");
@@ -96,6 +95,10 @@ public class SubmitReceiver {
 				logger.error("资源关闭异常");
 			}
 		}
-		factory.stop();
+		try {
+			factory.stop();
+		} catch (Exception e) {
+			logger.error("资源关闭异常");
+		}
 	}
 }

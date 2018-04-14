@@ -1,6 +1,5 @@
 package com.hhoj.judger.controller;
 
-import java.text.ParseException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -18,13 +17,16 @@ import com.alibaba.fastjson.JSONObject;
 import com.hhoj.judger.annotation.ValidatePermission;
 import com.hhoj.judger.entity.Contest;
 import com.hhoj.judger.entity.ContestProblem;
+import com.hhoj.judger.entity.ContestUser;
 import com.hhoj.judger.entity.PageBean;
 import com.hhoj.judger.entity.Problem;
 import com.hhoj.judger.entity.Role;
+import com.hhoj.judger.entity.Submit;
 import com.hhoj.judger.entity.User;
 import com.hhoj.judger.service.ContestService;
 import com.hhoj.judger.service.ProblemService;
-import com.hhoj.judger.util.DateUtil;
+import com.hhoj.judger.service.SubmitService;
+import com.hhoj.judger.service.UserService;
 import com.hhoj.judger.util.PageUtil;
 import com.hhoj.judger.util.ResponseUtil;
 
@@ -37,6 +39,12 @@ public class ContestController {
 	
 	@Autowired
 	private ProblemService problemService;
+	
+	@Autowired
+	private UserService userService;
+	
+	@Autowired
+	private SubmitService submitService;
 	/**
 	 * 获取竞赛列表
 	 * @param page
@@ -56,9 +64,13 @@ public class ContestController {
 		//如何当前用户已登录则查询此用户每个比赛的报名状态
 		if(currentUser!=null) {
 			list.forEach((contest)->{
-				if(contest.getUsers().contains(currentUser)) {
-					//如果包含说明此用户已经报名该比赛
-					contest.setUserStatus(1);
+				List<ContestUser>contestUsers=contest.getContestUsers();
+				for(int i=0;i<contestUsers.size();i++) {
+					if(contestUsers.get(i).getUser().getUid().intValue()==currentUser.getUid().intValue()) {
+						//如果包含说明此用户已经报名该比赛
+						contest.setUserStatus(1);
+						break;
+					}
 				}
 			});
 		}
@@ -72,6 +84,65 @@ public class ContestController {
 		mav.setViewName("index");
 		return mav;
 	}
+	
+	/**
+	 * 获取比赛详情
+	 * @param contestId
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/{contestId}", method = { RequestMethod.GET })
+	public ModelAndView contestDetail(@PathVariable("contestId") Integer contestId, HttpServletRequest request) {
+		ModelAndView mav = new ModelAndView();
+		Contest contest = contestService.findContestById(contestId);
+		User currentUser=(User)request.getSession().getAttribute("currentUser");
+		if(currentUser!=null) {
+			List<ContestUser>list=contest.getContestUsers();
+			//检查该用户是否已报名该比赛
+			for(ContestUser contestUser:list) {
+				if(contestUser.getUser().getUid().equals(currentUser.getUid())) {
+					contest.setUserStatus(1);
+					break;
+				}
+			}
+		}
+		mav.addObject("contest", contest);
+		mav.setViewName("foreground/contest/contest-info");
+		return mav;
+	}
+	
+	
+	/**
+	 * 
+	 * 获取比赛所需的题目信息
+	 * @param contestId
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/{contestId}/problem/list", method = { RequestMethod.GET })
+	public ModelAndView beginContest(@PathVariable("contestId") Integer contestId, HttpServletRequest request) {
+		ModelAndView mav = new ModelAndView();
+		Contest contest = contestService.findContestById(contestId);
+		User currentUser=(User)request.getSession().getAttribute("currentUser");
+		if(currentUser!=null) {
+			List<ContestUser>list=contest.getContestUsers();
+			//检查该用户是否已报名该比赛
+			for(ContestUser contestUser:list) {
+				if(contestUser.getUser().getUid().equals(currentUser.getUid())) {
+					contest.setUserStatus(1);
+					break;
+				}
+			}
+		}
+		request.getSession().setAttribute("myCurrentContest", contest);
+		//获取比赛题目
+		List<ContestProblem>contestProblemList=contestService.findContestProblems(contestId);
+		mav.addObject("contestProblemList", contestProblemList);
+		mav.addObject("mainPage", "contest-problem-list.jsp");
+		mav.setViewName("foreground/contest/contest-detail");
+		return mav;
+	}
+	
 	
 	/**
 	 * 加入比赛
@@ -113,22 +184,6 @@ public class ContestController {
 		ResponseUtil.write(json, response);
 	}
 	
-	/**
-	 * 获取竞赛试题列表
-	 * @param contestId
-	 * @return
-	 */
-	@RequestMapping(value="/{contestId}/problem/list",method=RequestMethod.GET)
-	public ModelAndView contestProblemList(
-			@PathVariable(value = "contestId") Integer contestId) {
-		ModelAndView mav=new ModelAndView();
-		List<ContestProblem>list=contestService.findContestProblems(contestId);
-		mav.addObject("contestProblemList", list);
-		mav.addObject("contestId", contestId);
-		mav.addObject("mainPage", "contest/contest-problem-list.jsp");
-		mav.setViewName("manager");
-		return mav;
-	}
 	
 	
 	/**
@@ -166,33 +221,59 @@ public class ContestController {
 	
 	
 	/**
-	 * 删除竞赛
-	 * 
-	 * @param response
+	 * 获取比赛试题
+	 * @param cpId
+	 * @return
 	 */
-	@ValidatePermission(role=Role.MANAGER)
-	@RequestMapping(value="/remove/{contestId}",method= {RequestMethod.POST})
-	public void removeContest(@PathVariable("contestId")Integer contestId,
-			HttpServletResponse response) {
-		JSONObject o=new JSONObject();
-		Integer count=contestService.removeContest(contestId);
-		o.put("count", count);
-		ResponseUtil.write(o, response);
+	@RequestMapping(value="/problem/{cpId}",method=RequestMethod.GET)
+	public ModelAndView getContestProblem(@PathVariable("cpId") Integer cpId) {
+		ModelAndView mav=new ModelAndView();
+		ContestProblem contestProblem=contestService.findContestProblemById(cpId);
+		mav.addObject("contestProblem", contestProblem);
+		mav.addObject("mainPage", "contest-problem-detail.jsp");
+		mav.setViewName("foreground/contest/contest-detail");
+		return mav;
 	}
 	
+	/**
+	 * 查找比赛提交列表
+	 */
+	@RequestMapping(value="/{contestId}/submit/list/{page}",method=RequestMethod.GET)
+	public ModelAndView getContestSubmits(@PathVariable("contestId") Integer contestId,
+			@PathVariable("page") Integer page,HttpServletRequest request) {
+		ModelAndView mav=new ModelAndView();
+		String url=request.getContextPath()+"/contest/"+contestId+"/submit/list";
+		Integer count=submitService.findContestSubmitCount(contestId);
+		PageBean pageBean=new PageBean(10, page,count);
+		String pagination=PageUtil.getPagination(url, pageBean);
+		mav.addObject("pagination", pagination);
+		List<Submit>submitList=submitService.findContestSubmits(contestId,pageBean);
+		mav.addObject("submitList", submitList);
+		mav.addObject("mainPage", "contest-problem-submit.jsp");
+		mav.setViewName("foreground/contest/contest-detail");
+		return mav;
+	}
 	
 	/**
-	 * 删除竞赛试题
-	 * @param cpId
-	 * @param response
+	 * 获取竞赛用户列表
+	 * @param contestId
+	 * @param page
+	 * @param request
+	 * @return
 	 */
-	@ValidatePermission(role=Role.MANAGER)
-	@RequestMapping(value="/problem/remove/{cpId}",method= {RequestMethod.POST})
-	public void removeContestProblem(@PathVariable("cpId")Integer cpId,
-			HttpServletResponse response) {
-		JSONObject o=new JSONObject();
-		Integer count=contestService.removeContestProblem(cpId);
-		o.put("count", count);
-		ResponseUtil.write(o, response);
+	@RequestMapping(value="/{contestId}/user/list/{page}")
+	public ModelAndView getContestUser(@PathVariable("contestId") Integer contestId,
+			@PathVariable("page") Integer page,HttpServletRequest request) {
+		ModelAndView mav=new ModelAndView();
+		String url=request.getContextPath()+"/contest/"+contestId+"/user/list";
+		Integer count=userService.findUserCountByContestId(contestId);
+		PageBean pageBean=new PageBean(10, page,count);
+		String pagination=PageUtil.getPagination(url, pageBean);
+		mav.addObject("pagination", pagination);
+		List<ContestUser>contestUser=userService.findContestUsers(contestId, pageBean);
+		mav.addObject("contestUser", contestUser);
+		mav.addObject("mainPage", "contest-user-list.jsp");
+		mav.setViewName("foreground/contest/contest-detail");
+		return mav;
 	}
 }

@@ -20,7 +20,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<result column="accepted" property="accepted"/>
 	<result column="submited" property="submited"/>
 	<result column="publish" property="publish"/>
-	<association property="typeId" column="type" select="com.hhoj.judger.mapper.ProblemTypeMapper.findProblemTypeById"></association>
+	<association property="type" column="typeId" select="com.hhoj.judger.mapper.ProblemTypeMapper.findProblemTypeById"></association>
 	
 </resultMap>
 

@@ -46,4 +46,20 @@ public class SubmitServiceImpl implements SubmitService{
 		return submitMapper.findCount(submit);
 	}
 
+	@Override
+	public List<Submit> findContestSubmits(Integer contestId,PageBean pageBean) {
+		if(contestId==null&&pageBean!=null) {
+			return null;
+		}
+		return submitMapper.findContestSubmits(contestId,pageBean);
+	}
+
+	@Override
+	public Integer findContestSubmitCount(Integer contestId) {
+		if(contestId==null) {
+			return null;
+		}
+		return submitMapper.findContestSubmitCount(contestId);
+	}
+
 }

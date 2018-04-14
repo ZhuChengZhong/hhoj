@@ -61,6 +61,14 @@ public interface ContestService {
 	public Integer addContestProblem(ContestProblem contestProblem);
 	
 	
+	
+	/**
+	 * 查找竞赛试题
+	 * 
+	 * @return
+	 */
+	public ContestProblem findContestProblemById(Integer cpId);
+	
 	/**
 	 * 查找竞赛试题
 	 * @param pid

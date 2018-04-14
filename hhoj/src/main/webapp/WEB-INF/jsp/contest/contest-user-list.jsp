@@ -42,36 +42,27 @@
             <thead>
               <tr>
                 <th class="table-check"><input type="checkbox" /></th>
-                <th class="table-id">用户编号</th>
+                <th class="table-id">名次</th>
                 <th class="table-title">用户名</th>
-                <th class="table-type">邮箱</th>
-                <th class="table-author">角色</th>
-                <th class="table-date">Accepted</th>
-                <th class="table-set">Submited</th>
-                <th class="table-set">Solved</th>
-                <th class="table-set">最后登录时间</th>
+                <th class="table-type">解题数</th>
+                <th class="table-author">使用时间</th>
+                <th class="table-date">使用内存</th>
               </tr>
           </thead>
           <tbody>
- 	<c:forEach items="${userList}" var="user">
+ 	<c:forEach items="${contestUserList}" var="contestUser" varStatus="status">
  		     <tr>
               <td><input type="checkbox" /></td>
-              <td>${user.uid}</td>
-              <td>${user.userName}</td>
-              <td>${user.email }</td>
-              <td>${user.role}</td>
-              <td>${user.accepted}</td>
-              <td>${user.submited}</td>
-              <td>${user.solved}</td>
+              <td>${status.index+1}</td>
+              <td>${contestUser.user.userName}</td>
+              <td>${contestUser.solved }</td>
+              <td>${contestUser.useTotalTime}</td>
+              <td>${contestUser.useTotalMemary}</td>
              
-                             
-              <td> <fmt:formatDate value="${user.lastLoginTime }" pattern="yyyy-MM-dd hh:mm:ss"/></td>
               <td>
                 <div class="am-btn-toolbar">
                   <div class="am-btn-group am-btn-group-xs">
-                    <button class="am-btn am-btn-default am-btn-xs am-text-secondary"><span class="am-icon-pencil-square-o"></span> 编辑</button>
-                    <button class="am-btn am-btn-default am-btn-xs"><span class="am-icon-copy"></span> 复制</button>
-                    <button class="am-btn am-btn-default am-btn-xs" onclick="removeUser(${user.uid})"><span class="am-icon-trash-o"></span>删除</button>
+                    <button class="am-btn am-btn-default am-btn-xs" onclick="remove_contest_user(${contestUser.cuId})"><span class="am-icon-trash-o"></span>删除</button>
                   </div>
                 </div>
               </td>
@@ -100,13 +91,9 @@
 
 <script type="text/javascript">
 
-	function removeUser(uid) {
+	function remove_contest_user(cuId) {
 		if(confirm("你确定要删除该用户吗？")){
 			var url="/hhoj/manager/user/remove/"+uid;
-			/* $.post(url, {}, function(result){
-				
-				//document.location.reload();
-			}); */
 			 $.ajax({  
                 async:false,   //使用同步的Ajax请求  
                 type: "POST",  
