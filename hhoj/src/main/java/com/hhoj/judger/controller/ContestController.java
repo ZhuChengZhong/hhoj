@@ -1,6 +1,8 @@
 package com.hhoj.judger.controller;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -57,9 +59,13 @@ public class ContestController {
 		if(page==null) {
 			page=1;
 		}
-		int count=contestService.findCount();
+		Map<String,Object>param=new HashMap<>();
+		param.put("status", "status!=-1");
+		param.put("start", (page-1)*10);
+		param.put("size", 10);
+		int count=contestService.findCount(param);
 		PageBean pageBean=new PageBean(10, page, count);
-		List<Contest>list=contestService.findContests(pageBean);
+		List<Contest>list=contestService.findContests(param);
 		User currentUser=(User)request.getSession().getAttribute("currentUser");
 		//如何当前用户已登录则查询此用户每个比赛的报名状态
 		if(currentUser!=null) {

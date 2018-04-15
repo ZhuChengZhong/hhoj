@@ -1,7 +1,10 @@
 package com.hhoj.judger.controller;
 
 import java.text.ParseException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.DelayQueue;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -42,6 +45,9 @@ public class AdminContestController {
 	
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private DelayQueue<Contest>contestDelayQueue;
 	/**
 	 * 获取竞赛列表
 	 * @param page
@@ -54,9 +60,12 @@ public class AdminContestController {
 		if(page==null) {
 			page=1;
 		}
-		int count=contestService.findCount();
+		Map<String,Object>param=new HashMap<>();
+		param.put("start", (page-1)*10);
+		param.put("size", 10);
+		int count=contestService.findCount(param);
 		PageBean pageBean=new PageBean(10, page, count);
-		List<Contest>list=contestService.findContests(pageBean);
+		List<Contest>list=contestService.findContests(param);
 		String contextPath=request.getContextPath();
 		String url=contextPath+"/manager/contest/list";
 		String pagination=PageUtil.getPagination(url, pageBean);
@@ -238,6 +247,42 @@ public class AdminContestController {
 		JSONObject o=new JSONObject();
 		Integer count=contestService.removeContestProblem(cpId);
 		o.put("count", count);
+		ResponseUtil.write(o, response);
+	}
+	
+	
+	/**
+	 * 改变比赛状态
+	 * 并返回当前状态
+	 * @param contestId
+	 * @param status
+	 * @param response
+	 */
+	@ValidatePermission(role=Role.MANAGER)
+	@RequestMapping(value="/{contestId}/status/{status}",method= {RequestMethod.POST})
+	public void changeContestStatus(@PathVariable("contestId")Integer contestId,
+			@PathVariable("status")Integer status,
+			HttpServletResponse response) {
+		JSONObject o=new JSONObject();
+		Contest contest=new Contest();
+		contest.setContestId(contestId);
+		contest.setStatus(status);
+		Integer count=contestService.updateContest(contest);
+		if(count>0) {
+			o.put("success", true);
+			o.put("status", status);
+			o.put("contestId", contestId);
+			/**
+			 * 根据修改的比赛状态从延迟队列中添加或者删除比赛
+			 */
+			if(status==1) {
+				contestDelayQueue.add(contestService.findContestById(contestId));
+			}else {
+				contestDelayQueue.remove(contest);
+			}
+		}else {
+			o.put("success", false);
+		}
 		ResponseUtil.write(o, response);
 	}
 }

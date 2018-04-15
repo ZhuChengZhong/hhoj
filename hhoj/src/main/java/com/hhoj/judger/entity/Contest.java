@@ -3,13 +3,16 @@ package com.hhoj.judger.entity;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.DelayQueue;
+import java.util.concurrent.Delayed;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 竞赛类实体
  * @author zhu
  *
  */
-public class Contest implements Serializable{
+public class Contest implements Serializable,Delayed{
 	private Integer contestId;
 	private String title;
 	private String desc;
@@ -105,6 +108,32 @@ public class Contest implements Serializable{
 	public void setInitiator(User initiator) {
 		this.initiator = initiator;
 	}
+	
+	
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((contestId == null) ? 0 : contestId.hashCode());
+		return result;
+	}
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Contest other = (Contest) obj;
+		if (contestId == null) {
+			if (other.contestId != null)
+				return false;
+		} else if (!contestId.equals(other.contestId))
+			return false;
+		return true;
+	}
 	@Override
 	public String toString() {
 		return "Contest [contestId=" + contestId + ", title=" + title + ", desc=" + desc + ", joinNumber=" + joinNumber
@@ -112,6 +141,43 @@ public class Contest implements Serializable{
 				+ ", endJoinTime=" + endJoinTime + ", contestPassword=" + contestPassword + ", initiator=" + initiator
 				+ ", status=" + status + "]";
 	}
+	@Override
+	public int compareTo(Delayed o) {
+		if(o==this) {
+			return 0;
+		}
+		if(o instanceof Contest) {
+			Contest other=(Contest)o;
+			long diff=this.getStartTime().getTime()-other.getStartTime().getTime();
+			if(diff>0) {
+				return 1;
+			}
+			if(diff<0) {
+				return -1;
+			}
+			return 0;
+		}
+		long d=this.getDelay(TimeUnit.NANOSECONDS)-o.getDelay(TimeUnit.NANOSECONDS);
+		return d>0?1:(d<0?-1:0);
+	}
+	@Override
+	public long getDelay(TimeUnit unit) {
+		return unit.convert(this.startTime.getTime()-System.currentTimeMillis(),TimeUnit.MILLISECONDS);
+	}
 	
-	
+	public static void main(String[] args) throws InterruptedException {
+		DelayQueue<Contest> queue=new DelayQueue<>();
+		Contest c1=new Contest();
+		c1.setContestId(1);
+		c1.setStartTime(new Date(System.currentTimeMillis()+3000));
+		Contest c2=new Contest();
+		c2.setContestId(2);
+		c2.setStartTime(new Date(System.currentTimeMillis()+5000));
+		queue.put(c1);
+		queue.put(c2);
+		while(!queue.isEmpty()) {
+			Contest c=queue.take();
+			System.out.println(c.getContestId());
+		}
+	}
 }

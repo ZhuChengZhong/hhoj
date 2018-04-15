@@ -25,14 +25,24 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  contestId,title,contestDesc,joinNumber,startTime,timeLimit,startJoinTime,endJoinTime,contestPassword,initiator,status
 </sql>
 	
-	<select id="findContests" resultMap="contestMap" parameterType="PageBean">
+	<select id="findContests" resultMap="contestMap" parameterType="Map">
 	
 		select <include refid="fields"></include> from t_contest
+		
+		<where>
+			<if test="status!=null">
+			   and ${status}
+			</if>
+			<if test="title!=null">
+			   and #{title}
+			</if>
+		</where>
 		
 		order by startJoinTime desc 
 		<if test="start!=null and size!=null">
 			limit #{start},#{size}
 		</if>
+		
 	</select>
     <select id="findContestById" parameterType="Integer" resultMap="contestMap"  >
         select <include refid="fields"></include> from t_contest where contestId=#{contestId}  
@@ -43,9 +53,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         ( select contestId from t_contest_user where uid=#{uid}) 
     </select>
     
-    <select id="findCount" resultType="Integer">
+    <select id="findCount" resultType="Integer" parameterType="Map">
    
     	select count(*) from t_contest
+    	<where>
+			<if test="status!=null">
+			   and ${status}
+			</if>
+			<if test="title!=null">
+			   and #{title}
+			</if>
+		</where>
     	
     </select>
     

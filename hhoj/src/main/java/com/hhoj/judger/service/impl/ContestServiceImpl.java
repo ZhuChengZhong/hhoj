@@ -1,7 +1,9 @@
 package com.hhoj.judger.service.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,9 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.hhoj.judger.entity.Contest;
 import com.hhoj.judger.entity.ContestProblem;
-import com.hhoj.judger.entity.PageBean;
 import com.hhoj.judger.entity.Problem;
-import com.hhoj.judger.entity.ProblemType;
 import com.hhoj.judger.entity.TestPoint;
 import com.hhoj.judger.entity.User;
 import com.hhoj.judger.mapper.ContestMapper;
@@ -22,7 +22,7 @@ import com.hhoj.judger.service.ContestService;
 import com.hhoj.judger.service.ProblemService;
 import com.hhoj.judger.service.TestPointService;
 
-@Service("contestServiceImpl")
+@Service("contestService")
 public class ContestServiceImpl implements ContestService{
 	
 	@Autowired
@@ -76,18 +76,14 @@ public class ContestServiceImpl implements ContestService{
 		return contest;
 	}
 
-	@Override
-	public List<Contest> findContests(PageBean pageBean) {
-		List<Contest> list=null;
-		if(pageBean!=null) {
-			list=contestMapper.findContests(pageBean);
-		}
-		return list;
-	}
+
 
 	@Override
-	public Integer findCount() {
-		return contestMapper.findCount();
+	public Integer findCount(Map<String,Object>param) {
+		if(param!=null) {
+			return contestMapper.findCount(param);
+		}
+		return 0;
 	}
 
 	@Override
@@ -229,6 +225,14 @@ public class ContestServiceImpl implements ContestService{
 			return null;
 		}
 		return contestProblemMapper.findContestProblemById(cpId);
+	}
+
+	@Override
+	public List<Contest> findContests(Map<String, Object> param) {
+		if(param!=null) {
+			return contestMapper.findContests(param);
+		}
+		return new ArrayList<Contest>();
 	}
 
 }

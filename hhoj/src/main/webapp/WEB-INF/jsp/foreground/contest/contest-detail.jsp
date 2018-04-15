@@ -63,8 +63,8 @@
         <li><a href="${pageContext.request.contextPath }/contest/list/1"><span class="am-icon-th"></span>竞赛</a></li>
         <li><a href="${pageContext.request.contextPath }/problem/list/1"><span class="am-icon-puzzle-piece">测试</a></li>
         <li><a href="#"><span class="am-icon-file"></span>运行</a></li>
-        <c:if test="currentUser!=null&&currentUser.role>1">
-        	 <li><a href="${pageContext.request.contextPath }/manager"><span class="am-icon-table"></span>管理</a></li>
+        <c:if test="${currentUser!=null && currentUser.role>1 }">
+        	 <li><a  target="_blank"   href="${pageContext.request.contextPath }/manager"><span class="am-icon-table"></span>管理</a></li>
         </c:if>
       </ul>
       <form class="navbar-form navbar-left">
@@ -126,7 +126,8 @@
         <p><span class="am-icon-bookmark"></span><font size="11">${myCurrentContest.title }</font></p>
         <p> 参加人数： ${myCurrentContest.joinNumber }</p>
         <p>剩余时间：<font id="left_time"></font></p>
-        <p>比赛时常：${myCurrentContest.timeLimit }小时</p>
+        <font id="begin_time"  color="white"><fmt:formatDate value="${myCurrentContest.startTime }" pattern="yyyy-MM-dd hh:mm"/></font>
+        <p>比赛时常：<font id="time_limit">${myCurrentContest.timeLimit }</font>小时</p>
 		<c:choose>
 		<c:when test="${myCurrentContest.status==0}">
 			<c:if test="${myCurrentContest.userStatus==0}">
@@ -208,33 +209,39 @@
             }); 
 		}
 		left_time();
+		
+		var time;   //剩余时间
+		var interval;
 	function left_time(){
 		var begin_time=$('#begin_time').html();
-		
+		var timeLimit=$('#time_limit').html();
 		var year=begin_time.substring(0,4);
 		var month=begin_time.substring(5,7);
 		var day=begin_time.substring(8,10);
 		var hour=begin_time.substring(11,13);
 		var minute=begin_time.substring(14,16);
 		var second=0;
-		leftTimer(year,month,day,hour,minute,second);
+		 time = (new Date(year,month-1,day,hour,minute,second)) - (new Date()); //计算剩余的毫秒数 
+		 time+=timeLimit*60*60*1000;
+		leftTimer();
+		interval=setInterval("leftTimer()",1000); 
 	}
-	function leftTimer(year,month,day,hour,minute,second){ 
-		  var leftTime = (new Date(year,month-1,day,hour,minute,second)) - (new Date()); //计算剩余的毫秒数 
-		  if(leftTime<=0){
-			  $('#left_time').html(0+"天" + 0+"小时" + 0+"分"+0+"秒");  
-			  return ;
-		  }
-		  var days = parseInt(leftTime / 1000 / 60 / 60 / 24 , 10); //计算剩余的天数 
-		  var hours = parseInt(leftTime / 1000 / 60 / 60 % 24 , 10); //计算剩余的小时 
-		  var minutes = parseInt(leftTime / 1000 / 60 % 60, 10);//计算剩余的分钟 
-		  var seconds = parseInt(leftTime / 1000 % 60, 10);//计算剩余的秒数 
-		  days = checkTime(days); 
-		  hours = checkTime(hours); 
-		  minutes = checkTime(minutes); 
-		  seconds = checkTime(seconds); 
-		  setInterval("leftTimer(2016,11,11,11,11,11)",1000); 
-		  $('#left_time').html(days+"天" + hours+"小时" + minutes+"分"+seconds+"秒");  
+	function leftTimer(){ 
+			  time-=1000;
+			  if(time<=0){
+				  clearInterval(interval);
+				  $('#left_time').html( 0+"小时" + 0+"分"+0+"秒");  
+				  return ;
+			  }
+			  var days = parseInt(time / 1000 / 60 / 60 / 24 , 10); //计算剩余的天数 
+			  var hours = parseInt(time / 1000 / 60 / 60 % 24 , 10); //计算剩余的小时 
+			  var minutes = parseInt(time / 1000 / 60 % 60, 10);//计算剩余的分钟 
+			  var seconds = parseInt(time / 1000 % 60, 10); //计算剩余的秒数 
+			  days = checkTime(days); 
+			  hours = checkTime(hours); 
+			  minutes = checkTime(minutes); 
+			  seconds = checkTime(seconds); 
+			  $('#left_time').html(hours+"小时" + minutes+"分"+seconds+"秒");  
 		} 
 		function checkTime(i){ //将0-9的数字前面加上0，例1变为01 
 		  if(i<10) 

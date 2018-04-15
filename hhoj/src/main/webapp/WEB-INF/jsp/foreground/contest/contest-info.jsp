@@ -26,13 +26,7 @@
 <script src="${pageContext.request.contextPath }/bootstrap/js/bootstrap.min.js"></script>
 
 </head>
-<%
-	String mainPage=(String)request.getAttribute("mainPage");
-	if(mainPage==null || "".equals(mainPage)) {
-		mainPage="default.jsp";
-		request.setAttribute("mainPage", mainPage);
-	}
-%>
+
 <body>
 <!--[if lte IE 9]>
 <p class="browsehappy">你正在使用<strong>过时</strong>的浏览器，Amaze UI 暂不支持。 请 <a href="http://browsehappy.com/" target="_blank">升级浏览器</a>
@@ -69,8 +63,8 @@
         <li><a href="${pageContext.request.contextPath }/contest/list/1"><span class="am-icon-th"></span>竞赛</a></li>
         <li><a href="${pageContext.request.contextPath }/problem/list/1"><span class="am-icon-puzzle-piece">测试</a></li>
         <li><a href="#"><span class="am-icon-file"></span>运行</a></li>
-        <c:if test="currentUser!=null&&currentUser.role>1">
-        	 <li><a href="${pageContext.request.contextPath }/manager"><span class="am-icon-table"></span>管理</a></li>
+        <c:if test="${currentUser!=null&&currentUser.role>1}">
+        	 <li><a  target="_blank"  href="${pageContext.request.contextPath }/manager"><span class="am-icon-table"></span>管理</a></li>
         </c:if>
       </ul>
       <form class="navbar-form navbar-left">

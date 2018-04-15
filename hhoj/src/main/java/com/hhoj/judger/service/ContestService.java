@@ -1,6 +1,7 @@
 package com.hhoj.judger.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -36,15 +37,15 @@ public interface ContestService {
 	public Contest findContestById(Integer contestId);
 	/**
 	 * 查找比赛集合
-	 * @param contestId
+	 * @param param
 	 * @return
 	 */
-	public List<Contest> findContests(PageBean pageBean);
+	public List<Contest> findContests(Map<String,Object>param);
 	/**
 	 * 查找比赛总数
 	 * @return
 	 */
-	public Integer findCount();
+	public Integer findCount(Map<String,Object>param);
 	
 	/**
 	 * 获取竞赛试题

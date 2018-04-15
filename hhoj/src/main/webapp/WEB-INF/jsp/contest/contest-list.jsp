@@ -72,7 +72,25 @@
                <td><fmt:formatDate value="${contest.startJoinTime}" pattern="yyyy-MM-dd hh:mm:ss"/></td>
                 <td><fmt:formatDate value="${contest.endJoinTime}" pattern="yyyy-MM-dd hh:mm:ss"/></td>             
                <td>${contest.initiator.userName}</td>  
-                <td>${contest.status}</td>  
+               <td id="contest_status">
+                <c:choose>
+                	<c:when test="${contest.status==-1}">
+                		<a onclick="change_status(${contest.contestId},0)">激活</a>
+                	</c:when>
+                	<c:when test="${contest.status==0}">
+                		<a onclick="change_status(${contest.contestId},-1)">隐藏</a>
+                	</c:when>
+                	<c:when test="${contest.status==1}">
+                		进行中
+                	</c:when>
+                	<c:when test="${contest.status==2}">
+                		已结束
+                	</c:when>
+                	<c:otherwise>
+                	  已结束
+                	</c:otherwise>
+                </c:choose>
+                </td>
               <td>
                 <div class="am-btn-toolbar">
                   <div class="am-btn-group am-btn-group-xs">
@@ -107,6 +125,29 @@
 </body>
 
 <script type="text/javascript">
+
+	/*
+		改变比赛状态
+	*/
+	function change_status(contestId,status){
+		var url="/hhoj/manager/contest/"+contestId+"/status/"+status;
+		if(status!=null&&contestId!=null){
+			 $.ajax({  
+	             async:false,   //使用同步的Ajax请求  
+	             type: "POST",  
+	             url: url,  
+	             data: "", 
+	             dataType:"json",
+	             success: function(result){  
+	             	if(result.success){
+	             		document.location.reload();
+	             	}
+	             }  
+	         }); 
+		}
+	}
+
+
 	function remove_contest(contest_id) {
 		if(confirm("你确定要删除该竞赛吗？")){
 			var url="/hhoj/manager/contest/remove/"+contest_id;
