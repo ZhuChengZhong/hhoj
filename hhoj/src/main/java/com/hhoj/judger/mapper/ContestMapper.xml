@@ -116,7 +116,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     	where contestId=#{contestId}
     </update>
    
-   <delete id="removeContest" parameterType="Integer">
+   <delete id="removeContest"  parameterType="Integer">
    	delete from t_contest where contestId =#{contestId}
    </delete>
 </mapper>

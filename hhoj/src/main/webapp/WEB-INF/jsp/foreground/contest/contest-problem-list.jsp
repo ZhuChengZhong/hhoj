@@ -19,9 +19,9 @@
 
   <!-- Nav tabs -->
   <ul class="nav nav-tabs" role="tablist">
-    <li id="problem_list" role="presentation" class="active" ><a href="#"  onclick="problem_list(${myCurrentContest.contestId})" aria-controls="problem_list" role="tab" data-toggle="tab">题目列表</a></li>
-    <li id="problem_submit" role="presentation" ><a href="#" onclick="submit_list(${myCurrentContest.contestId})" aria-controls="problem_submit"  role="tab" data-toggle="tab">运行结果</a></li>
-    <li id="user_list" role="presentation"><a href="#" onclick="user_list(${myCurrentContest.contestId})" aria-controls="problem_ranking" role="tab" data-toggle="tab">排行榜</a></li>
+    <li id="problem_list" role="presentation" class="active" ><a href="#"  onclick="problem_list(${contest.contestId})" aria-controls="problem_list" role="tab" data-toggle="tab">题目列表</a></li>
+    <li id="problem_submit" role="presentation" ><a href="#" onclick="submit_list(${contest.contestId})" aria-controls="problem_submit"  role="tab" data-toggle="tab">运行结果</a></li>
+    <li id="user_list" role="presentation"><a href="#" onclick="user_list(${contest.contestId})" aria-controls="problem_ranking" role="tab" data-toggle="tab">排行榜</a></li>
   </ul>
 
   <!-- Tab panes -->
@@ -45,7 +45,16 @@
           <c:forEach items="${contestProblemList}" var="contestProblem" varStatus="status">
           		<tr>
 	       		<td >${status.index+1 }</td>
-	       		<td><a href="${pageContext.request.contextPath}/contest/problem/${contestProblem.cpId}">${contestProblem.problem.title }</a></td>
+	       		<td>
+	       			<c:choose>
+	       				<c:when test="${contest.status==1}">
+	       					<a href="${pageContext.request.contextPath}/contest/${contest.contestId}/problem/${contestProblem.cpId}">${contestProblem.problem.title }</a>
+	       				</c:when>
+	       				<c:otherwise>
+	       						${contestProblem.problem.title }
+	       				</c:otherwise>
+	       			</c:choose>
+	       		</td>
 	       		<td><span class="am-badge am-badge-secondary">${contestProblem.submited }</span></td> 
 	       		<td><span class="am-badge am-badge-success">+${contestProblem.accepted }</span></td> 
 	            <td>${Math.round((contestProblem.accepted)*1000/(contestProblem.submited))/10 }%</td>

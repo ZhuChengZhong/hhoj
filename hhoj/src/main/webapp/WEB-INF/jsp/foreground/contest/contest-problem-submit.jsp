@@ -18,9 +18,9 @@
           <div>
 
   <ul class="nav nav-tabs" role="tablist">
-    <li id="problem_list" role="presentation"  ><a href="#"  onclick="problem_list(${myCurrentContest.contestId})" aria-controls="problem_list" role="tab" data-toggle="tab">题目列表</a></li>
-    <li id="problem_submit" role="presentation"  class="active"><a href="#" onclick="problem_submit(${myCurrentContest.contestId})" aria-controls="problem_submit"  role="tab" data-toggle="tab">运行结果</a></li>
-    <li id="user_list" role="presentation"><a href="#" onclick="user_list(${myCurrentContest.contestId})" aria-controls="user_list" role="tab" data-toggle="tab">排行榜</a></li>
+    <li id="problem_list" role="presentation"  ><a href="#"  onclick="problem_list(${contest.contestId})" aria-controls="problem_list" role="tab" data-toggle="tab">题目列表</a></li>
+    <li id="problem_submit" role="presentation"  class="active"><a href="#" onclick="problem_submit(${contest.contestId})" aria-controls="problem_submit"  role="tab" data-toggle="tab">运行结果</a></li>
+    <li id="user_list" role="presentation"><a href="#" onclick="user_list(${contest.contestId})" aria-controls="user_list" role="tab" data-toggle="tab">排行榜</a></li>
   </ul>
 
   <!-- Tab panes -->
@@ -47,7 +47,7 @@
          			 <tr>
 			          <td>${submit.sid}</td>
 			          <td>${submit.user.userName}</td>
-			          <td><a href="${pageContext.request.contextPath}/problem/detail/${submit.problem.pid}">${submit.problem.title }</a></td> 
+			          <td>${submit.problem.title }</td> 
 			         	<c:if test="${submit.judged==1}">
 			         		 <td>${submit.useTime}</td>
 					          <td>${submit.useMemary}</td>

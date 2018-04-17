@@ -50,7 +50,7 @@ public class Initialization implements ServletContextListener {
 
 		ContestService contestService = (ContestService) webApplicationContext.getBean("contestService");
 		Map<String, Object> param = new HashMap<>();
-		param.put("status", "status=0");
+		param.put("status", "status in (0,1)");
 		// 获取还未开始的比赛
 		List<Contest> notBeginContest = contestService.findContests(param);
 		// 延迟队列用于存放未开始的比赛
@@ -95,11 +95,11 @@ public class Initialization implements ServletContextListener {
 						updateContest.setStatus(1);
 						contestService.updateContest(updateContest);
 						contest.setStatus(1);
-						long delay=contest.getStartTime().getTime()+contest.getTimeLimit()*60*60*1000-System.currentTimeMillis();
-						scheduledExecutorService.schedule(new EndContestTask(contest, contestService),delay,TimeUnit.SECONDS);
-						logger.info("比赛开始：" + contest.getTitle());
-						
 					}
+					long delay=contest.getStartTime().getTime()+contest.getTimeLimit()*60*60*1000-System.currentTimeMillis();
+					scheduledExecutorService.schedule(new EndContestTask(contest, contestService),delay,TimeUnit.SECONDS);
+					logger.info("比赛开始：" + contest.getTitle());
+						
 				} catch (InterruptedException e) {
 					Thread.currentThread().interrupt();
 				}

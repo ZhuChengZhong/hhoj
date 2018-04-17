@@ -125,28 +125,28 @@
       <div class="am-panel-bd">
         <p><span class="am-icon-bookmark"></span><font size="11">${contest.title }</font></p>
         <p> 参加人数： ${contest.joinNumber }</p>
-        <p> 开始时间：<font id="begin_time"><fmt:formatDate value="${contest.startTime }" pattern="yyyy-MM-dd hh:mm"/></font></p>
+        <p> 开始时间：<font id="begin_time"><fmt:formatDate value="${contest.startTime }" pattern="yyyy-MM-dd HH:mm"/></font></p>
         <p>距开始还有：<font id="left_time"></font></p>
         <p>比赛时常：${contest.timeLimit }小时</p>
 		<c:choose>
 		<c:when test="${contest.status==0}">
 			<c:if test="${contest.userStatus==0}">
-				<button  onclick="join_contest(${contest.contestId})"  style="width:200px;height:38px;background-color: #1cb0f6;border-radius: 20px;"><font color="white">报名参加比赛</font></button>
+				<button  id="contest_button" onclick="join_contest(${contest.contestId})"  style="width:200px;height:38px;background-color: #1cb0f6;border-radius: 20px;"><font color="white">报名参加比赛</font></button>
 			</c:if>
 			<c:if test="${contest.userStatus==1}">
-				<button   onclick="exit_contest(${contest.contestId})"  style="width:200px;height:38px;background-color: #1cb0f6;border-radius: 20px;"><font color="white">退出比赛</font></button>
+				<button   id="contest_button" onclick="exit_contest(${contest.contestId})"  style="width:200px;height:38px;background-color: #1cb0f6;border-radius: 20px;"><font color="white">退出比赛</font></button>
 			</c:if>
 		</c:when>
 		<c:when test="${contest.status==2}">
 			
-				<button  style="width:200px;height:38px;background-color: #ade2fc;border-radius: 20px;"><font color="white">比赛已结束</font></button>
+				<button  id="contest_button" style="width:200px;height:38px;background-color: #ade2fc;border-radius: 20px;"><font color="white">比赛已结束</font></button>
 		</c:when>
 		<c:otherwise>
 			<c:if test="${contest.userStatus==0}">
-				<button style="width:200px;height:38px;background-color: #ade2fc;border-radius: 20px;"><font color="white">您未参加本次比赛</font></button>
+				<button id="contest_button" style="width:200px;height:38px;background-color: #ade2fc;border-radius: 20px;"><font color="white">您未参加本次比赛</font></button>
 			</c:if>
 			<c:if test="${contest.userStatus==1}">
-				<button   onclick=""  style="width:200px;height:38px;background-color: #1cb0f6;border-radius: 20px;"><font color="white">进入比赛</font></button>
+				<button id="contest_button"  onclick="problem_list(${contest.contestId})"  style="width:200px;height:38px;background-color: #1cb0f6;border-radius: 20px;"><font color="white">进入比赛</font></button>
 			</c:if>
 		</c:otherwise>
 	</c:choose>
@@ -210,6 +210,8 @@
             }); 
 		}
 		left_time();
+		var leftTime;
+		var interval;
 	function left_time(){
 		var begin_time=$('#begin_time').html();
 		
@@ -219,12 +221,24 @@
 		var hour=begin_time.substring(11,13);
 		var minute=begin_time.substring(14,16);
 		var second=0;
-		leftTimer(year,month,day,hour,minute,second);
+		leftTime = (new Date(year,month-1,day,hour,minute,second)) - (new Date()); //计算剩余的毫秒数 
+		interval=setInterval("leftTimer()",1000); 
 	}
-	function leftTimer(year,month,day,hour,minute,second){ 
-		  var leftTime = (new Date(year,month-1,day,hour,minute,second)) - (new Date()); //计算剩余的毫秒数 
+	
+	function problem_list(contestId){
+		window.location.href="/hhoj/contest/"+contestId+"/problem/list";
+	}
+	function leftTimer(){ 
+		  leftTime-=1000;
 		  if(leftTime<=0){
+			  clearInterval(interval);
 			  $('#left_time').html(0+"天" + 0+"小时" + 0+"分"+0+"秒");  
+			  var join=${contest.userStatus};
+			  if(join==1){
+				  var contestId=${contest.contestId};
+				  $('#contest_button').attr('onclick',"problem_list("+contestId+")");
+				  $('#contest_button').html("<font color='white'>进入比赛</font>");
+			  }
 			  return ;
 		  }
 		  var days = parseInt(leftTime / 1000 / 60 / 60 / 24 , 10); //计算剩余的天数 
@@ -235,7 +249,7 @@
 		  hours = checkTime(hours); 
 		  minutes = checkTime(minutes); 
 		  seconds = checkTime(seconds); 
-		  setInterval("leftTimer(2016,11,11,11,11,11)",1000); 
+		 
 		  $('#left_time').html(days+"天" + hours+"小时" + minutes+"分"+seconds+"秒");  
 		} 
 		function checkTime(i){ //将0-9的数字前面加上0，例1变为01 

@@ -91,11 +91,11 @@ public class SubmitController {
 	 * @return
 	 */
 
-	@ValidatePermission(role = Role.COMMON)
 	@RequestMapping("/problem/{pid}/add")
 	public void addSubmit(Submit submit, @PathVariable("pid") Integer pid,
 			@RequestParam("languageId") Integer languageId, HttpServletRequest request, HttpServletResponse response) {
 		ModelAndView mav = new ModelAndView();
+		JSONObject jsonObject = new JSONObject();
 		/**
 		 * 设置所属题目
 		 */
@@ -114,6 +114,12 @@ public class SubmitController {
 		 * 设置提交用户
 		 */
 		User user = (User) request.getSession().getAttribute("currentUser");
+		if(user==null) {
+			jsonObject.put("success", false);
+			request.getSession().setAttribute("redirect", "/problem/detail/"+pid);
+			ResponseUtil.write(jsonObject, response);
+			return ;
+		}
 		submit.setUser(user);
 		/**
 		 * 设置基本初始化信息
@@ -122,9 +128,13 @@ public class SubmitController {
 		submit.setSubmitTime(new Date());
 		submit.setUseMemary(0);
 		submit.setUseTime(0);
-		submit.setIsContest(0);
+		/**
+		 * 判断是否为比赛提交
+		 */
+		if(submit.getContestId()==null) {
+			submit.setContestId(0);
+		}
 		submit.setResult(" ");
-		
 		/**
 		 * 将提交添加至数据库
 		 */
@@ -135,7 +145,6 @@ public class SubmitController {
 		
 		submitSender.sendSubmit(submit.getSid());
 		logger.info("向判题服务器发送一个判题请求,submitId:"+submit.getSid());
-		JSONObject jsonObject = new JSONObject();
 		jsonObject.put("success", true);
 		ResponseUtil.write(jsonObject, response);
 	}

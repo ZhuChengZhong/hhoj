@@ -2,6 +2,8 @@ package com.hhoj.judger.service;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import com.hhoj.judger.entity.ContestUser;
 import com.hhoj.judger.entity.PageBean;
 import com.hhoj.judger.entity.User;
@@ -94,4 +96,6 @@ public interface UserService {
 	 * @return
 	 */
 	public Integer findUserCountByContestId(Integer contestId);
+	
+	
 }

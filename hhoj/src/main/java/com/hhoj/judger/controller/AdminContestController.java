@@ -275,7 +275,7 @@ public class AdminContestController {
 			/**
 			 * 根据修改的比赛状态从延迟队列中添加或者删除比赛
 			 */
-			if(status==1) {
+			if(status==0) {
 				contestDelayQueue.add(contestService.findContestById(contestId));
 			}else {
 				contestDelayQueue.remove(contest);

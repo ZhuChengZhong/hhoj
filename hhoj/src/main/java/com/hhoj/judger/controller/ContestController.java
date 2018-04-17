@@ -101,6 +101,10 @@ public class ContestController {
 	public ModelAndView contestDetail(@PathVariable("contestId") Integer contestId, HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView();
 		Contest contest = contestService.findContestById(contestId);
+		if(contest.getStatus()==2) {
+			mav.setViewName("redirect:"+contestId+"/problem/list");
+			return mav;
+		}
 		User currentUser=(User)request.getSession().getAttribute("currentUser");
 		if(currentUser!=null) {
 			List<ContestUser>list=contest.getContestUsers();
@@ -126,9 +130,10 @@ public class ContestController {
 	 * @return
 	 */
 	@RequestMapping(value = "/{contestId}/problem/list", method = { RequestMethod.GET })
-	public ModelAndView beginContest(@PathVariable("contestId") Integer contestId, HttpServletRequest request) {
+	public ModelAndView contestProblem(@PathVariable("contestId") Integer contestId, HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView();
 		Contest contest = contestService.findContestById(contestId);
+		mav.addObject("contest", contest);
 		User currentUser=(User)request.getSession().getAttribute("currentUser");
 		if(currentUser!=null) {
 			List<ContestUser>list=contest.getContestUsers();
@@ -140,7 +145,6 @@ public class ContestController {
 				}
 			}
 		}
-		request.getSession().setAttribute("myCurrentContest", contest);
 		//获取比赛题目
 		List<ContestProblem>contestProblemList=contestService.findContestProblems(contestId);
 		mav.addObject("contestProblemList", contestProblemList);
@@ -193,47 +197,16 @@ public class ContestController {
 	
 	
 	/**
-	 * 添加竞赛试题
-	 * @param pid
-	 * @param contestId
-	 * @return
-	 */
-	@ValidatePermission(role=Role.MANAGER)
-	@RequestMapping(value="problem/add",method= {RequestMethod.POST})
-	public void addContestProblem(
-			@RequestParam("pid") Integer pid,
-			@RequestParam("contestId") Integer contestId,
-			HttpServletResponse response) {
-		
-		response.setCharacterEncoding("utf-8");
-		Problem problem=new Problem();
-		problem.setPid(pid);
-		ContestProblem contestProblem=new ContestProblem();
-		contestProblem.setContestId(contestId);
-		contestProblem.setProblem(problem);
-		contestProblem.setAccepted(0);
-		contestProblem.setSubmited(0);
-		int result=contestService.addContestProblem(contestProblem);
-		JSONObject o=new JSONObject();
-		if(result>0) {
-			o.put("success", true);
-			
-		}else {
-			o.put("success", false);
-			o.put("message", "添加失败");
-		}
-		ResponseUtil.write(o, response);
-	}
-	
-	
-	/**
 	 * 获取比赛试题
 	 * @param cpId
 	 * @return
 	 */
-	@RequestMapping(value="/problem/{cpId}",method=RequestMethod.GET)
-	public ModelAndView getContestProblem(@PathVariable("cpId") Integer cpId) {
+	@RequestMapping(value="{contestId}/problem/{cpId}",method=RequestMethod.GET)
+	public ModelAndView getContestProblem(@PathVariable("cpId") Integer cpId,
+			@PathVariable("contestId") Integer contestId) {
 		ModelAndView mav=new ModelAndView();
+		Contest contest = contestService.findContestById(contestId);
+		mav.addObject("contest", contest);
 		ContestProblem contestProblem=contestService.findContestProblemById(cpId);
 		mav.addObject("contestProblem", contestProblem);
 		mav.addObject("mainPage", "contest-problem-detail.jsp");
@@ -248,6 +221,8 @@ public class ContestController {
 	public ModelAndView getContestSubmits(@PathVariable("contestId") Integer contestId,
 			@PathVariable("page") Integer page,HttpServletRequest request) {
 		ModelAndView mav=new ModelAndView();
+		Contest contest = contestService.findContestById(contestId);
+		mav.addObject("contest", contest);
 		String url=request.getContextPath()+"/contest/"+contestId+"/submit/list";
 		Integer count=submitService.findContestSubmitCount(contestId);
 		PageBean pageBean=new PageBean(10, page,count);
@@ -268,16 +243,18 @@ public class ContestController {
 	 * @return
 	 */
 	@RequestMapping(value="/{contestId}/user/list/{page}")
-	public ModelAndView getContestUser(@PathVariable("contestId") Integer contestId,
+	public ModelAndView getContestUsers(@PathVariable("contestId") Integer contestId,
 			@PathVariable("page") Integer page,HttpServletRequest request) {
 		ModelAndView mav=new ModelAndView();
+		Contest contest = contestService.findContestById(contestId);
+		mav.addObject("contest", contest);
 		String url=request.getContextPath()+"/contest/"+contestId+"/user/list";
 		Integer count=userService.findUserCountByContestId(contestId);
 		PageBean pageBean=new PageBean(10, page,count);
 		String pagination=PageUtil.getPagination(url, pageBean);
 		mav.addObject("pagination", pagination);
 		List<ContestUser>contestUser=userService.findContestUsers(contestId, pageBean);
-		mav.addObject("contestUser", contestUser);
+		mav.addObject("contestUserList", contestUser);
 		mav.addObject("mainPage", "contest-user-list.jsp");
 		mav.setViewName("foreground/contest/contest-detail");
 		return mav;

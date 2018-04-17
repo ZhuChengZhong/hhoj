@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.hhoj.judger.entity.Contest;
 import com.hhoj.judger.entity.ContestProblem;
+import com.hhoj.judger.entity.ContestUser;
 import com.hhoj.judger.entity.Problem;
 import com.hhoj.judger.entity.TestPoint;
 import com.hhoj.judger.entity.User;
@@ -235,4 +236,15 @@ public class ContestServiceImpl implements ContestService{
 		return new ArrayList<Contest>();
 	}
 
+	@Override
+	public ContestUser updateContestUser(Integer cuId, ContestUser contestUser) {
+		return contestUserMapper.updateContestUser(cuId, contestUser);
+	}
+
+	@Override
+	public ContestUser findContestUser(Integer uid, Integer contestId) {
+		return contestUserMapper.findContestUser(uid, contestId);
+	}
+
+	
 }

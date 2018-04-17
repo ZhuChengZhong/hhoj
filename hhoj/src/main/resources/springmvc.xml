@@ -43,6 +43,9 @@
  		<mvc:interceptors>
  			<mvc:interceptor>
  				<mvc:mapping path="/manager/**"/>
+ 				<mvc:mapping path="/contest/join/**"/>
+ 				<mvc:mapping path="/contest/exit/**"/>
+ 				<mvc:mapping path="/contest/*/problem/**"/>
  				<bean class="com.hhoj.judger.filter.SecurityInterceptor"></bean>
  			</mvc:interceptor>
  			<mvc:interceptor>

@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.hhoj.judger.entity.Contest;
 import com.hhoj.judger.entity.ContestProblem;
+import com.hhoj.judger.entity.ContestUser;
 import com.hhoj.judger.entity.PageBean;
 import com.hhoj.judger.entity.User;
 
@@ -112,5 +113,20 @@ public interface ContestService {
 	 * @return
 	 */
 	public boolean existUser(Integer uid,Integer contestId);
+	/**
+	 * 更新比赛用户
+	 * @param uid
+	 * @param contestUser
+	 * @return
+	 */
+	public ContestUser updateContestUser(@Param("cuId")Integer cuId,@Param("contestUser")ContestUser contestUser);
+	
+	/**
+	 * 查找用户
+	 * @param uid
+	 * @param contestId
+	 * @return
+	 */
+	public ContestUser findContestUser(@Param("uid")Integer uid,@Param("contestId")Integer contestId);
 	
 }

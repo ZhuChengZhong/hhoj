@@ -19,39 +19,46 @@
 
   <!-- Nav tabs -->
   <ul class="nav nav-tabs" role="tablist">
-    <li id="problem_list" role="presentation"  ><a href="#"  onclick="problem_list(${contest.contestId})" aria-controls="problem_list" role="tab" data-toggle="tab">题目列表</a></li>
-    <li id="problem_submit" role="presentation" ><a href="#" onclick="submit_list(${contest.contestId})" aria-controls="submit_list"  role="tab" data-toggle="tab">运行结果</a></li>
-    <li id="user_list" role="presentation" class="active"><a href="#" onclick="user_list(${contest.contestId})" aria-controls="user_list" role="tab" data-toggle="tab">排行榜</a></li>
+    <li  role="presentation" class="active" ><a href="#problem_list"   aria-controls="problem_list" role="tab" data-toggle="tab">题目列表</a></li>
+    <li  role="presentation" ><a href="#"  aria-controls="problem_submit"  role="tab" data-toggle="tab">运行结果</a></li>
+    <li  role="presentation"><a href="#"  aria-controls="problem_ranking" role="tab" data-toggle="tab">排行榜</a></li>
   </ul>
 
   <!-- Tab panes -->
   <div class="tab-content">
 
    
-    <div role="tabpanel" class="tab-pane  active " id="user_list">
+    <div role="tabpanel" class="tab-pane  active " id="problem_list">
        <div class="am-u-sm-12">
         <table class="am-table am-table-bd am-table-striped admin-content-table">
          	        <thead >
            <tr bgcolor="#7EC0EE" >
-			<th>排名</th>
-			<th>用户</th>
-			<th>通过题数</th>
-			<th>总耗时</th>
+			<th>题号</th>
+			<th>标题</th>
+			<th>提交次数</th>
+			<th>通过次数</th>
+			<th>通过率</th>
+			<th>状态</th>
 		    </tr>
           </thead>
           <tbody>
-          <c:forEach items="${contestUserList}" var="contestUser" varStatus="status">
+          <c:forEach items="${contestProblemList}" var="contestProblem" varStatus="status">
           		<tr>
 	       		<td >${status.index+1 }</td>
-	       		<td><span class="am-badge am-badge-secondary">${contestUser.user.userName }</span></td> 
-	       		<td><span class="am-badge am-badge-success">+${contestUser.solved }</span></td> 
-	            <td>${contestUser.useTotalTime }</td>
+	       		<td>${contestProblem.problem.title }</td>
+	       		<td><span class="am-badge am-badge-secondary">${contestProblem.submited }</span></td> 
+	       		<td><span class="am-badge am-badge-success">+${contestProblem.accepted }</span></td> 
+	            <td>${Math.round((contestProblem.accepted)*1000/(contestProblem.submited))/10 }%</td>
+	            <td>X</td>
          	    </tr>
           </c:forEach>
 		 </tbody>
         </table>
       </div>
 	</div>
+	
+	
+	
     </div>
     <div role="tabpanel" class="tab-pane" id="problem_speak">...</div>
   </div>
@@ -60,15 +67,6 @@
   </div>
 </body>
 <script type="text/javascript">
-function submit_list(contestId){
-	window.location.href="/hhoj/contest/"+contestId+"/submit/list/1";
 
-}
-function problem_list(contestId){
-	window.location.href="/hhoj/contest/"+contestId+"/problem/list";
-}
-function user_list(contestId){
-	window.location.href="/hhoj/contest/"+contestId+"/user/list/1";
-}
 </script>
 </html>

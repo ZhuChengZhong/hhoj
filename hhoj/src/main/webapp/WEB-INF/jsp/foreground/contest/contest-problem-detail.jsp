@@ -54,7 +54,7 @@
                  
               </div>
      <textarea class="form-control" cols="20" rows="15" id="problem_code"></textarea>
-     <button class="btn btn-default" onclick="create_submit(${problem.pid})">提交</button><div><font color="red" id="error"></font></div>
+     <button class="btn btn-default" onclick="create_submit(${contestProblem.problem.pid})">提交</button><div><font color="red" id="error"></font></div>
  
    </div>
 
@@ -79,6 +79,7 @@ function create_submit(pid){
 	var problem_code=$('#problem_code').val();
 	if(problem_language.trim()!=''&&problem_code.trim()!=''){
 		var url="/hhoj/submit/problem/"+pid+"/add";
+		var contestId=${contest.contestId};
 		$.ajax({  
             async:false,   //使用同步的Ajax请求  
             type: "POST",  
@@ -86,13 +87,14 @@ function create_submit(pid){
             dataType:"json",
             data: {
             	   languageId:problem_language,
-            	   code:problem_code
+            	   code:problem_code,
+            	   contestId:contestId
             	   },  
             success: function(result){
             	if(result.success){
-            		window.location.href="/hhoj/submit/problem/"+pid+"/list/1";
+            		window.location.href="/hhoj/contest/"+contestId+"/submit/list/1";
             	}else{
-            		window.location.href="/hhoj/user/login";            		
+            	  window.location.href="/hhoj/user/login";
             	}
             }  
         }); 

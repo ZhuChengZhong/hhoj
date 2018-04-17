@@ -123,30 +123,23 @@
    
      <div class="am-panel am-panel-default admin-sidebar-panel" style="height: 600px">
       <div class="am-panel-bd">
-        <p><span class="am-icon-bookmark"></span><font size="11">${myCurrentContest.title }</font></p>
-        <p> 参加人数： ${myCurrentContest.joinNumber }</p>
+        <p><span class="am-icon-bookmark"></span><font size="11">${contest.title }</font></p>
+        <p> 参加人数： ${contest.joinNumber }</p>
         <p>剩余时间：<font id="left_time"></font></p>
-        <font id="begin_time"  color="white"><fmt:formatDate value="${myCurrentContest.startTime }" pattern="yyyy-MM-dd hh:mm"/></font>
-        <p>比赛时常：<font id="time_limit">${myCurrentContest.timeLimit }</font>小时</p>
+        <font id="begin_time"  color="white"><fmt:formatDate value="${contest.startTime }" pattern="yyyy-MM-dd HH:mm"/></font>
+        <p>比赛时常：<font id="time_limit">${contest.timeLimit }</font>小时</p>
 		<c:choose>
-		<c:when test="${myCurrentContest.status==0}">
-			<c:if test="${myCurrentContest.userStatus==0}">
-				<button  onclick="join_contest(${myCurrentContest.contestId})"  style="width:200px;height:38px;background-color: #1cb0f6;border-radius: 20px;"><font color="white">报名参加比赛</font></button>
-			</c:if>
-			<c:if test="${myCurrentContest.userStatus==1}">
-				<button   onclick="exit_contest(${myCurrentContest.contestId})"  style="width:200px;height:38px;background-color: #1cb0f6;border-radius: 20px;"><font color="white">退出比赛</font></button>
-			</c:if>
-		</c:when>
-		<c:when test="${myCurrentContest.status==2}">
+		
+		<c:when test="${contest.status==2}">
 			
 				<button  style="width:200px;height:38px;background-color: #ade2fc;border-radius: 20px;"><font color="white">比赛已结束</font></button>
 		</c:when>
 		<c:otherwise>
-			<c:if test="${myCurrentContest.userStatus==0}">
+			<c:if test="${contest.userStatus==0}">
 				<button style="width:200px;height:38px;background-color: #ade2fc;border-radius: 20px;"><font color="white">您未参加本次比赛</font></button>
 			</c:if>
-			<c:if test="${myCurrentContest.userStatus==1}">
-				<button   onclick=""  style="width:200px;height:38px;background-color: #1cb0f6;border-radius: 20px;"><font color="white">进入比赛</font></button>
+			<c:if test="${contest.userStatus==1}">
+				<button   onclick=""  style="width:200px;height:38px;background-color: #1cb0f6;border-radius: 20px;"><font color="white">进行中</font></button>
 			</c:if>
 		</c:otherwise>
 	</c:choose>
