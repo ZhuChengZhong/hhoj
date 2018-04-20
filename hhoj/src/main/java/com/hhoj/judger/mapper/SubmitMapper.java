@@ -56,18 +56,4 @@ public interface SubmitMapper {
 	 * @return
 	 */
 	public Integer findCount(Submit submit);
-	
-	/**
-	 *  查找比赛提交列表
-	 * @param contestId
-	 * @return
-	 */
-	public List<Submit> findContestSubmits(@Param("contestId")Integer contestId,@Param("pageBean")PageBean pageBean);
-	
-	/**
-	 * 查找比赛提交个数
-	 * @param contestId
-	 * @return
-	 */
-	public Integer findContestSubmitCount(Integer contestId);
 }

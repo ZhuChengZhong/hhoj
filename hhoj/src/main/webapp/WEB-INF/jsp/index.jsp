@@ -69,8 +69,8 @@
         <li><a href="${pageContext.request.contextPath }/contest/list/1"><span class="am-icon-th"></span>竞赛</a></li>
         <li><a href="${pageContext.request.contextPath }/problem/list/1"><span class="am-icon-puzzle-piece">测试</a></li>
         <li><a href="#"><span class="am-icon-file"></span>运行</a></li>
-        <c:if test="${currentUser!=null && currentUser.role>1 }">
-        	 <li><a  target="_blank"  href="${pageContext.request.contextPath }/manager"><span class="am-icon-table"></span>管理</a></li>
+        <c:if test="currentUser!=null&&currentUser.role>1">
+        	 <li><a href="${pageContext.request.contextPath }/manager"><span class="am-icon-table"></span>管理</a></li>
         </c:if>
       </ul>
       <form class="navbar-form navbar-left">

@@ -14,7 +14,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	
 	<sql id="fields">languageId,languageName,compileCommand,runCommand</sql>
 	
-	<select id="findLanguageById" resultMap="languageMap" parameterType="Integer">
+	<select id="findLanguageById" resultMap="languageMap" parameterType="Integer" flushCache="true">
 	 select <include refid="fields"></include> from t_language where languageId=#{languageId}
 	</select>
    

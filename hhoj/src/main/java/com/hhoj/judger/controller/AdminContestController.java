@@ -1,10 +1,7 @@
 package com.hhoj.judger.controller;
 
 import java.text.ParseException;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.DelayQueue;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,14 +18,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.hhoj.judger.annotation.ValidatePermission;
 import com.hhoj.judger.entity.Contest;
 import com.hhoj.judger.entity.ContestProblem;
-import com.hhoj.judger.entity.ContestUser;
 import com.hhoj.judger.entity.PageBean;
 import com.hhoj.judger.entity.Problem;
 import com.hhoj.judger.entity.Role;
 import com.hhoj.judger.entity.User;
 import com.hhoj.judger.service.ContestService;
 import com.hhoj.judger.service.ProblemService;
-import com.hhoj.judger.service.UserService;
 import com.hhoj.judger.util.DateUtil;
 import com.hhoj.judger.util.PageUtil;
 import com.hhoj.judger.util.ResponseUtil;
@@ -42,12 +37,6 @@ public class AdminContestController {
 	
 	@Autowired
 	private ProblemService problemService;
-	
-	@Autowired
-	private UserService userService;
-	
-	@Autowired
-	private DelayQueue<Contest>contestDelayQueue;
 	/**
 	 * 获取竞赛列表
 	 * @param page
@@ -60,12 +49,9 @@ public class AdminContestController {
 		if(page==null) {
 			page=1;
 		}
-		Map<String,Object>param=new HashMap<>();
-		param.put("start", (page-1)*10);
-		param.put("size", 10);
-		int count=contestService.findCount(param);
+		int count=contestService.findCount();
 		PageBean pageBean=new PageBean(10, page, count);
-		List<Contest>list=contestService.findContests(param);
+		List<Contest>list=contestService.findContests(pageBean);
 		String contextPath=request.getContextPath();
 		String url=contextPath+"/manager/contest/list";
 		String pagination=PageUtil.getPagination(url, pageBean);
@@ -169,23 +155,6 @@ public class AdminContestController {
 	
 	
 	/**
-	 * 获取比赛用户列表
-	 * @param contestId
-	 * @return
-	 */
-	@RequestMapping(value="/{contestId}/user/list",method=RequestMethod.GET)
-	public ModelAndView contestUserList(
-			@PathVariable(value = "contestId") Integer contestId) {
-		ModelAndView mav=new ModelAndView();
-		List<ContestUser>list=userService.findUsersByContestId(contestId);
-		mav.addObject("contestUserList", list);
-		mav.addObject("contestId", contestId);
-		mav.addObject("mainPage", "contest/contest-user-list.jsp");
-		mav.setViewName("manager");
-		return mav;
-	}
-	
-	/**
 	 * 添加竞赛试题
 	 * @param pid
 	 * @param contestId
@@ -247,42 +216,6 @@ public class AdminContestController {
 		JSONObject o=new JSONObject();
 		Integer count=contestService.removeContestProblem(cpId);
 		o.put("count", count);
-		ResponseUtil.write(o, response);
-	}
-	
-	
-	/**
-	 * 改变比赛状态
-	 * 并返回当前状态
-	 * @param contestId
-	 * @param status
-	 * @param response
-	 */
-	@ValidatePermission(role=Role.MANAGER)
-	@RequestMapping(value="/{contestId}/status/{status}",method= {RequestMethod.POST})
-	public void changeContestStatus(@PathVariable("contestId")Integer contestId,
-			@PathVariable("status")Integer status,
-			HttpServletResponse response) {
-		JSONObject o=new JSONObject();
-		Contest contest=new Contest();
-		contest.setContestId(contestId);
-		contest.setStatus(status);
-		Integer count=contestService.updateContest(contest);
-		if(count>0) {
-			o.put("success", true);
-			o.put("status", status);
-			o.put("contestId", contestId);
-			/**
-			 * 根据修改的比赛状态从延迟队列中添加或者删除比赛
-			 */
-			if(status==0) {
-				contestDelayQueue.add(contestService.findContestById(contestId));
-			}else {
-				contestDelayQueue.remove(contest);
-			}
-		}else {
-			o.put("success", false);
-		}
 		ResponseUtil.write(o, response);
 	}
 }

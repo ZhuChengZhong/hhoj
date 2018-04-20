@@ -2,8 +2,6 @@ package com.hhoj.judger.service;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Param;
-
 import com.hhoj.judger.entity.PageBean;
 import com.hhoj.judger.entity.Submit;
 
@@ -50,18 +48,4 @@ public interface SubmitService {
 	 * @return
 	 */
 	public Integer findCount(Submit submit);
-	
-	/**
-	 *  查找比赛提交列表
-	 * @param contestId
-	 * @return
-	 */
-	public List<Submit> findContestSubmits(Integer contestId,PageBean pageBean);
-	
-	/**
-	 * 查找比赛提交个数
-	 * @param contestId
-	 * @return
-	 */
-	public Integer findContestSubmitCount(Integer contestId);
 }

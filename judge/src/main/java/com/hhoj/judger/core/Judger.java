@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import org.apache.ibatis.binding.MapperProxy;
 import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,15 +40,16 @@ public class Judger implements Runnable{
 	}
 
 	public void run() {
-
 		// 从数据库中查找提交
 		Submit submit = submitMapper.findById(submitId);
 		if (submit == null) {
+			logger.info("未从服务器查询到提交信息:"+submitId);
 			return;
 		}
 		logger.info("从服务器查询具体的提交信息:"+submit);
 		// 获取测试点
 		List<TestPoint> pointList = testPointMapper.findPointListByProblemId(submit.getProblem().getPid());
+		
 		Handler handler;
 		try {
 			// 根据不同的语言获取不同的处理类

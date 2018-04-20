@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
-import com.hhoj.judger.entity.ContestUser;
 import com.hhoj.judger.entity.PageBean;
 import com.hhoj.judger.entity.User;
 
@@ -68,19 +67,5 @@ public interface UserMapper {
 	 * @param contestId
 	 * @return
 	 */
-	public List<ContestUser> findUsersByContestId(Integer contestId);
-	
-	/**
-	 * 分页查找某个比赛的用户
-	 * @param contestId
-	 * @return
-	 */
-	public List<ContestUser> findContestUsers(@Param("contestId")Integer contestId,@Param("pageBean")PageBean pageBean);
-	
-	/**
-	 * 查找比赛用户个数
-	 * @param contestId
-	 * @return
-	 */
-	public Integer findUserCountByContestId(Integer contestId);
+	public List<User> findUsersByContestId(Integer contestId);
 }

@@ -1,13 +1,11 @@
 package com.hhoj.judger.service;
 
 import java.util.List;
-import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
 import com.hhoj.judger.entity.Contest;
 import com.hhoj.judger.entity.ContestProblem;
-import com.hhoj.judger.entity.ContestUser;
 import com.hhoj.judger.entity.PageBean;
 import com.hhoj.judger.entity.User;
 
@@ -38,15 +36,15 @@ public interface ContestService {
 	public Contest findContestById(Integer contestId);
 	/**
 	 * 查找比赛集合
-	 * @param param
+	 * @param contestId
 	 * @return
 	 */
-	public List<Contest> findContests(Map<String,Object>param);
+	public List<Contest> findContests(PageBean pageBean);
 	/**
 	 * 查找比赛总数
 	 * @return
 	 */
-	public Integer findCount(Map<String,Object>param);
+	public Integer findCount();
 	
 	/**
 	 * 获取竞赛试题
@@ -62,14 +60,6 @@ public interface ContestService {
 	 */
 	public Integer addContestProblem(ContestProblem contestProblem);
 	
-	
-	
-	/**
-	 * 查找竞赛试题
-	 * 
-	 * @return
-	 */
-	public ContestProblem findContestProblemById(Integer cpId);
 	
 	/**
 	 * 查找竞赛试题
@@ -113,20 +103,5 @@ public interface ContestService {
 	 * @return
 	 */
 	public boolean existUser(Integer uid,Integer contestId);
-	/**
-	 * 更新比赛用户
-	 * @param uid
-	 * @param contestUser
-	 * @return
-	 */
-	public ContestUser updateContestUser(@Param("cuId")Integer cuId,@Param("contestUser")ContestUser contestUser);
-	
-	/**
-	 * 查找用户
-	 * @param uid
-	 * @param contestId
-	 * @return
-	 */
-	public ContestUser findContestUser(@Param("uid")Integer uid,@Param("contestId")Integer contestId);
 	
 }

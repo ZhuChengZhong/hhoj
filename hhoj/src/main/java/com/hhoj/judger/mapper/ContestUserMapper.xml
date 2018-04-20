@@ -6,30 +6,13 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <insert id="joinContest" >
     	insert into t_contest_user 
-    	values (null,#{uid},#{contestId},0,0,0)
+    	values (#{uid},#{contestId})
     </insert>
-   <update id="updateContestUser" resultType="Integer">
-   		update t_contest_user
-   		<set>
-   			<if test="contestUser.solved!=null">
-   				 solved=#{contestUser.solved}, 
-   			</if>
-   			<if test="contestUser.useTotalTime!=null">
-   				 useTotalTime=#{contestUser.useTotalTime}, 
-   			</if>
-   			<if test="contestUser.useTotalMemary!=null">
-   				 useTotalMemary=#{contestUser.useTotalMemary}, 
-   			</if>
-   		</set>
-   		where cuId=#{cuId}
-   </update>
-   
-   <select id="findContestUser" resultType="ContestUser">
-   	 select * from t_contest_user where uid=#{uid} and contestId=#{contestId}
-   </select>
+  
    
    <delete id="exitContest" >
-   	delete from t_contest_user where  uid=#{uid} and contestId=#{contestId}
+   	delete from t_contest_user where  uid=#{uid} 
+   	and contestId=#{contestId}
    </delete>
    
    <select id="existUser" resultType="Integer">

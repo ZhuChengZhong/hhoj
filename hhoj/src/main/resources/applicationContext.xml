@@ -86,12 +86,4 @@
  	<bean id="submitReceiver" class="com.hhoj.judger.mq.SubmitReceiver" destroy-method="close">
  	</bean>
  	<bean id="submitMessageListener" class="com.hhoj.judger.mq.SubmitMessageListener"></bean>
- 	<!-- 延迟队列用于存放未开始的比赛 -->
- 	<bean id="contestDelayQueue" class="java.util.concurrent.DelayQueue">
- 	</bean>
- 	
- 	<!-- 用于结束比赛的线程池 -->
- 	<bean id="scheduledExecutorService" class="java.util.concurrent.ScheduledThreadPoolExecutor" destroy-method="shutdown">
- 	 <constructor-arg index="0" value="2" />
- 	</bean>
 </beans>

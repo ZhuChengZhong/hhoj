@@ -34,13 +34,14 @@ public class Submit implements Serializable{
 	//记录该提交是否被评测过    1 已评测 0 未评测
 	private Integer judged;
 	//是否为比赛的提交
-	private Integer isContest;
+	private Integer contestId;
 	
-	public Integer getIsContest() {
-		return isContest;
+	
+	public Integer getContestId() {
+		return contestId;
 	}
-	public void setIsContest(Integer isContest) {
-		this.isContest = isContest;
+	public void setContestId(Integer contestId) {
+		this.contestId = contestId;
 	}
 	public Integer getJudged() {
 		return judged;
@@ -111,10 +112,10 @@ public class Submit implements Serializable{
 	public String toString() {
 		return "Submit [sid=" + sid + ", user=" + user + ", problem=" + problem + ", result=" + result + ", useTime="
 				+ useTime + ", useMemary=" + useMemary + ", code=" + code + ", submitTime=" + submitTime + ", language="
-				+ language + ", judged=" + judged + ", isContest=" + isContest + "]";
+				+ language + ", judged=" + judged + ", contestId=" + contestId + "]";
 	}
 	public Submit(User user, Problem problem, String result, Integer useTime, Integer useMemary, String code,
-			Date submitTime, Language language, Integer judged, Integer isContest) {
+			Date submitTime, Language language, Integer judged, Integer contestId) {
 		super();
 		this.user = user;
 		this.problem = problem;
@@ -125,7 +126,7 @@ public class Submit implements Serializable{
 		this.submitTime = submitTime;
 		this.language = language;
 		this.judged = judged;
-		this.isContest = isContest;
+		this.contestId = contestId;
 	}
 	
 	

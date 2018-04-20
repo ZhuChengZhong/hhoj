@@ -3,7 +3,6 @@ package com.hhoj.judger.mapper;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.ibatis.binding.MapperProxyFactory;
 import org.junit.Test;
 
 import com.hhoj.judger.entity.User;
@@ -53,5 +52,5 @@ public class UserMapperTest {
 		System.out.println(list);
 	}
 	
-	//MapperProxyFactory<T>
+	
 }

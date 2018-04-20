@@ -19,8 +19,8 @@
 								<th colspan="4"><font color="black">${contest.title}</font></th>
 							</tr>
 							<tr>
-								<th>报名人数:</th>
-								<td>${contest.joinNumber}</td>
+								<th>比赛状态:</th>
+								<td>${contest.status}</td>
 								<th>比赛时长:</th>
 								<td>${contest.timeLimit}</td>
 							</tr>
@@ -33,21 +33,31 @@
 								<fmt:formatDate value="${contest.endJoinTime }" pattern="yyyy-MM-dd hh:mm"/></td>
 							</tr>
 							<tr>
-								<th>比赛状态:</th>
-							<c:choose>
-								<c:when test="${contest.status==0}">
-									<td>未开始</td>
-								</c:when>
-								<c:when test="${contest.status==1}">
-									<td>正在进行</td>
-								</c:when>
-								<c:otherwise>
-									<td>已经结束</td>
-								</c:otherwise>
-							</c:choose>
+								<th>比赛描述 </th>
+								<td>${contest.desc}</td>
 								<th> </th>
 								<td>
-									<a href="${pageContext.request.contextPath}/contest/${contest.contestId}"><font color="blue"> 查看详情</font></a>
+									<c:choose>
+										<c:when test="${contest.status==0}">
+											<c:if test="${contest.userStatus==0}">
+												<a href="#" onclick="join_contest(${contest.contestId})">
+												<font color="blue">报名</font></a>
+											</c:if>
+											<c:if test="${contest.userStatus==1}">
+												<a href="#" onclick="exit_contest(${contest.contestId})">
+												<font color="blue">退出比赛</font>
+												</a>
+											</c:if>
+										</c:when>
+										<c:otherwise>
+											<c:if test="${contest.userStatus==0}">
+												<font color="gray">未参加</font>
+											</c:if>
+											<c:if test="${contest.userStatus==1}">
+												<font color="gray">已参加</font>
+											</c:if>
+										</c:otherwise>
+									</c:choose>
 								</td>
 							</tr>
 								
@@ -67,5 +77,37 @@
   </div>
   </div>
   
-
+  <script type="text/javascript">
+		function join_contest(contest_id){
+			var url="/hhoj/contest/join/"+contest_id;
+			$.ajax({  
+                async:false,   //使用同步的Ajax请求  
+                type: "POST",  
+                url: url,  
+                data: {},  
+                dataType:'json',
+                success: function(result){  
+					if(result.success){
+						window.location.href="/hhoj/contest/list/1";
+                	}
+                }  
+            }); 
+		}
+		
+		function exit_contest(contest_id){
+			var url="/hhoj/contest/exit/"+contest_id;
+			$.ajax({  
+                async:false,   //使用同步的Ajax请求  
+                type: "POST",  
+                url: url,  
+                data: {},  
+                dataType:'json',
+                success: function(result){  
+					if(result.success){
+						window.location.href="/hhoj/contest/list/1";
+                	}
+                }  
+            }); 
+		}
+</script>
   <!-- content end -->

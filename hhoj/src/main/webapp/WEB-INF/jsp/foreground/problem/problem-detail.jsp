@@ -91,11 +91,10 @@ function create_submit(pid){
             	   code:problem_code
             	   },  
             success: function(result){
-            	alert(result);
             	if(result.success){
             		window.location.href="/hhoj/submit/problem/"+pid+"/list/1";
             	}else{
-            	  window.location.href="/hhoj/user/login";
+            		window.location.href="/hhoj/user/login";            		
             	}
             }  
         }); 

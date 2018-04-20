@@ -1,8 +1,11 @@
 package com.hhoj.judger.mapper;
 
+import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 
-import com.hhoj.judger.entity.ContestUser;
+import com.hhoj.judger.entity.Contest;
+import com.hhoj.judger.entity.User;
 
 /**
  * 比赛用户映射类
@@ -20,7 +23,8 @@ public interface ContestUserMapper {
 	
 	/**
 	 * 退出比赛
-	 * 
+	 * @param uid
+	 * @param contestId
 	 * @return
 	 */
 	public Integer exitContest(@Param("uid")Integer uid,@Param("contestId")Integer contestId);
@@ -32,20 +36,4 @@ public interface ContestUserMapper {
 	 * @return
 	 */
 	public Integer existUser(@Param("uid")Integer uid,@Param("contestId")Integer contestId);
-	
-	/**
-	 * 更新比赛用户
-	 * @param uid
-	 * @param contestUser
-	 * @return
-	 */
-	public ContestUser updateContestUser(@Param("cuId")Integer cuId,@Param("contestUser")ContestUser contestUser);
-	
-	/**
-	 * 查找用户
-	 * @param uid
-	 * @param contestId
-	 * @return
-	 */
-	public ContestUser findContestUser(@Param("uid")Integer uid,@Param("contestId")Integer contestId);
 }

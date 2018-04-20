@@ -72,31 +72,12 @@
                <td><fmt:formatDate value="${contest.startJoinTime}" pattern="yyyy-MM-dd hh:mm:ss"/></td>
                 <td><fmt:formatDate value="${contest.endJoinTime}" pattern="yyyy-MM-dd hh:mm:ss"/></td>             
                <td>${contest.initiator.userName}</td>  
-               <td id="contest_status">
-                <c:choose>
-                	<c:when test="${contest.status==-1}">
-                		<a onclick="change_status(${contest.contestId},0)">激活</a>
-                	</c:when>
-                	<c:when test="${contest.status==0}">
-                		<a onclick="change_status(${contest.contestId},-1)">隐藏</a>
-                	</c:when>
-                	<c:when test="${contest.status==1}">
-                		进行中
-                	</c:when>
-                	<c:when test="${contest.status==2}">
-                		已结束
-                	</c:when>
-                	<c:otherwise>
-                	  已结束
-                	</c:otherwise>
-                </c:choose>
-                </td>
+                <td>${contest.status}</td>  
               <td>
                 <div class="am-btn-toolbar">
                   <div class="am-btn-group am-btn-group-xs">
                     <button type="button" class="am-btn am-btn-default"  onclick="update_contest(${contest.contestId})"><span class="am-icon-save"></span> 编辑</button>
                      <button type="button" class="am-btn am-btn-default"  onclick="contest_problem_list(${contest.contestId})"><span class="am-icon-save"></span>题目管理</button>
-                     <button type="button" class="am-btn am-btn-default"  onclick="contest_user_list(${contest.contestId})"><span class="am-icon-save"></span>报名用户</button>
                     <button class="am-btn am-btn-default am-btn-xs" onclick="remove_contest(${contest.contestId})"><span class="am-icon-trash-o"></span>删除</button>
                   </div>
                 </div>
@@ -125,29 +106,6 @@
 </body>
 
 <script type="text/javascript">
-
-	/*
-		改变比赛状态
-	*/
-	function change_status(contestId,status){
-		var url="/hhoj/manager/contest/"+contestId+"/status/"+status;
-		if(status!=null&&contestId!=null){
-			 $.ajax({  
-	             async:false,   //使用同步的Ajax请求  
-	             type: "POST",  
-	             url: url,  
-	             data: "", 
-	             dataType:"json",
-	             success: function(result){  
-	             	if(result.success){
-	             		document.location.reload();
-	             	}
-	             }  
-	         }); 
-		}
-	}
-
-
 	function remove_contest(contest_id) {
 		if(confirm("你确定要删除该竞赛吗？")){
 			var url="/hhoj/manager/contest/remove/"+contest_id;
@@ -174,10 +132,6 @@ function update_contest(contest_id){
 }
 function contest_problem_list(contest_id){
 	window.location.href="/hhoj/manager/contest/"+contest_id+"/problem/list";
-}
-
-function contest_user_list(contest_id){
-	window.location.href="/hhoj/manager/contest/"+contest_id+"/user/list";
 }
 </script>
 </html>

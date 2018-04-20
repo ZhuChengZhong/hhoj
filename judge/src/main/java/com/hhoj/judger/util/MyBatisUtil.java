@@ -30,11 +30,12 @@ public final class MyBatisUtil {
     * @return
     */
    public static SqlSession getSqlSession(){
-	   SqlSession sqlSession=sqlSessionHolder.get();
+	  /* SqlSession sqlSession=sqlSessionHolder.get();
 	   if(sqlSession==null){
 		   sqlSession=sqlSessionFactory.openSession();
 		   sqlSessionHolder.set(sqlSession);
-	   }
+	   }*/
+	   SqlSession sqlSession=sqlSessionFactory.openSession();
 	   return sqlSession;
    }
    /**

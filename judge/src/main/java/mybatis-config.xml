@@ -5,8 +5,9 @@
 <configuration>
 	<settings>
 		<setting name="cacheEnabled" value="false" />
+		<setting name="localCacheScope" value="STATEMENT" />
 		<setting name="lazyLoadingEnabled" value="false" />
-		<setting name="defaultExecutorType" value="REUSE" />
+		<setting name="defaultExecutorType" value="SIMPLE" />
 		<setting name="defaultStatementTimeout" value="25" />
 	</settings>
 	<typeAliases>

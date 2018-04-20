@@ -53,6 +53,7 @@ jobject JHashMap::toJObject(JNIEnv* jniEnv) {
             hashMap, 
             putMethod,
             key,
+
             value
         );
     }
