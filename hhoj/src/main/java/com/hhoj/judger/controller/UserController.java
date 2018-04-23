@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +21,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hhoj.judger.entity.PageBean;
 import com.hhoj.judger.entity.Role;
 import com.hhoj.judger.entity.User;
+import com.hhoj.judger.service.ProblemService;
 import com.hhoj.judger.service.UserService;
 import com.hhoj.judger.util.JavaMailUtil;
 import com.hhoj.judger.util.PageUtil;
@@ -39,9 +41,11 @@ public class UserController {
 	
 	private static Logger logger=LoggerFactory.getLogger(UserController.class);
 	
-	@Resource
+	@Autowired
 	private UserService userService;
 	
+	@Autowired
+	private ProblemService problemService;
 	
 	/**
 	 * 用户注册
@@ -173,7 +177,10 @@ public class UserController {
 			mav.addObject("message", "用户名或密码错误");
 			mav.setViewName("user/login");
 		}else {
+			//将用户已通过题目的id查询出来
+			List<Integer>passIds=problemService.findAcceptProblemByUId(currentUser.getUid());
 			request.getSession().setAttribute("currentUser", currentUser);
+			request.getSession().setAttribute("passIds", passIds);
 			logger.info("user logining :"+currentUser);
 			String path=(String)request.getSession().getAttribute("redirect");
 			if(StringUtil.isNotEmpty(path)) {

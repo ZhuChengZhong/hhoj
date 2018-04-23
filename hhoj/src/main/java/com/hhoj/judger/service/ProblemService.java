@@ -48,4 +48,10 @@ public interface ProblemService {
 	 * @return
 	 */
 	public Integer findCount(Problem problem);
+	/**
+	 * 查找某用户已通过的题目
+	 * @param uid
+	 * @return
+	 */
+	public List<Integer> findAcceptProblemByUId(Integer uid);
 }

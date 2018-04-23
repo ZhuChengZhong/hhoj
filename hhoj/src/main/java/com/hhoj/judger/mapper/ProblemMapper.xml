@@ -20,7 +20,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<result column="accepted" property="accepted"/>
 	<result column="submited" property="submited"/>
 	<result column="publish" property="publish"/>
-	<association property="typeId" column="type" select="com.hhoj.judger.mapper.ProblemTypeMapper.findProblemTypeById"></association>
+	<association property="type" column="typeId" select="com.hhoj.judger.mapper.ProblemTypeMapper.findProblemTypeById"></association>
 	
 </resultMap>
 
@@ -46,6 +46,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			limit #{pageBean.start},#{pageBean.size}
 		</if>
 	</select>
+	
+	<select id="findAcceptProblemByUId" parameterType="Integer" resultType="Integer">
+		select distinct pid from t_submit where result='Accepted' and uid=#{uid}
+	</select>
+	
     <select id="findProblemById" parameterType="Integer" resultMap="problemMap"  >
         select <include refid="info"></include> from t_problem where pid=#{pId}  
     </select>
@@ -117,6 +122,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     	
     	where pid=#{pid}
     </update>
+   
+   
    
    <delete id="removeProblem" parameterType="Integer">
    	delete from t_problem where pid =#{pid}

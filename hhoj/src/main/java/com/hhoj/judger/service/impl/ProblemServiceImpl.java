@@ -46,4 +46,9 @@ public class ProblemServiceImpl implements ProblemService{
 		return problemMapper.findCount(problem);
 	}
 
+	@Override
+	public List<Integer> findAcceptProblemByUId(Integer uid) {
+		return problemMapper.findAcceptProblemByUId(uid);
+	}
+
 }

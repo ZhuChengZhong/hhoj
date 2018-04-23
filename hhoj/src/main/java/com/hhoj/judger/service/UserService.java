@@ -2,6 +2,9 @@ package com.hhoj.judger.service;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
+import com.hhoj.judger.entity.ContestUser;
 import com.hhoj.judger.entity.PageBean;
 import com.hhoj.judger.entity.User;
 
@@ -72,5 +75,27 @@ public interface UserService {
 	 * @return
 	 */
 	public User findUserByUid(Integer uid);
+	
+	/**
+	 * 分页查找某个比赛的用户
+	 * @param contestId
+	 * @return
+	 */
+	public List<ContestUser> findContestUsers(Integer contestId,PageBean pageBean);
+	
+	/**
+	 * 查找某个比赛的所有用户
+	 * @param contestId
+	 * @return
+	 */
+	public List<ContestUser> findUsersByContestId(Integer contestId);
+	
+	/**
+	 * 查找比赛用户个数
+	 * @param contestId
+	 * @return
+	 */
+	public Integer findUserCountByContestId(Integer contestId);
+	
 	
 }

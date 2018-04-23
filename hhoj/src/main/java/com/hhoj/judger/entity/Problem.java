@@ -9,6 +9,9 @@ import java.util.Date;
  *
  */
 public class Problem implements Serializable{
+	
+	public static final int PASS=1;
+	public static final int NO_PASS=0;
 	// 问题id
 	private Integer pid;
 	//标题
@@ -37,7 +40,16 @@ public class Problem implements Serializable{
 	private ProblemType type;
 	//该题是否发布（0未发布 1发布）
 	private Integer publish;
+	//标记用户是否通过 1通过 0未通过
+	private int pass=NO_PASS;
 	
+	
+	public int getPass() {
+		return pass;
+	}
+	public void setPass(int pass) {
+		this.pass = pass;
+	}
 	public Integer getPublish() {
 		return publish;
 	}

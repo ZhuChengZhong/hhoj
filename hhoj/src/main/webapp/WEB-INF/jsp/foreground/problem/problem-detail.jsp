@@ -94,7 +94,7 @@ function create_submit(pid){
             	if(result.success){
             		window.location.href="/hhoj/submit/problem/"+pid+"/list/1";
             	}else{
-            		window.location.href="/hhoj/user/login";            		
+            	  window.location.href="/hhoj/user/login";
             	}
             }  
         }); 

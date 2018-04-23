@@ -32,23 +32,29 @@
         <table class="am-table am-table-striped am-table-hover table-main">   
           <thead >
            <tr bgcolor="#7EC0EE" >
+           <th>通过</th>
 			<th>题号</th>
 			<th>标题</th>
 			<th>提交次数</th>
 			<th>通过次数</th>
 			<th>通过率</th>
-			<th>来源</th>
+			
 		    </tr>
           </thead>
           <tbody>
           <c:forEach items="${problemList}" var="problem">
           		<tr>
+          		<td>
+          			<c:if test="${problem.pass==1 }">
+          				<img alt="" width="30" height="30" src="${pageContext.request.contextPath}/assets/images/pass.png">
+          			</c:if>
+          			
+          		</td>
 	       		<td >${problem.pid }</td>
 	       		<td><a href="${pageContext.request.contextPath}/problem/detail/${problem.pid}">${problem.title }</a></td>
 	       		<td><span class="am-badge am-badge-secondary">${problem.submited }</span></td> 
 	       		<td><span class="am-badge am-badge-success">+${problem.accepted }</span></td> 
 	            <td>${Math.round((problem.accepted)*1000/(problem.submited))/10 }%</td>
-	            <td>${problem.source }</td>
          	    </tr>
           </c:forEach>
 		 </tbody>

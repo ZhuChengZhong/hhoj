@@ -60,5 +60,11 @@ public class ProblemMapperTest {
 		System.out.println(list);
 	}
 	
+	@Test
+	public void testfindPassProblems(){
+		List<Integer> list=problemMapper.findAcceptProblemByUId(111);
+		System.out.println("--");
+		System.out.println(list);
+	}
 	
 }

@@ -18,21 +18,31 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	<result column="contestPassword" property="contestPassword" />
 	<result column="status" property="status"/>
 	<association property="initiator" column="initiator" select="com.hhoj.judger.mapper.UserMapper.findUserById"></association>
-	<collection property="users" column="contestId"  select="com.hhoj.judger.mapper.UserMapper.findUsersByContestId"></collection>
+	<collection property="contestUsers" column="contestId"  select="com.hhoj.judger.mapper.UserMapper.findUsersByContestId"></collection>
 </resultMap>
 
 <sql id="fields">
  contestId,title,contestDesc,joinNumber,startTime,timeLimit,startJoinTime,endJoinTime,contestPassword,initiator,status
 </sql>
 	
-	<select id="findContests" resultMap="contestMap" parameterType="PageBean">
+	<select id="findContests" resultMap="contestMap" parameterType="Map">
 	
 		select <include refid="fields"></include> from t_contest
+		
+		<where>
+			<if test="status!=null">
+			   and ${status}
+			</if>
+			<if test="title!=null">
+			   and #{title}
+			</if>
+		</where>
 		
 		order by startJoinTime desc 
 		<if test="start!=null and size!=null">
 			limit #{start},#{size}
 		</if>
+		
 	</select>
     <select id="findContestById" parameterType="Integer" resultMap="contestMap"  >
         select <include refid="fields"></include> from t_contest where contestId=#{contestId}  
@@ -43,9 +53,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         ( select contestId from t_contest_user where uid=#{uid}) 
     </select>
     
-    <select id="findCount" resultType="Integer">
+    <select id="findCount" resultType="Integer" parameterType="Map">
    
     	select count(*) from t_contest
+    	<where>
+			<if test="status!=null">
+			   and ${status}
+			</if>
+			<if test="title!=null">
+			   and #{title}
+			</if>
+		</where>
     	
     </select>
     
@@ -75,7 +93,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	    	<if test="startTime!=null and startTime!=''">
 	    		startTime=#{startTime,typeHandler=com.hhoj.judger.mapper.typehandler.DateToLongTypeHandler},
 	    	</if>
-	    	<if test="endTime!=null and endTime!=''">
+	    	<if test="timeLimit!=null">
 	    		timeLimit=#{timeLimit},
 	    	</if>
 	    	<if test="startJoinTime!=null and startJoinTime !='' ">
@@ -88,7 +106,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	    		contestPassword=#{contestPassword},
 	    	</if>
 	    	<if test="initiator!=null and initiator.uid!=null ">
-	    		initiator=#{createTime,typeHandler=com.hhoj.judger.mapper.typehandler.DateToLongTypeHandler},
+	    		initiator=#{initiator.uid},
 	    	</if>
 	    	<if test="status!=null">
 	    		status=#{status},
@@ -98,7 +116,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     	where contestId=#{contestId}
     </update>
    
-   <delete id="removeContest" parameterType="Integer">
+   <delete id="removeContest"  parameterType="Integer">
    	delete from t_contest where contestId =#{contestId}
    </delete>
 </mapper>

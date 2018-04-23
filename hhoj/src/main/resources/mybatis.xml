@@ -26,8 +26,8 @@
   		<typeHandler handler="com.hhoj.judger.mapper.typehandler.DateToLongTypeHandler" javaType="java.util.Date" jdbcType="BIGINT"/>
   	</typeHandlers>
   	
-<!--     对事务的管理和连接池的配置  
-    <environments default="development">  
+
+<!--    <environments default="development">  
         <environment id="development">  
             <transactionManager type="JDBC" />  
             <dataSource type="POOLED">  
@@ -40,9 +40,9 @@
     </environments>  
   
    
-    mapping 文件路径配置  
+
     <mappers>  
         <package name="com.hhoj.judger.mapper"/>
-    </mappers> 
-     -->
+    </mappers>   -->
+     
 </configuration>

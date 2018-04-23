@@ -1,9 +1,9 @@
 package com.hhoj.judger.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import com.hhoj.judger.entity.Contest;
-import com.hhoj.judger.entity.PageBean;
 import com.hhoj.judger.entity.User;
 
 /**
@@ -38,15 +38,15 @@ public interface ContestMapper {
 	public Contest findContestById(Integer contestId);
 	/**
 	 * 查找比赛集合
-	 * @param contestId
+	 * @param param
 	 * @return
 	 */
-	public List<Contest> findContests(PageBean pageBean);
+	public List<Contest> findContests(Map<String,Object>param);
 	/**
 	 * 查找比赛总数
 	 * @return
 	 */
-	public Integer findCount();
+	public Integer findCount(Map<String,Object>param);
 	
 	/**
 	 * 查找某个用户参加的所有比赛

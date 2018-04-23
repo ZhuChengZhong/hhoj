@@ -30,7 +30,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
    		select <include refid="fields"></include> from t_language 
    </select>
    
-   <update id="updateLanguage" parameterType="Language">
+   <update id="updateLanguage" parameterType="Language" >
    		update t_language
    		<set>
    			<if test="languageName!=null and languageName !=''">
