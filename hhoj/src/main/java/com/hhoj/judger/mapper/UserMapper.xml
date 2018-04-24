@@ -50,9 +50,11 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	    		and role=#{role}
 	    	</if>
 		</where>
+		  order by solved desc
 		<if test="pageBean!=null">
 			limit #{pageBean.start},#{pageBean.size}
 		</if>
+		
 	</select>
     <select id="findUserById" parameterType="Integer" resultMap="userMap"  >
         select <include refid="info"></include> from t_user where uid=#{userId}  

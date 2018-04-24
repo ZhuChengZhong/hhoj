@@ -4,9 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.DelayQueue;
-import java.util.concurrent.Delayed;
 import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 
 import javax.servlet.ServletContext;
@@ -19,9 +17,15 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import com.hhoj.judger.entity.Contest;
+import com.hhoj.judger.entity.PageBean;
+import com.hhoj.judger.entity.Submit;
+import com.hhoj.judger.entity.User;
 import com.hhoj.judger.mq.SubmitMessageListener;
 import com.hhoj.judger.mq.SubmitReceiver;
 import com.hhoj.judger.service.ContestService;
+import com.hhoj.judger.service.ProblemService;
+import com.hhoj.judger.service.SubmitService;
+import com.hhoj.judger.service.UserService;
 
 /**
  * 容器启动初始化
@@ -38,16 +42,41 @@ public class Initialization implements ServletContextListener {
 		ServletContext context = sce.getServletContext();
 		WebApplicationContext webApplicationContext = WebApplicationContextUtils
 				.getWebApplicationContext(sce.getServletContext());
-		SubmitReceiver submitReceiver = (SubmitReceiver) webApplicationContext.getBean("submitReceiver");
-		SubmitMessageListener submitMessageListener = (SubmitMessageListener) webApplicationContext
-				.getBean("submitMessageListener");
-		if (submitReceiver == null || submitMessageListener == null) {
-			logger.info("未找到消息接收者或消息监听器");
-			throw new NullPointerException();
-		}
-		submitReceiver.receiveSubmit(submitMessageListener);
-		logger.info("消息接收服务器成功启动");
+		//初始化消息队列
+		initMQ(webApplicationContext);
+		//初始化比赛
+		initContest(webApplicationContext);
+		//初始化全局参数
+		initAttributes(webApplicationContext,context);
+	}
 
+	/**
+	 * 初始化全局参数
+	 * @param webApplicationContext
+	 * @param context
+	 */
+	private void initAttributes(WebApplicationContext webApplicationContext,ServletContext context) {
+		ProblemService problemService=(ProblemService)webApplicationContext.getBean("problemService");
+		int globalProblemCount=problemService.findCount(null);
+		
+		SubmitService submitService=(SubmitService)webApplicationContext.getBean("submitService");
+		Submit submit=new Submit();
+		submit.setResult("Accepted");
+		int globalAcceptedCount=submitService.findCount(submit);
+		UserService userService=(UserService)webApplicationContext.getBean("userService");
+		int globalUserCount=userService.findCount(null);
+		PageBean pageBean=new PageBean(5, 1, 0);
+		List<User>globalACUsers=userService.findUsers(new User(), pageBean);
+		context.setAttribute("globalProblemCount", globalProblemCount);
+		context.setAttribute("globalAcceptedCount", globalAcceptedCount);
+		context.setAttribute("globalUserCount", globalUserCount);
+		context.setAttribute("globalACUsers", globalACUsers);
+	}
+	/**
+	 * 初始化比赛调度任务
+	 * @param webApplicationContext
+	 */
+	private void initContest(WebApplicationContext webApplicationContext) {
 		ContestService contestService = (ContestService) webApplicationContext.getBean("contestService");
 		Map<String, Object> param = new HashMap<>();
 		param.put("status", "status in (0,1)");
@@ -62,7 +91,22 @@ public class Initialization implements ServletContextListener {
 				.getBean("scheduledExecutorService");
 		new Thread(new BeginContestTask(contestDelayQueue,contestService,scheduledExecutorService)).start();
 	}
-
+	
+	/**
+	 * 初始化消息队列
+	 * @param webApplicationContext
+	 */
+	private void initMQ(WebApplicationContext webApplicationContext ) {
+		SubmitReceiver submitReceiver = (SubmitReceiver) webApplicationContext.getBean("submitReceiver");
+		SubmitMessageListener submitMessageListener = (SubmitMessageListener) webApplicationContext
+				.getBean("submitMessageListener");
+		if (submitReceiver == null || submitMessageListener == null) {
+			logger.info("未找到消息接收者或消息监听器");
+			throw new NullPointerException();
+		}
+		submitReceiver.receiveSubmit(submitMessageListener);
+		logger.info("消息接收服务器成功启动");
+	}
 	/**
 	 * 开始比赛任务
 	 * 
