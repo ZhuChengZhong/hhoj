@@ -1,0 +1,22 @@
+languageId=2&code=#include<stdio.h>%0A
+int main()%0A
+{%0A
+  int a[10];%0A
+  int n,i,count=0;%0A
+  scanf("%25d",%26n);%0A
+  for(i=0;i<n;i%2B%2B)%0A
+  {%0A
+     scanf("%25d",%26a[i]);%0A
+  }%0A
+  for(i=0;i<n;i%2B%2B)%0A
+  {%0A
+     if(i==0){count%2B%2B;continue;}%0A
+     if(a[i]!=a[i-1])%0A
+     {%0A
+        count%2B%2B;%0A
+     }%0A
+  }%0A
+  printf("%25d\n",count);%0A
+  return 0;%0A
+}%0A
+%0A

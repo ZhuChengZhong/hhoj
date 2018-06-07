@@ -1,10 +1,10 @@
 package com.hhoj.judger.util;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
-
-import org.apache.ibatis.io.Resources;
 
 /**
  * 配置文件读取类
@@ -18,7 +18,9 @@ public final class PropertiesUtil {
 	 */
 	static{
 		try {
-			InputStream inputStream=Resources.getResourceAsStream("judge.properties");
+			String path=PropertiesUtil.class.getResource("/").getPath();
+			File file=new File(path+"judge.properties");
+			InputStream inputStream=new FileInputStream(file);
 			pro=new Properties();
 			pro.load(inputStream);
 		} catch (IOException e) {
@@ -34,5 +36,5 @@ public final class PropertiesUtil {
 	public static String getParam(String key){
 		return pro.getProperty(key);
 	}
-	
+
 }

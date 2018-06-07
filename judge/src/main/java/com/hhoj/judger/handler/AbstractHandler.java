@@ -1,15 +1,24 @@
 package com.hhoj.judger.handler;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.hhoj.judger.constant.ConfigConstant;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.hhoj.judger.constant.ResultConstant;
-import com.hhoj.judger.core.Runner;
+import com.hhoj.judger.core.Executor;
+import com.hhoj.judger.entity.ExecResult;
+import com.hhoj.judger.entity.JudgeResult;
 import com.hhoj.judger.entity.Submit;
 import com.hhoj.judger.entity.TestPoint;
 import com.hhoj.judger.util.FileUtil;
+import com.hhoj.judger.util.PropertiesUtil;
+import com.spotify.docker.client.exceptions.DockerCertificateException;
+import com.spotify.docker.client.exceptions.DockerException;
 
 /**
  * 核心处理器
@@ -18,185 +27,244 @@ import com.hhoj.judger.util.FileUtil;
  *
  */
 public abstract class AbstractHandler implements Handler {
-	/**
-	 * 调用本地方法进行编译运行的类
-	 */
-	private Runner runner = new Runner();
 
-	protected String dataFileDir;
-	protected String programFileDir;
-	private String programFileName;
+	private static Logger logger=LoggerFactory.getLogger(AbstractHandler.class);
+	
+	public static final String INPUT_FILE_PATH_LIST_KEY = "inputFileList";
 
-	public AbstractHandler(String dataFileDir, String programFileDir) {
-		this.dataFileDir = dataFileDir;
-		this.programFileDir = programFileDir;
+	public static final String OUTPUT_FILE_PATH_LIST_KEY = "outputFileList";
+
+	public static final String USER_OUTPUT_FILE_PATH_LIST_KEY = "userOutputFileList";
+
+	public static final String RESULT_FILE_PATH_KEY = "resultFilePath";
+
+	public static final String CODE_FILE_PATH_KEY = "codeFilePath";
+
+	public static final String PROGRAM_FILE_PATH_KEY = "programFilePath";
+
+	public static final String INPUT_FILE_PATH;
+
+	public static final String OUTPUT_FILE_PATH;
+
+	public static final String USER_OUTPUT_FILE_PATH;
+
+	public static final String CODE_FILE_PATH;
+
+	public static final String PROGRAM_FILE_PATH;
+
+	public static final String RESULT_FILE_PATH;
+
+	public static final String SUBMIT_ID_PLACEHOLDER = "SUBMIT_ID_PLACEHOLDER";
+
+	public static final String POINT_ID_PLACEHOLDER = "POINT_ID_PLACEHOLDER";
+
+	public static final String PROGRAM_NAME_PLACEHOLDER = "PROGRAM_NAME_PLACEHOLDER";
+
+	public static final String PROGRAM_SUFFIX_PLACEHOLDER = "PROGRAM_SUFFIX_PLACEHOLDER";
+
+	public static final String WORKSPACE;
+
+	static {
+		WORKSPACE = PropertiesUtil.getParam("workspace");
+
+		INPUT_FILE_PATH = WORKSPACE + FileUtil.separator + "input" + FileUtil.separator + SUBMIT_ID_PLACEHOLDER
+				+ FileUtil.separator + POINT_ID_PLACEHOLDER + ".in";
+
+		OUTPUT_FILE_PATH = WORKSPACE + FileUtil.separator + "output" + FileUtil.separator + SUBMIT_ID_PLACEHOLDER
+				+ FileUtil.separator + POINT_ID_PLACEHOLDER + ".out";
+
+		USER_OUTPUT_FILE_PATH = WORKSPACE + FileUtil.separator + "useroutput" + FileUtil.separator
+				+ SUBMIT_ID_PLACEHOLDER + FileUtil.separator + POINT_ID_PLACEHOLDER + ".out";
+
+		CODE_FILE_PATH = WORKSPACE + FileUtil.separator + "code" + FileUtil.separator + SUBMIT_ID_PLACEHOLDER
+				+ FileUtil.separator + PROGRAM_NAME_PLACEHOLDER + PROGRAM_SUFFIX_PLACEHOLDER;
+
+		PROGRAM_FILE_PATH = WORKSPACE + FileUtil.separator + "program" + FileUtil.separator + SUBMIT_ID_PLACEHOLDER
+				+ FileUtil.separator + PROGRAM_NAME_PLACEHOLDER + PROGRAM_SUFFIX_PLACEHOLDER;
+
+		RESULT_FILE_PATH = WORKSPACE + FileUtil.separator + "result" + FileUtil.separator + SUBMIT_ID_PLACEHOLDER
+				+ FileUtil.separator + "res.txt";
 	}
 
-	/**
-	 * 
-	 * 用于对用户的提交进行处理
-	 */
-	public void handlerSubmit(Submit submit, List<TestPoint> pointList) {
-		boolean failed = false;
-		String fileName = this.prepare(submit, pointList);
-		if (compile(submit, fileName) && run(submit, fileName, pointList) && compare(submit, pointList)) {
-			submit.setResult(ResultConstant.AC);
+	private Executor executor = new Executor();
+
+	public JudgeResult handlerSubmit(Submit submit) throws Exception {
+		JudgeResult jr = new JudgeResult();
+		jr.setSubmitId(submit.getSubmitId());
+		Map<String, Object> paths = this.prepare(submit);
+		if (compile(jr, submit, paths) && run(jr, submit, paths) && compare(jr, paths,submit)) {
+			jr.setResult(ResultConstant.AC);
 		}
-		submit.setJudged(1);
-		this.clean();
+		this.clean(submit);
+		return jr;
 	}
 
-	/**
-	 * 根据用户提交的源码创建源码文件 不同的语言创建源码文件的方式不同，所以该方法留给子类实现
-	 * 
-	 * @param submit
-	 * @param codeDir
-	 * @return
-	 */
-	public abstract String createCodeFile(Submit submit, String codeDir);
+	public abstract void createCodeFile(Submit submit, Map<String, Object> paths);
 
-	/**
-	 * 获取编译程序命令
-	 * 
-	 * @param fileName
-	 * @return
-	 */
-	public abstract String getCompileCommand(Submit submit, String fileName);
+	public abstract String getCompileCommand(String codeFilePath,String programFilePath);
 
-	/**
-	 * 获取运行程序命令
-	 * 
-	 * @param fileName
-	 * @return
-	 */
-	public abstract String getRunCommand(Submit submit, String fileName);
+	public abstract String getRunCommand(String programFilePath);
 
-	/**
-	 * 编译程序
-	 */
-	public boolean compile(Submit submit, String fileName) {
-		String commandLine = this.getCompileCommand(submit, fileName);
-		Map<String, Object> map = runner.runCommand(commandLine, null, null, "", "", submit.getProblem().getTimeLimit(),
-				submit.getProblem().getMemaryLimit());
-		Integer exitCode = (Integer) map.get("exitCode");
+	public boolean compile(JudgeResult jr, Submit submit, Map<String, Object> paths) throws Exception {
+		long start=System.currentTimeMillis();
+		String codeFilePath = (String) paths.get(CODE_FILE_PATH_KEY);
+		String programFilePath = (String) paths.get(PROGRAM_FILE_PATH_KEY);
+		String resultFilePath = (String) paths.get(RESULT_FILE_PATH_KEY);
+		String command = this.getCompileCommand(codeFilePath,programFilePath);
+		ExecResult result = executor.exec(command, resultFilePath);
+		long cost=System.currentTimeMillis()-start;
+		logger.info("submit-id:"+submit.getSubmitId()+"  编译阶段花费时间："+cost+" ms");
+		if(result==null) {
+			jr.setResult(ResultConstant.TLE);
+			return false;
+		}
+		Integer exitCode = result.getExitCode();
 		if (exitCode != 0) {
-			submit.setResult(ResultConstant.CE);
+			jr.setResult(ResultConstant.CE);
 			return false;
 		}
 		return true;
 	}
 
-	/**
-	 * 运行程序
-	 */
-	public boolean run(Submit submit, String fileName, List<TestPoint> pointList) {
-		String commandLine = this.getRunCommand(submit, fileName);
+	public boolean run(JudgeResult jr, Submit submit, Map<String, Object> paths) throws Exception {
+		long start=System.currentTimeMillis();
+		String programFilePath = (String) paths.get(PROGRAM_FILE_PATH_KEY);
+		String command = this.getRunCommand(programFilePath);
 		int usedTime = 0;
 		int usedMemory = 0;
-		int timeLimit = submit.getProblem().getTimeLimit();
-		int memaryLimit = submit.getProblem().getMemaryLimit();
-		for (int i = 0; i < pointList.size(); i++) {
-			String inputFilePath = dataFileDir + FileUtil.separator + submit.getSid() + "/in/"
-					+ pointList.get(i).getPointId() + ".in";
-			String outputFilePath = dataFileDir + FileUtil.separator + submit.getSid() + "/userout/"
-					+ pointList.get(i).getPointId() + ".out";
-			Map<String, Object> map = runner.runCommand(commandLine, null, null, inputFilePath, outputFilePath,
-					timeLimit, memaryLimit);
-			Integer exitCode = (Integer) map.get("exitCode");
-			if (exitCode != 0) {
-				submit.setResult(ResultConstant.RE);
-				return false;
+		int timeLimit = submit.getTimeLimit();
+		int memaryLimit = submit.getMemaryLimit();
+		List<String> inputFilePathList = (List<String>) paths.get(INPUT_FILE_PATH_LIST_KEY);
+		List<String> userOnputFilePathList = (List<String>) paths.get(USER_OUTPUT_FILE_PATH_LIST_KEY);
+		String resultFilePath = (String) paths.get(RESULT_FILE_PATH_KEY);
+		int len = inputFilePathList.size();
+		for (int i = 0; i < len; i++) {
+			String inputFilePath = inputFilePathList.get(i);
+			String userOutputFilePath = userOnputFilePathList.get(i);
+			ExecResult result = executor.exec(inputFilePath, userOutputFilePath, command, resultFilePath);
+			if(result==null){
+				jr.setResult(ResultConstant.TLE);
+				break;
 			}
-			usedTime += (Integer) map.get("usedTime");
-			usedMemory = Math.max(usedMemory, (Integer) map.get("usedMemory"));
+			if (result.getExitCode() != 0) {
+				jr.setResult(ResultConstant.RE);
+				break;
+			}
+			usedTime += result.getUseTime();
+			usedMemory = Math.max(result.getUseMemary(), usedMemory);
 		}
-		submit.setUseTime(usedTime);
-		submit.setUseMemary(usedMemory);
+		long cost=System.currentTimeMillis()-start;
+		logger.info("submit-id:"+submit.getSubmitId()+"  运行阶段花费时间："+cost+" ms");
+		if(jr.getResult()!=null) {
+			return false;
+		}
 		if (usedTime > timeLimit) {
-			submit.setResult(ResultConstant.TLE);
+			jr.setResult(ResultConstant.TLE);
 			return false;
 		}
-		if (usedMemory > timeLimit) {
-			submit.setResult(ResultConstant.MLE);
+		if (usedMemory > memaryLimit) {
+			jr.setResult(ResultConstant.MLE);
 			return false;
 		}
+		jr.setUseTime(usedTime);
+		jr.setUseMemary(usedMemory);
 		return true;
 	}
 
-	/**
-	 * 比较结果
-	 */
-	public boolean compare(Submit submit, List<TestPoint> pointList) {
-		for (int i = 0; i < pointList.size(); i++) {
-			String standardOutputFilePath = dataFileDir + FileUtil.separator + submit.getSid() + "/out/"
-					+ pointList.get(i).getPointId() + ".out";
-			String userOutputFilePath = dataFileDir + FileUtil.separator + submit.getSid() + "/userout/"
-					+ pointList.get(i).getPointId() + ".out";
-			boolean failed = FileUtil.compare(standardOutputFilePath, userOutputFilePath);
-			if (!failed) {
-				submit.setResult(ResultConstant.WA);
-				return failed;
+	public boolean compare(JudgeResult jr, Map<String, Object> paths,Submit submit) {
+		long start=System.currentTimeMillis();
+		List<String> outputFilePathList = (List<String>) paths.get(OUTPUT_FILE_PATH_LIST_KEY);
+		List<String> userOutputFilePathList = (List<String>) paths.get(USER_OUTPUT_FILE_PATH_LIST_KEY);
+		int len = outputFilePathList.size();
+		for (int i = 0; i < len; i++) {
+			String outputFilePath = outputFilePathList.get(i);
+			String userOutputFilePath = userOutputFilePathList.get(i);
+			if (!FileUtil.compare(outputFilePath, userOutputFilePath)) {
+				jr.setResult(ResultConstant.WA);
+				break;
 			}
 		}
+		long cost=System.currentTimeMillis()-start;
+		logger.info("submit-id:"+submit.getSubmitId()+"  比较阶段花费时间："+cost+" ms");
+		if(jr.getResult()!=null) {
+			return false;
+		}
 		return true;
 	}
 
-	/**
-	 * 准备工作 将所有的测试数据以文件的形式保存到指定目录 将用户代码以文件的形式保存到指定目录
-	 * 
-	 * @param submit
-	 *            提交实体类
-	 * @param pointList
-	 *            测试点的集合
-	 * @return 返回创建的代码文件名称
-	 */
-	public String prepare(Submit submit, List<TestPoint> pointList) {
-		String inFileDir = dataFileDir + FileUtil.separator + submit.getSid() + "/in";
-		String outFileDir = dataFileDir + FileUtil.separator + submit.getSid() + "/out";
-		String userOutFileDir = dataFileDir + FileUtil.separator + submit.getSid() + "/userout";
-		String detailProgramFileDir = programFileDir + FileUtil.separator + submit.getSid();
-		FileUtil.mkdir(inFileDir);
-		FileUtil.mkdir(outFileDir);
-		FileUtil.mkdir(userOutFileDir);
-		FileUtil.mkdir(detailProgramFileDir);
-		// 创建测试数据
-		createTestDataFiles(submit, pointList, inFileDir, outFileDir);
+	public Map<String, Object> prepare(Submit submit) throws IOException {
+		long start=System.currentTimeMillis();
+		// 创建测试数据 及相应的文件
+		Map<String, Object> paths = createTestDataFiles(submit);
 		// 根据用户提交的源码创建源码文件
-		return createCodeFile(submit, programFileDir);
+		createCodeFile(submit, paths);
+		long cost=System.currentTimeMillis()-start;
+		logger.info("submit-id:"+submit.getSubmitId()+"  准备阶段花费时间："+cost+" ms");
+		return paths;
 	}
 
-	/**
-	 * 生成测试数据
-	 * 
-	 * @param submit
-	 * @param pointList
-	 * @param inDataDir
-	 * @param outDataDir
-	 * @return
-	 */
-	public boolean createTestDataFiles(Submit submit, List<TestPoint> pointList, String inDataDir, String outDataDir) {
-		List<String> inList = new ArrayList<String>();
-		List<String> outList = new ArrayList<String>();
-		for (TestPoint point : pointList) {
-			String inputPointFileName = inDataDir + FileUtil.separator + point.getPointId() + ".in";
-			if (!FileUtil.createFile(inputPointFileName, point.getInput())) {
-				return false;
+	public Map<String, Object> createTestDataFiles(Submit submit) throws IOException {
+		// 用来保存 输入测试数据 的文件路经
+		List<String> inputFileList = new ArrayList<String>();
+		// 用来保存 输出测试数据 的文件路经
+		List<String> outputFileList = new ArrayList<String>();
+		// 用来保存 用户输出 的文件路经
+		List<String> userOutputFileList = new ArrayList<String>();
+		List<TestPoint> pointList = submit.getPoints();
+		for (int i = 1; i <= pointList.size(); i++) {
+			TestPoint point = pointList.get(i-1);
+			String inputFilePath = INPUT_FILE_PATH
+					.replace(SUBMIT_ID_PLACEHOLDER, submit.getSubmitId() + "")
+					.replace(POINT_ID_PLACEHOLDER, i + "");
+			if (!FileUtil.createFile(inputFilePath, point.getInput())) {
+				throw new IOException("创建文件失败");
 			}
-			inList.add(inputPointFileName);
-			String outputPointFileName = outDataDir + FileUtil.separator + point.getPointId() + ".out";
-			if (!FileUtil.createFile(outputPointFileName, point.getOutput())) {
-				return false;
+			inputFileList.add(inputFilePath);
+			String outputFileName = OUTPUT_FILE_PATH
+					.replace(SUBMIT_ID_PLACEHOLDER, submit.getSubmitId() + "")
+					.replace(POINT_ID_PLACEHOLDER, i + "");
+			if (!FileUtil.createFile(outputFileName, point.getOutput())) {
+				throw new IOException("创建文件失败");
 			}
-			outList.add(outputPointFileName);
+			outputFileList.add(outputFileName);
+			String userOutFilePath = USER_OUTPUT_FILE_PATH
+					.replace(SUBMIT_ID_PLACEHOLDER, submit.getSubmitId() + "")
+					.replace(POINT_ID_PLACEHOLDER, i + "");
+			if (!FileUtil.createFile(userOutFilePath,"")) {
+				throw new IOException("创建文件失败");
+			}
+			userOutputFileList.add(userOutFilePath);
 		}
-		return true;
+		String resultFilePath = RESULT_FILE_PATH
+				.replace(SUBMIT_ID_PLACEHOLDER, submit.getSubmitId() + "");
+		FileUtil.createFile(resultFilePath, "");
+		Map<String, Object> paths = new HashMap<>();
+		paths.put(INPUT_FILE_PATH_LIST_KEY, inputFileList);
+		paths.put(OUTPUT_FILE_PATH_LIST_KEY, outputFileList);
+		paths.put(USER_OUTPUT_FILE_PATH_LIST_KEY, userOutputFileList);
+		paths.put(RESULT_FILE_PATH_KEY, resultFilePath);
+		return paths;
 	}
-
-	/**
-	 * 清理处理调教产生的文件文件
-	 */
-	public boolean clean() {
-
+	
+	public void generalProgramFile(Submit submit,String fileName,String codeSuffix,String programSufix,Map<String,Object>paths) {
+		String codeFilePath=CODE_FILE_PATH.replaceFirst(SUBMIT_ID_PLACEHOLDER,submit.getSubmitId()+"")
+	    		.replaceFirst(PROGRAM_NAME_PLACEHOLDER,fileName)
+	    		.replaceFirst(PROGRAM_SUFFIX_PLACEHOLDER, codeSuffix);
+		paths.put(CODE_FILE_PATH_KEY, codeFilePath);
+		FileUtil.createFile(codeFilePath, submit.getCode());
+		String programFilePath=PROGRAM_FILE_PATH.replaceFirst(SUBMIT_ID_PLACEHOLDER,submit.getSubmitId()+"")
+				.replaceFirst(PROGRAM_NAME_PLACEHOLDER, fileName)
+				.replaceFirst(PROGRAM_SUFFIX_PLACEHOLDER,programSufix);
+		paths.put(PROGRAM_FILE_PATH_KEY, programFilePath);
+		String programFileDir=programFilePath.substring(0, programFilePath.lastIndexOf("/"));
+		FileUtil.mkdir(programFileDir);
+	}
+	
+	public boolean clean(Submit submit) {
+		long start=System.currentTimeMillis();
+		
+		long cost=System.currentTimeMillis()-start;
+		logger.info("submit-id:"+submit.getSubmitId()+"  清理阶段花费时间："+cost+" ms");
 		return true;
 	}
 

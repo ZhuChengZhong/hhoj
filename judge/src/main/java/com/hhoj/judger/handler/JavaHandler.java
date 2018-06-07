@@ -17,21 +17,18 @@ import com.hhoj.judger.util.FileUtil;
  *
  */
 public class JavaHandler extends AbstractHandler{
-	public JavaHandler(String dataFileDir, String programFileDir) {
-		super(dataFileDir, programFileDir);
-	}
-	
+	//Java文件后缀
+	public static final String CODE_SUFFIX=".java";
+	//class文件后缀
+	public static final String PROGRAM_SUFFIX=".class";
 	/**
 	 * 为用户提交的java代码创建源码文件
 	 */
-	@Override
-	public String createCodeFile(Submit submit, String codeDir) {
+	public void createCodeFile(Submit submit,Map<String,Object>paths) {
 	    String className=findClassName(submit.getCode());
 	    if(className==null)
-		   return null;
-	    String newFilePath=codeDir+FileUtil.separator+submit.getSid()+FileUtil.separator+className+".java";
-		FileUtil.createFile(newFilePath, submit.getCode());
-		return className;
+		   return ;
+	    generalProgramFile(submit, className, CODE_SUFFIX, PROGRAM_SUFFIX, paths);
 	}
 	/**
 	 * 找出Java代码中的类名
@@ -53,9 +50,9 @@ public class JavaHandler extends AbstractHandler{
 	 * 获取Java语言的编译命令
 	 */
 	@Override
-	public String getCompileCommand(Submit submit,String fileName) {
-		String programFilePath=programFileDir+FileUtil.separator+submit.getSid()+FileUtil.separator+fileName+".java";
-		String commandLine="javac "+programFilePath;
+	public String getCompileCommand(String codeFilePath,String programFilePath) {
+		String programFileDir=programFilePath.substring(0, programFilePath.lastIndexOf("/")); 
+		String commandLine="javac -d "+programFileDir+" "+codeFilePath;
 		return commandLine;
 	}
 
@@ -64,10 +61,14 @@ public class JavaHandler extends AbstractHandler{
 	 * 获取Java语言的运行命令
 	 */
 	@Override
-	public String getRunCommand(Submit submit,String fileName) {
-		String detailProgramFileDir=programFileDir+FileUtil.separator+submit.getSid();
-		String commandLine="java -cp "+detailProgramFileDir+"   "+fileName;
-		return commandLine;
+	public String getRunCommand(String programFilePath) {
+		int index=programFilePath.indexOf("/");
+		String classPath=programFilePath.substring(0, index);
+		String className=programFilePath.substring(index+1);
+		int i=className.indexOf(".");
+		className=className.substring(0,i);
+		String command="java -cp "+classPath+" "+className;
+		return command;
 	}
 
 }

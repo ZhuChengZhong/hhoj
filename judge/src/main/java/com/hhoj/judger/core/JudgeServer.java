@@ -1,63 +1,64 @@
 package com.hhoj.judger.core;
 
 import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-
-import org.apache.ibatis.session.SqlSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.hhoj.judger.listener.SubmitListener;
-import com.hhoj.judger.mapper.SubmitMapper;
-import com.hhoj.judger.mapper.TestPointMapper;
-import com.hhoj.judger.mq.SubmitSender;
-import com.hhoj.judger.util.MyBatisUtil;
+import com.hhoj.judger.entity.Submit;
+import com.hhoj.judger.redis.mq.MessageConsumer;
+import com.hhoj.judger.redis.mq.MessageProducer;
 
 public class JudgeServer extends Thread{
-	private Logger logger=LoggerFactory.getLogger(SubmitListener.class);
+	private Logger logger=LoggerFactory.getLogger(JudgeServer.class);
 	
-	private SubmitSender submitSender;
+	private static final Integer THREAD_POOL_COUNT=5;
 	
-	private static final Integer STOP_SIGNAL=-1;
-	//提交实体类映射器
-	private SubmitMapper submitMapper;
-	//测试点实体类映射器
-	private TestPointMapper testPointMapper;
-	// 存放待处理的 提交 id
-	private LinkedBlockingQueue<Integer> submitIdQueue;
+	private MessageConsumer consumer;
+	
+	private MessageProducer producer;
+	
+	private volatile boolean running=true;
 	// 线程池
-	private ExecutorService executor = new ThreadPoolExecutor(2, 5, 1, TimeUnit.SECONDS,
-			new ArrayBlockingQueue<Runnable>(1000));
+	private ThreadPoolExecutor executor = new ThreadPoolExecutor(THREAD_POOL_COUNT,
+			THREAD_POOL_COUNT, 1, TimeUnit.SECONDS,new ArrayBlockingQueue<>(10));
 
-	public JudgeServer(LinkedBlockingQueue<Integer> submitIdQueue,SubmitSender submitSender) {
-		this.submitIdQueue = submitIdQueue;
-		this.submitSender=submitSender;
-		SqlSession sqlSession = MyBatisUtil.getSqlSession();
-		submitMapper = sqlSession.getMapper(SubmitMapper.class);
-		testPointMapper = sqlSession.getMapper(TestPointMapper.class);
+	public JudgeServer(MessageConsumer consumer,MessageProducer producer) {
+		this.consumer = consumer;
+		this.producer=producer;
 	}
-
 	@Override
 	public void run() {
-		while (!Thread.currentThread().isInterrupted()) {
+		while (!Thread.currentThread().isInterrupted()&&running) {
 			try {
-				int submitId = submitIdQueue.take();
-				//如果接收到服务器发来的停止信号则终止判题服务器运行
-				if(submitId==STOP_SIGNAL) {
-					logger.info("接收到终止信号！！！");
-					executor.shutdown();
-					break;
+				//如果阻塞队列中有任务则等待
+				//避免获取大量判题任务后程序
+				//崩溃会造成任务丢失
+				while(executor.getQueue().size()>0) {
+					Thread.sleep(100);
 				}
-				Judger judger = new Judger(submitId,submitSender);
-				executor.execute(judger);
-				logger.info("创建判定提交任务："+judger);
+				// 获取待判题目
+				logger.info("等待获取任务...");
+				Submit submit=consumer.take();
+				logger.info("获取待判题目 submit id:"+submit.getSubmitId());
+				//创建判题任务
+				JudgeTask task=new JudgeTask(submit,producer);
+				//提交线程池执行
+				executor.execute(task);
 			} catch (InterruptedException e) {
+				
 				Thread.currentThread().interrupt();
+				
+				logger.info("判题服务器响应中断退出");
 			}
 		}
 	}
-
+	
+	/**
+	 * 关闭服务器
+	 */
+	public void close() {
+		running=false;
+		executor.shutdown();
+	}
 }

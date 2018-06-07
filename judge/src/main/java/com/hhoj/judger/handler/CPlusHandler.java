@@ -1,7 +1,12 @@
 package com.hhoj.judger.handler;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import com.hhoj.judger.entity.JudgeResult;
 import com.hhoj.judger.entity.Submit;
-import com.hhoj.judger.util.FileUtil;
+import com.hhoj.judger.entity.TestPoint;
 
 /**
  * C/C++语言 提交处理类
@@ -9,43 +14,44 @@ import com.hhoj.judger.util.FileUtil;
  *
  */
 public class CPlusHandler extends AbstractHandler{
-
-	public CPlusHandler(String dataFileDir, String programFileDir) {
-		super(dataFileDir, programFileDir);
+	//c++文件后缀
+	public static final String CODE_SUFFIX=".cpp";
+	//c++可执行文件后缀
+	public static final String PROGRAM_SUFFIX=".o";
+	@Override
+	public void createCodeFile(Submit submit, Map<String, Object> paths) {
+		// TODO Auto-generated method stub
+		String fileName="program"+submit.getSubmitId();
+	    generalProgramFile(submit, fileName, CODE_SUFFIX, PROGRAM_SUFFIX, paths);
 	}
 
-	/**
-	 * 为用户提交的C++代码创建源码文件
-	 */
 	@Override
-	public String createCodeFile(Submit submit, String programFileDir) {
-		String fileName="program"+submit.getSid();
-	    String newFilePath=programFileDir+FileUtil.separator+submit.getSid()+FileUtil.separator+fileName+".cpp";
-		FileUtil.createFile(newFilePath, submit.getCode());
-		return fileName;
+	public String getCompileCommand(String codeFilePath,String programFilePath) {
+		// TODO Auto-generated method stub
+		String command="g++ -o "+programFilePath+" "+codeFilePath;
+		return command;
 	}
 
-	
-	/**
-	 * 获取c++编译命令
-	 */
 	@Override
-	public String getCompileCommand(Submit submit, String fileName) {
-		String filePath=programFileDir+FileUtil.separator+submit.getSid()+FileUtil.separator+fileName;
-		String compileCommand="g++ "+filePath+".cpp"+" -o "+filePath;
-		return compileCommand;
+	public String getRunCommand(String programFilePath) {
+		return programFilePath;
 	}
 
-	
-	
-	/**
-	 * 获取c++运行命令
-	 */
-	@Override
-	public String getRunCommand(Submit submit, String fileName) {
-		String detailProgramFilePath=programFileDir+FileUtil.separator+submit.getSid()+FileUtil.separator+fileName;
-		String commandLine=detailProgramFilePath;
-		return commandLine;
+	public static void main(String[] args) throws Exception {
+		try {
+			Handler handler=new CPlusHandler();
+			String code="#include<stdio.h>\nint main() {printf(\"hahaha\");}";
+			List<TestPoint> points=new ArrayList<>();
+			TestPoint p1=new TestPoint("","hahaha");
+			points.add(p1);
+			Submit submit=new Submit(1, 1000, 65535, "Java",code, points);
+			JudgeResult result=handler.handlerSubmit(submit);
+			System.out.println(result);
+		}catch(Exception e) {
+			e.printStackTrace();
+		}finally {
+			
+		}
 	}
 
 }

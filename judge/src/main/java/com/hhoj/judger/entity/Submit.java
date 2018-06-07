@@ -1,89 +1,41 @@
 package com.hhoj.judger.entity;
 
-import java.io.Serializable;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.List;
 
-/**
- * 用户的一次提交
- * @author zhu
- *
- */
-public class Submit implements Serializable{
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
-	// id
-	private Integer sid;
-	//提交用户
-	private transient User user;
-	//被提交试题
-	private transient Problem problem;
-	//运行结果
-	private String result;
-	//运行使用时间
-	private Integer useTime;
-	//运行使用内存
-	private Integer useMemary;
-	//提交的代码
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+
+public class Submit {
+	private Integer submitId;
+	private Integer timeLimit;
+	private Integer memaryLimit;
+	private String language;
 	private String code;
-	//提交时间
-	private Date submitTime;
-	//使用语言
-	private transient Language language;
-	//记录该提交是否被评测过    1 已评测 0 未评测
-	private Integer judged;
-	//是否为比赛的提交
-	private Integer contestId;
-	
-	
-	public Integer getContestId() {
-		return contestId;
+	private List<TestPoint>points;
+	public Integer getSubmitId() {
+		return submitId;
 	}
-	public void setContestId(Integer contestId) {
-		this.contestId = contestId;
+	public void setSubmitId(Integer submitId) {
+		this.submitId = submitId;
 	}
-	public Integer getJudged() {
-		return judged;
+	public Integer getTimeLimit() {
+		return timeLimit;
 	}
-	public void setJudged(Integer judged) {
-		this.judged = judged;
+	public void setTimeLimit(Integer timeLimit) {
+		this.timeLimit = timeLimit;
 	}
-	public Integer getSid() {
-		return sid;
+	public Integer getMemaryLimit() {
+		return memaryLimit;
 	}
-	public void setSid(Integer sid) {
-		this.sid = sid;
+	public void setMemaryLimit(Integer memaryLimit) {
+		this.memaryLimit = memaryLimit;
 	}
-	public User getUser() {
-		return user;
+	public String getLanguage() {
+		return language;
 	}
-	public void setUser(User user) {
-		this.user = user;
-	}
-	public Problem getProblem() {
-		return problem;
-	}
-	public void setProblem(Problem problem) {
-		this.problem = problem;
-	}
-	public String getResult() {
-		return result;
-	}
-	public void setResult(String result) {
-		this.result = result;
-	}
-	public Integer getUseTime() {
-		return useTime;
-	}
-	public void setUseTime(Integer useTime) {
-		this.useTime = useTime;
-	}
-	public Integer getUseMemary() {
-		return useMemary;
-	}
-	public void setUseMemary(Integer useMemary) {
-		this.useMemary = useMemary;
+	public void setLanguage(String language) {
+		this.language = language;
 	}
 	public String getCode() {
 		return code;
@@ -91,43 +43,35 @@ public class Submit implements Serializable{
 	public void setCode(String code) {
 		this.code = code;
 	}
-	public Date getSubmitTime() {
-		return submitTime;
+	public List<TestPoint> getPoints() {
+		return points;
 	}
-	public void setSubmitTime(Date submitTime) {
-		this.submitTime = submitTime;
-	}
-	public Language getLanguage() {
-		return language;
-	}
-	public void setLanguage(Language language) {
-		this.language = language;
-	}
-	public Submit() {
-		super();
-		// TODO Auto-generated constructor stub
+	public void setPoints(List<TestPoint> points) {
+		this.points = points;
 	}
 	
-	@Override
-	public String toString() {
-		return "Submit [sid=" + sid + ", user=" + user + ", problem=" + problem + ", result=" + result + ", useTime="
-				+ useTime + ", useMemary=" + useMemary + ", code=" + code + ", submitTime=" + submitTime + ", language="
-				+ language + ", judged=" + judged + ", contestId=" + contestId + "]";
-	}
-	public Submit(User user, Problem problem, String result, Integer useTime, Integer useMemary, String code,
-			Date submitTime, Language language, Integer judged, Integer contestId) {
+	public Submit(Integer submitId, Integer timeLimit, Integer memaryLimit, String language, String code,
+			List<TestPoint> points) {
 		super();
-		this.user = user;
-		this.problem = problem;
-		this.result = result;
-		this.useTime = useTime;
-		this.useMemary = useMemary;
+		this.submitId = submitId;
+		this.timeLimit = timeLimit;
+		this.memaryLimit = memaryLimit;
+		this.language = language;
 		this.code = code;
-		this.submitTime = submitTime;
-		this.language = language;
-		this.judged = judged;
-		this.contestId = contestId;
+		this.points = points;
 	}
-	
-	
+	public static void main(String[] args) {
+		/*List<TestPoint>points=new ArrayList<>();
+		TestPoint p1=new TestPoint("1 2","a,b");
+		TestPoint p2=new TestPoint("3 4","c,d");
+		points.add(p1);
+		points.add(p2);
+		Submit submit=new Submit(1, 1000, 1000,"java","printf true", points);
+		JSONObject json=new JSONObject();
+		String s=JSON.toJSONString(submit);
+		System.out.println(s);*/
+		Submit a=JSON.parseObject("11",Submit.class);
+		System.out.println(a);
+		
+	}
 }

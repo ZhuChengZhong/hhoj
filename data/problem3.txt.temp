@@ -1,0 +1,7 @@
+languageId=2&code=#include<stdio.h>%0A int main() %0A{
+ int a;
+ scanf("%25d",%26a);
+ printf("%25d\n",a); 
+return 0;
+ }
+

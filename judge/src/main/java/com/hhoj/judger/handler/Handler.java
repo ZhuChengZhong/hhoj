@@ -1,8 +1,10 @@
 package com.hhoj.judger.handler;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
+import com.hhoj.judger.entity.JudgeResult;
 import com.hhoj.judger.entity.Submit;
 import com.hhoj.judger.entity.TestPoint;
 
@@ -13,52 +15,20 @@ import com.hhoj.judger.entity.TestPoint;
  */
 public interface Handler {
 	
-	/**
-	 * 准备工作 将所有的测试数据以文件的形式保存到指定目录 将用户代码以文件的形式保存到指定目录
-	 * 
-	 * @param submit
-	 *            提交实体类
-	 * @param pointList
-	 *            测试点的集合
-	 * @return 返回创建的代码文件名称
-	 */
-	public String prepare(Submit submit, List<TestPoint> pointList);
 	
-	/**
-	 * 编译程序
-	 * @param submit
-	 * @param fileName
-	 * @return
-	 */
-	public boolean compile(Submit submit, String fileName);
+	public Map<String, Object> prepare(Submit submit) throws IOException;
 	
-	/**
-	 * 运行程序
-	 * @param submit
-	 * @param fileName
-	 * @param pointList
-	 * @return
-	 */
-	public boolean run(Submit submit, String fileName, List<TestPoint> pointList);
+	public boolean compare(JudgeResult js,Map<String,Object>paths,Submit submit);
 	
-	/**
-	 * 比较输出结果是否正确
-	 * @param submit
-	 * @param pointList
-	 * @return
-	 */
-	public boolean compare(Submit submit, List<TestPoint> pointList);
 
-	/**
-	 * 清理产生的文件
-	 * @return
-	 */
-	public boolean clean();
+	public boolean run(JudgeResult jr,Submit submit, Map<String,Object>paths) throws Exception;
 	
-	/**
-	 * 处理提交
-	 * @param submit
-	 * @param pointList
-	 */
-	public void handlerSubmit(Submit submit, List<TestPoint> pointList);
+
+	public boolean compile(JudgeResult jr,Submit submit, Map<String,Object>paths) throws Exception ;
+
+	
+	public boolean clean(Submit submit);
+	
+
+	public JudgeResult handlerSubmit(Submit submit) throws Exception;
 }
