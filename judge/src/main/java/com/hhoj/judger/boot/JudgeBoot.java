@@ -2,10 +2,12 @@ package com.hhoj.judger.boot;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
 import com.hhoj.judger.constant.Config;
+import com.hhoj.judger.core.Executor;
 import com.hhoj.judger.core.JudgeServer;
+import com.hhoj.judger.docker.pool.DockerOperator;
 import com.hhoj.judger.redis.mq.MQServer;
-import com.hhoj.judger.util.DockerOperator;
 import com.spotify.docker.client.exceptions.DockerCertificateException;
 
 /**
@@ -51,11 +53,7 @@ public class JudgeBoot {
 			if(mqServer!=null) {
 				mqServer.close();
 			}
-			try {
-				DockerOperator.instance().close();
-			} catch (DockerCertificateException e) {
-				logger.info("docker关闭异常");
-			}
+			Executor.instance().close();
 			logger.info("判题机已关闭！！！");
 		}
 	}

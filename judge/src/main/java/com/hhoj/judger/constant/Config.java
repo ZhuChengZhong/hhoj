@@ -31,6 +31,11 @@ public abstract class Config {
 	public static final Integer MAX_WAIT_TIME;
 	
 	/**
+	 *DOCKER镜像 
+	 */
+	public static final String JUDGER_IMAGE;
+	
+	/**
 	 * 初始化加载配置参数
 	 */
 	static{
@@ -44,5 +49,7 @@ public abstract class Config {
 		RESULT_QUEUE=PropertiesUtil.getParam("redis.result.queue");
 		
 		MAX_WAIT_TIME=Integer.parseInt(PropertiesUtil.getParam("max.wait.time"));
+		
+		JUDGER_IMAGE=PropertiesUtil.getParam("judger.image");
 	}
 }

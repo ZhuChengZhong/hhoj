@@ -1,15 +1,10 @@
 package com.hhoj.judger.handler;
 
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.hhoj.judger.constant.ResultConstant;
-import com.hhoj.judger.core.Runner;
 import com.hhoj.judger.entity.Submit;
-import com.hhoj.judger.entity.TestPoint;
-import com.hhoj.judger.util.FileUtil;
 
 /**
  * 针对Java语言的处理类

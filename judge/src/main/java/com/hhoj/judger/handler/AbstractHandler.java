@@ -86,7 +86,7 @@ public abstract class AbstractHandler implements Handler {
 				+ FileUtil.separator + "res.txt";
 	}
 
-	private Executor executor = new Executor();
+	private Executor executor = Executor.instance();
 
 	public JudgeResult handlerSubmit(Submit submit) throws Exception {
 		JudgeResult jr = new JudgeResult();
