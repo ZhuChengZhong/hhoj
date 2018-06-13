@@ -1,3 +1,0 @@
-pid	datafile
-76	data/problem76.txt.temp
-3	data/problem3.txt.temp
