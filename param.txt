@@ -1,2 +1,0 @@
-JSESSIONID 07AEF4553FAD56C4449B3A237D76F343
-url /hhoj/submit/problem/"+pid+"/add
