@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.DelayQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
@@ -15,13 +17,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.context.support.WebApplicationContextUtils;
-
 import com.hhoj.judger.entity.Contest;
+import com.hhoj.judger.entity.JudgeResult;
 import com.hhoj.judger.entity.PageBean;
 import com.hhoj.judger.entity.Submit;
 import com.hhoj.judger.entity.User;
-import com.hhoj.judger.mq.SubmitMessageListener;
-import com.hhoj.judger.mq.SubmitReceiver;
+import com.hhoj.judger.redis.mq.MQServer;
+import com.hhoj.judger.redis.mq.MessageConsumer;
 import com.hhoj.judger.service.ContestService;
 import com.hhoj.judger.service.ProblemService;
 import com.hhoj.judger.service.SubmitService;
@@ -36,7 +38,12 @@ import com.hhoj.judger.service.UserService;
 public class Initialization implements ServletContextListener {
 
 	private static Logger logger = LoggerFactory.getLogger(Initialization.class);
-
+	
+	/**
+	 * 判题结果处理线程池
+	 */
+	private static ExecutorService resultExecutor=Executors.newFixedThreadPool(4);
+	
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {
 		ServletContext context = sce.getServletContext();
@@ -97,16 +104,42 @@ public class Initialization implements ServletContextListener {
 	 * @param webApplicationContext
 	 */
 	private void initMQ(WebApplicationContext webApplicationContext ) {
-		SubmitReceiver submitReceiver = (SubmitReceiver) webApplicationContext.getBean("submitReceiver");
-		SubmitMessageListener submitMessageListener = (SubmitMessageListener) webApplicationContext
-				.getBean("submitMessageListener");
-		if (submitReceiver == null || submitMessageListener == null) {
-			logger.info("未找到消息接收者或消息监听器");
-			throw new NullPointerException();
+		MQServer mqServer = (MQServer) webApplicationContext.getBean("mqServer");
+		MessageConsumer consumer=mqServer.getConsumer();
+		SubmitService submitService=(SubmitService)webApplicationContext.getBean("submitService");
+		for(int i=0;i<4;i++) {
+			resultExecutor.execute(new JudgeResultHandler(consumer, submitService));
 		}
-		submitReceiver.receiveSubmit(submitMessageListener);
 		logger.info("消息接收服务器成功启动");
+		
 	}
+	
+	
+	class JudgeResultHandler extends Thread{
+		private MessageConsumer consumer;
+		private SubmitService submitService;
+		public JudgeResultHandler(MessageConsumer consumer,SubmitService submitService) {
+			this.consumer=consumer;
+			this.submitService=submitService;
+		}
+		@Override
+		public void run() {
+			while(!Thread.currentThread().isInterrupted()) {
+				try {
+					JudgeResult jr=consumer.take();
+					submitService.updateSubmit(jr);
+				} catch (InterruptedException e) {
+					Thread.currentThread().interrupt();
+				}
+			}
+		}
+		
+	}
+	
+	
+	
+	
+	
 	/**
 	 * 开始比赛任务
 	 * 
@@ -180,6 +213,7 @@ public class Initialization implements ServletContextListener {
 
 	@Override
 	public void contextDestroyed(ServletContextEvent sce) {
+		resultExecutor.shutdownNow();
 	}
 
 }

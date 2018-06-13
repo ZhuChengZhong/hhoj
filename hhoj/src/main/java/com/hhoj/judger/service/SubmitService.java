@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import com.hhoj.judger.entity.JudgeResult;
+import com.hhoj.judger.entity.Message;
 import com.hhoj.judger.entity.PageBean;
 import com.hhoj.judger.entity.Submit;
 
@@ -64,4 +66,18 @@ public interface SubmitService {
 	 * @return
 	 */
 	public Integer findContestSubmitCount(Integer contestId);
+	
+	/**
+	 * 将提交转换为消息
+	 * @param submit
+	 * @return
+	 */
+	public String transforToMessage(Submit submit);
+	
+	/**
+	 * 将判题结果转换为Submit并更新
+	 * @param jr
+	 * @return
+	 */
+	public Integer updateSubmit(JudgeResult jr);
 }

@@ -3,8 +3,6 @@ package com.hhoj.judger.controller;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.LinkedBlockingQueue;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -18,14 +16,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hhoj.judger.annotation.ValidatePermission;
 import com.hhoj.judger.entity.Language;
 import com.hhoj.judger.entity.PageBean;
 import com.hhoj.judger.entity.Problem;
-import com.hhoj.judger.entity.Role;
 import com.hhoj.judger.entity.Submit;
 import com.hhoj.judger.entity.User;
-import com.hhoj.judger.mq.SubmitSender;
+import com.hhoj.judger.redis.mq.MQServer;
+import com.hhoj.judger.service.LanguageService;
 import com.hhoj.judger.service.ProblemService;
 import com.hhoj.judger.service.SubmitService;
 import com.hhoj.judger.util.PageUtil;
@@ -44,7 +41,10 @@ public class SubmitController {
 	private ProblemService problemService;
 	
 	@Autowired
-	private SubmitSender submitSender;
+	private LanguageService languageService;
+	
+	@Autowired
+	private MQServer mqServer;
 
 	/**
 	 * 查找指定测试题的所有提交结果
@@ -99,15 +99,13 @@ public class SubmitController {
 		/**
 		 * 设置所属题目
 		 */
-		Problem problem = new Problem();
-		problem.setPid(pid);
+		Problem problem = problemService.findProblemById(pid);
 		submit.setProblem(problem);
 
 		/**
 		 * 设置所属编程语言
 		 */
-		Language language = new Language();
-		language.setLanguageId(languageId);
+		Language language = languageService.findLanguageById(languageId);
 		submit.setLanguage(language);
 
 		/**
@@ -142,8 +140,8 @@ public class SubmitController {
 		/**
 		 * 将提交 发送给判题机进行判定
 		 */
-		
-		submitSender.sendSubmit(submit.getSid());
+		String message=submitService.transforToMessage(submit);
+		mqServer.getProducer().sendMessage(message);
 		logger.info("向判题服务器发送一个判题请求,submitId:"+submit.getSid());
 		jsonObject.put("success", true);
 		ResponseUtil.write(jsonObject, response);

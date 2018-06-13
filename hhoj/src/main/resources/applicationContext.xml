@@ -27,7 +27,7 @@
     <bean id="dataSource"
         class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="com.mysql.jdbc.Driver" />
-        <property name="url" value="jdbc:mysql://localhost:3306/hhoj" />
+        <property name="url" value="jdbc:mysql://localhost:3306/hhoj?useUnicode=true&amp;characterEncoding=utf8" />
         <property name="username" value="root" />
         <property name="password" value="121314" />
     </bean>
@@ -81,11 +81,12 @@
     </aop:config>
     
     <!-- 配置与判题机通讯的服务器 -->
- 	<bean id="submitSender" class="com.hhoj.judger.mq.SubmitSender" destroy-method="stop">
+ 	<bean id="mqServer" class="com.hhoj.judger.redis.mq.MQServer" destroy-method="close">
+ 		<constructor-arg index="0" value="localhost"></constructor-arg>
+ 		<constructor-arg index="1" value="result-queue"></constructor-arg>
+ 		<constructor-arg index="2" value="submit-queue"></constructor-arg>
  	</bean>
- 	<bean id="submitReceiver" class="com.hhoj.judger.mq.SubmitReceiver" destroy-method="close">
- 	</bean>
- 	<bean id="submitMessageListener" class="com.hhoj.judger.mq.SubmitMessageListener"></bean>
+ 
  	<!-- 延迟队列用于存放未开始的比赛 -->
  	<bean id="contestDelayQueue" class="java.util.concurrent.DelayQueue">
  	</bean>

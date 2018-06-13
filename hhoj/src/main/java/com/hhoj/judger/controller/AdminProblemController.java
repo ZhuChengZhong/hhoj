@@ -90,6 +90,8 @@ public class AdminProblemController {
 		type.setTypeId(Integer.parseInt(typeId));
 		problem.setType(type);
 		problem.setPublish(0);
+		problem.setAccepted(0);
+		problem.setSubmited(0);
 		Integer result;
 		if(problem.getPid()!=null) {
 			result=problemService.updateProblem(problem);
