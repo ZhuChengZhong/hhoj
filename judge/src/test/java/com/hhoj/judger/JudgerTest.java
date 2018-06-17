@@ -61,8 +61,8 @@ public class JudgerTest {
 		long cost=System.currentTimeMillis()-begin;
 		System.out.println("总花费时间为："+cost+" ms");
 	}
-
-	/*public static void main(String[] args) throws FileNotFoundException {
+/*
+	public static void main(String[] args) throws FileNotFoundException {
 		createTestPoint("/home/zhu/code/1.in", 100);
 		createTestPoint("/home/zhu/code/2.in", 1000);
 		createTestPoint("/home/zhu/code/3.in", 10000);

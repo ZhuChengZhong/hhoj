@@ -44,7 +44,9 @@ public class MessageConsumer {
 		} catch (JSONException e) {
 			logger.error("消息格式不正确！！无法转换成Submit！！");
 		} finally {
-			jedis.close();
+			if(jedis!=null) {
+				jedis.close();
+			}
 		}
 		return res;
 	}

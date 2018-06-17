@@ -178,8 +178,8 @@ public final class DockerOperator {
 			if(!state.running()) {
 				return state.exitCode();
 			}
-			Thread.sleep(100);
-			waitTime-=100;
+			Thread.sleep(10);
+			waitTime-=50;
 		}
 		return null;
 	}

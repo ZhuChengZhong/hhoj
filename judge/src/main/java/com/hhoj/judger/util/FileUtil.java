@@ -3,12 +3,12 @@ package com.hhoj.judger.util;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.io.RandomAccessFile;
-import java.nio.file.Path;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
 
 /**
  * 文件处理类
@@ -18,7 +18,17 @@ import java.nio.file.Path;
  */
 public final class FileUtil {
 	public static final String separator = "/";
-
+	
+	private static MessageDigest digest;
+	
+	static {
+		try {
+			digest=MessageDigest.getInstance("MD5");
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	private FileUtil() {
 
 	}
@@ -115,9 +125,12 @@ public final class FileUtil {
 		if (StringUtil.isEmpty(standardOutPath) || StringUtil.isEmpty(userOutPath)) {
 			return false;
 		}
-		String standardOut = getCharsFromFile(standardOutPath);
-		String userOut = getCharsFromFile(userOutPath);
-		return standardOut.equals(userOut);
+		File standardOutFile=new File(standardOutPath);
+		File userOutFile=new File(userOutPath);
+		if(standardOutFile.length()!=userOutFile.length()) {
+			return false;
+		}
+		return compareFileUseDigest(standardOutPath, userOutPath);
 	}
 
 	public static boolean rmdir(String dir) {
@@ -148,7 +161,54 @@ public final class FileUtil {
 		}
 		return null;
 	}
-	public static void main(String[] args) {
-		System.out.println(getFileDir("/home/zhu/test.java"));
+	public static String getFileMD5(String fileName) throws Exception {
+		File file=new File(fileName);
+		FileInputStream in=new FileInputStream(file);
+		byte[]buffer=new byte[1024];
+		int len=0;
+		while((len=in.read(buffer))!=-1) {
+			digest.update(buffer, 0, len);
+		}
+		in.close();
+		byte[]bs=digest.digest();
+		return convertBytesToString(bs);
+	}
+	public static boolean compareFileUseDigest(String standardOutPath, String userOutPath) {
+		try {
+			String digest1=getFileMD5(standardOutPath);
+			String digest2=getFileMD5(userOutPath);
+			if(digest1.equals(digest2)) {
+				return true;
+			}
+		} catch (Exception e) {
+			return false;
+		}
+		return false;
+	}
+	public static String convertBytesToString(byte[]bs) {
+		char[]arr={'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
+		StringBuilder sb=new StringBuilder();
+		byte mask=0X0F;
+		for(int i=0;i<bs.length;i++) {
+			byte b=(byte) ((bs[i]>>>4)&mask);
+			sb.append(arr[b]);
+			b=(byte) (bs[i]&mask);
+			sb.append(arr[b]);
+		}
+		return sb.toString();
+	}
+	
+	public static void testCompare() {
+		long start,cost;
+		
+		start=System.currentTimeMillis();
+		for(int i=0;i<1000;i++) {
+			compare("/home/zhu/judger/output/1/7.out", "/home/zhu/judger/output/1/7.out");
+		}
+		cost=System.currentTimeMillis()-start;
+		System.out.println(cost);
+	}
+	public static void main(String[] args) throws NoSuchAlgorithmException  {
+		testCompare();
 	}
 }
