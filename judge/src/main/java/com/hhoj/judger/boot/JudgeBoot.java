@@ -29,9 +29,9 @@ public class JudgeBoot {
 	private static JudgeServer server;
 	
 	public static void main(String[] args) throws InterruptedException, DockerCertificateException {
-		Runtime.getRuntime().addShutdownHook(new JudgerShutDownHook());
-		logger.info("判题机启动中...");
-		 DockerOperator.instance();
+		 Runtime.getRuntime().addShutdownHook(new JudgerShutDownHook());
+		 logger.info("判题机启动中...");
+		 Executor.instance();
 		 mqServer=new MQServer(Config.REDIS_HOST,Config.SUBMIT_QUEUE,Config.RESULT_QUEUE);
 		 server=new JudgeServer(mqServer.getConsumer(), mqServer.getProducer());
 		 server.start();

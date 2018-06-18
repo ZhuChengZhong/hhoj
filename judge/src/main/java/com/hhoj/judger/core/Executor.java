@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Scanner;
 
 import com.hhoj.judger.constant.Config;
+import com.hhoj.judger.docker.client.DockerClient;
 import com.hhoj.judger.docker.pool.BlockingPool;
 import com.hhoj.judger.docker.pool.ContainerPoolFactory;
 import com.hhoj.judger.docker.pool.DockerOperator;
@@ -17,7 +18,7 @@ public class Executor {
 	/**
 	 * 容器池
 	 */
-	private BlockingPool<String> pool;
+	private BlockingPool<String> pool = ContainerPoolFactory.newLocalContainerPool();
 
 	private static Executor executor = new Executor();
 
@@ -25,11 +26,7 @@ public class Executor {
 		return executor;
 	}
 
-	private Executor() {
-		Map<String, String> volumes = new HashMap<>();
-		volumes.put(Config.WORKSPACE, Config.WORKSPACE);
-		pool = ContainerPoolFactory.newContainerPool(Config.JUDGER_IMAGE, volumes);
-	}
+	private Executor() { }
 
 	public ExecResult exec(String inputFilePath, String userOutputFilePath, String cmd, String resultFilePath)
 			throws Exception {
@@ -38,13 +35,12 @@ public class Executor {
 	}
 
 	public ExecResult exec(String cmd, String resultFilePath) throws Exception {
-		DockerOperator docker = DockerOperator.instance();
+		DockerClient client=DockerClient.instance();
 		String containerId = pool.get();
 		// 使用/usr/bin/time 记录程序运行时间 %e 使用内存 %M 退出状态 %x
-		String[] cmds = { "sh", "-c", "/usr/bin/time -f '%e %M %x' -o " + resultFilePath + " " + cmd };
-		String execId = docker.execCmd(containerId, cmds);
-		Integer status = docker.waitCmdFinish(execId, Config.MAX_WAIT_TIME);
-		if (status == null) {
+		String command ="/usr/bin/time -f '%e %M %x' -o " + resultFilePath + " " + cmd;
+		String res = client.exec(command, containerId, Config.MAX_WAIT_TIME);
+		if(res==null) {
 			return null;
 		}
 		pool.release(containerId);
@@ -78,6 +74,5 @@ public class Executor {
 
 	public void close() {
 		pool.shutdown();
-		DockerOperator.instance().close();
 	}
 }

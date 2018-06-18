@@ -23,4 +23,24 @@ public class ContainerPoolFactory {
 		
 		return new ContainerBlockingPool(capacity,factory, validator);
 	}
+	
+	
+	public static BlockingPool<String> newLocalContainerPool() {
+		
+		LocalContainerFactory factory=new LocalContainerFactory();
+		
+		LocalContainerValidator validator=new LocalContainerValidator();
+		
+		return new ContainerBlockingPool(factory, validator);
+	}
+	
+	
+	public static BlockingPool<String> newLocalContainerPool(int capacity) {
+		
+		LocalContainerFactory factory=new LocalContainerFactory();
+		
+		LocalContainerValidator validator=new LocalContainerValidator();
+		
+		return new ContainerBlockingPool(capacity,factory, validator);
+	}
 }
