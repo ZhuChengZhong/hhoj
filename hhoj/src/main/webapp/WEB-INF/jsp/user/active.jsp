@@ -43,6 +43,7 @@
       <div class="am-u-sm-12">
         <h2 class="am-text-center am-text-xxxl am-margin-top-lg">    欢迎注册黄淮OJ ！</h2>
         <p class="am-text-center">请登录邮箱进行激活</p>
+         <p class="am-text-center"><a href="${pageContext.request.contextPath }/index">进入主页</a></p>
         <pre class="page-404">
           .----.
        _.'__    `.

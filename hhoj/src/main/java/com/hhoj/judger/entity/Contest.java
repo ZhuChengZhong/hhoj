@@ -7,6 +7,8 @@ import java.util.concurrent.DelayQueue;
 import java.util.concurrent.Delayed;
 import java.util.concurrent.TimeUnit;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 /**
  * 竞赛类实体
  * @author zhu
@@ -22,9 +24,12 @@ public class Contest implements Serializable,Delayed{
 	private Date startJoinTime;
 	private Date endJoinTime;
 	private String contestPassword;
+	@JSONField(serialize=false)
 	private User initiator;
 	private Integer status;  //比赛状态  -1  比赛未发布  0 未开始 1 正在进行 2结束
+	@JSONField(serialize=false)
 	private List<ContestUser>contestUsers;
+	@JSONField(serialize=false)
 	private int userStatus;  //用户的状态 0 未报名  1已报名
 	
 	
@@ -118,6 +123,7 @@ public class Contest implements Serializable,Delayed{
 		result = prime * result + ((contestId == null) ? 0 : contestId.hashCode());
 		return result;
 	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -133,6 +139,12 @@ public class Contest implements Serializable,Delayed{
 		} else if (!contestId.equals(other.contestId))
 			return false;
 		return true;
+	}
+	
+	
+	public Contest() {
+		super();
+		// TODO Auto-generated constructor stub
 	}
 	@Override
 	public String toString() {
@@ -165,6 +177,22 @@ public class Contest implements Serializable,Delayed{
 		return unit.convert(this.startTime.getTime()-System.currentTimeMillis(),TimeUnit.MILLISECONDS);
 	}
 	
+	
+	
+	public Contest(Integer contestId, String title, String desc, Integer joinNumber, Date startTime, Integer timeLimit,
+			Date startJoinTime, Date endJoinTime, String contestPassword, Integer status) {
+		super();
+		this.contestId = contestId;
+		this.title = title;
+		this.desc = desc;
+		this.joinNumber = joinNumber;
+		this.startTime = startTime;
+		this.timeLimit = timeLimit;
+		this.startJoinTime = startJoinTime;
+		this.endJoinTime = endJoinTime;
+		this.contestPassword = contestPassword;
+		this.status = status;
+	}
 	public static void main(String[] args) throws InterruptedException {
 		DelayQueue<Contest> queue=new DelayQueue<>();
 		Contest c1=new Contest();

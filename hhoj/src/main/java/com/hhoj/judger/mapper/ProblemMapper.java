@@ -62,4 +62,12 @@ public interface ProblemMapper {
 	 * @return
 	 */
 	public List<Integer> findAcceptProblemByUId(Integer uid);
+	
+	/**
+	 * 检查用户uid是否通过pid题
+	 * @param uid
+	 * @param pid
+	 * @return
+	 */
+	public int checkIsAccepted(@Param("uid")Integer uid,@Param("pid")Integer pid);
 }

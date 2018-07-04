@@ -130,7 +130,7 @@ public class ContestController {
 	 * @return
 	 */
 	@RequestMapping(value = "/{contestId}/problem/list", method = { RequestMethod.GET })
-	public ModelAndView contestProblem(@PathVariable("contestId") Integer contestId, HttpServletRequest request) {
+	public ModelAndView contestProblems(@PathVariable("contestId") Integer contestId, HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView();
 		Contest contest = contestService.findContestById(contestId);
 		mav.addObject("contest", contest);
@@ -195,9 +195,9 @@ public class ContestController {
 	}
 	
 	
-	
-	/**
-	 * 获取比赛试题
+																																																																										
+	/**																																																																														
+	 * 获取比赛试题																																																																																																																		
 	 * @param cpId
 	 * @return
 	 */

@@ -128,4 +128,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
    <delete id="removeProblem" parameterType="Integer">
    	delete from t_problem where pid =#{pid}
    </delete>
+   
+   <select id="checkIsAccepted" resultType="Integer">
+   		select count(*) from t_submit where uid=#{uid} and pid=#{pid} and result="Accepted"
+   </select>
 </mapper>

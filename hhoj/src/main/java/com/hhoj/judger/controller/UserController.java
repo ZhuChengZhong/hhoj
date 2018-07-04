@@ -162,7 +162,7 @@ public class UserController {
 		User currentUser=null;
 		ModelAndView mav=new ModelAndView();
 		if(randomcode==null||!randomcode.equals(request.getSession().getAttribute("randomcode"))) {
-			mav.addObject("message", "用户名不存在");
+			mav.addObject("message", "验证码错误");
 			mav.setViewName("user/login");
 			return mav;
 		}

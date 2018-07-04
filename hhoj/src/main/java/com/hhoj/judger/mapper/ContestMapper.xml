@@ -38,17 +38,17 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 			</if>
 		</where>
 		
-		order by startJoinTime desc 
+		order by contestId desc 
 		<if test="start!=null and size!=null">
 			limit #{start},#{size}
 		</if>
 		
 	</select>
-    <select id="findContestById" parameterType="Integer" resultMap="contestMap"  >
+    <select id="findContestById" parameterType="Integer" resultMap="contestMap" >
         select <include refid="fields"></include> from t_contest where contestId=#{contestId}  
     </select>
     
-    <select id="findContestsByUserId" parameterType="Integer" resultMap="contestMap"  >
+    <select id="findContestsByUserId" parameterType="Integer" resultMap="contestMap">
         select <include refid="fields"></include> from t_contest where contestId in
         ( select contestId from t_contest_user where uid=#{uid}) 
     </select>
@@ -87,7 +87,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	    	<if test="desc!=null and desc!=''">
 	    		contestDesc=#{desc},
 	    	</if>
-	    	<if test="joinNumber!=null and joinNumber!=''">
+	    	<if test="joinNumber!=null">
 	    		joinNumber=#{joinNumber},
 	    	</if>
 	    	<if test="startTime!=null and startTime!=''">

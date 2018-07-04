@@ -54,4 +54,13 @@ public interface ProblemService {
 	 * @return
 	 */
 	public List<Integer> findAcceptProblemByUId(Integer uid);
+	
+	
+	/**
+	 * 检查用户uid是否通过pid题
+	 * @param uid
+	 * @param pid
+	 * @return
+	 */
+	public boolean checkIsAccepted(Integer uid,Integer pid);
 }

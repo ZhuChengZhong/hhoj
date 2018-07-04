@@ -132,7 +132,7 @@ public class SubmitController {
 		if(submit.getContestId()==null) {
 			submit.setContestId(0);
 		}
-		submit.setResult(" ");
+		submit.setResult("");
 		/**
 		 * 将提交添加至数据库
 		 */

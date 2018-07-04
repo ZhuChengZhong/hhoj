@@ -48,7 +48,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	  			and contestId=#{submit.contestId}
 	  		</if>
 		</where>
-		 order by submitTime desc 
+		 order by sid desc 
 		<if test="pageBean!=null">
 			limit #{pageBean.start},#{pageBean.size}
 		</if>

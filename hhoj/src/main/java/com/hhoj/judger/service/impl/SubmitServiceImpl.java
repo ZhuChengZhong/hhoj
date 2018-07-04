@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSON;
+import com.hhoj.judger.cache.RedisCache;
 import com.hhoj.judger.entity.ContestUser;
 import com.hhoj.judger.entity.JudgeResult;
 import com.hhoj.judger.entity.Message;
@@ -65,30 +66,22 @@ public class SubmitServiceImpl implements SubmitService {
 	@Override
 	@Transactional
 	public Integer updateSubmit(Submit submit) {
-		Submit s = this.findSubmitById(submit.getSid());
-		Submit conditionSubmit=new Submit();
-		conditionSubmit.setProblem(s.getProblem());
-		conditionSubmit.setUser(s.getUser());
-		conditionSubmit.setResult("Accepted");
-		int acCount=this.findCount(conditionSubmit);
-		
-		Problem problem = s.getProblem();
-		problem.setSubmited(problem.getSubmited() + 1);
-		// 判断是否为比赛提交
+		boolean isSolved=problemService.checkIsAccepted(submit.getUser().getUid(),submit.getProblem().getPid());
+		// 处理比赛提交
 		if (submit.getContestId() > 0) {
-			if ("Accepted".equals(submit.getResult())&&acCount<1) {
-				ContestUser contestUser = contestService.findContestUser(s.getUser().getUid(), s.getContestId());
+			if ("Accepted".equals(submit.getResult())&&!isSolved) {
+				ContestUser contestUser = contestService.findContestUser(submit.getUser().getUid(),submit.getContestId());
 				contestUser.setSolved(contestUser.getSolved() + 1);
 				contestUser.setUseTotalTime(contestUser.getUseTotalTime() + submit.getUseTime());
 				contestUser.setUseTotalMemary(contestUser.getUseTotalMemary() + submit.getUseMemary());
 				contestService.updateContestUser(contestUser.getCuId(), contestUser);
 			}
 		}else {
-			User user=s.getUser();
+			User user=submit.getUser();
 			User updateUser=new User();
 			updateUser.setUid(user.getUid());
 			if ("Accepted".equals(submit.getResult())) {
-				if(acCount<1) {
+				if(!isSolved) {
 					updateUser.setSolved(user.getSolved()+1);
 				}
 				updateUser.setAccepted(user.getAccepted()+1);
@@ -97,11 +90,11 @@ public class SubmitServiceImpl implements SubmitService {
 			userService.updateUser(updateUser);
 		}
 		Problem newProblem = new Problem();
-		newProblem.setPid(problem.getPid());
+		newProblem.setPid(submit.getProblem().getPid());
 		if ("Accepted".equals(submit.getResult())) {
-			newProblem.setAccepted(problem.getAccepted() + 1);
+			newProblem.setAccepted(submit.getProblem().getAccepted() + 1);
 		}
-		newProblem.setSubmited(problem.getSubmited());
+		newProblem.setSubmited(submit.getProblem().getSubmited());
 		problemService.updateProblem(newProblem);
 		return submitMapper.updateSubmit(submit);
 	}
@@ -110,7 +103,8 @@ public class SubmitServiceImpl implements SubmitService {
 	
 	@Override
 	public Integer findCount(Submit submit) {
-		return submitMapper.findCount(submit);
+		int c=submitMapper.findCount(submit);
+		return c;
 	}
 
 	@Override

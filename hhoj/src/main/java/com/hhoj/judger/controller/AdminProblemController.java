@@ -110,7 +110,7 @@ public class AdminProblemController {
 	
 	@ValidatePermission(role=Role.MANAGER)
 	@RequestMapping("/remove/{pid}")
-	public void removeUser(@PathVariable("pid")Integer pid,HttpServletResponse response){
+	public void removeProblem(@PathVariable("pid")Integer pid,HttpServletResponse response){
 		Integer count=problemService.removeProblem(pid);
 		JSONObject result=new JSONObject();
 		result.put("success", true);

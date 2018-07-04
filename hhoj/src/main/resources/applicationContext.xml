@@ -27,7 +27,7 @@
     <bean id="dataSource"
         class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <property name="driverClassName" value="com.mysql.jdbc.Driver" />
-        <property name="url" value="jdbc:mysql://localhost:3306/hhoj?useUnicode=true&amp;characterEncoding=utf8" />
+        <property name="url" value="jdbc:mysql://localhost:3306/hhoj_test?useUnicode=true&amp;characterEncoding=utf8" />
         <property name="username" value="root" />
         <property name="password" value="121314" />
     </bean>
@@ -49,36 +49,7 @@
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="dataSource"/>
     </bean>
-     
-   	<!-- 配置事务通知属性 -->  
-    <tx:advice id="txAdvice" transaction-manager="transactionManager">  
-        <!-- 定义事务传播属性 -->  
-        <tx:attributes>  
-            <tx:method name="insert*" propagation="REQUIRED" />  
-            <tx:method name="update*" propagation="REQUIRED" />  
-            <tx:method name="edit*" propagation="REQUIRED" />  
-            <tx:method name="save*" propagation="REQUIRED" />  
-            <tx:method name="add*" propagation="REQUIRED" />  
-            <tx:method name="new*" propagation="REQUIRED" />  
-            <tx:method name="set*" propagation="REQUIRED" />  
-            <tx:method name="remove*" propagation="REQUIRED" />  
-            <tx:method name="delete*" propagation="REQUIRED" />  
-            <tx:method name="change*" propagation="REQUIRED" />  
-            <tx:method name="check*" propagation="REQUIRED" />  
-            <tx:method name="get*" propagation="REQUIRED" read-only="true" />  
-            <tx:method name="find*" propagation="REQUIRED" read-only="true" />  
-            <tx:method name="load*" propagation="REQUIRED" read-only="true" />  
-            <tx:method name="*" propagation="REQUIRED" read-only="true" />  
-        </tx:attributes>  
-    </tx:advice> 
-      
-     <!-- 配置AOP，为添加事务管理的操作配置AOP -->
-    <aop:config>
-        <!-- 引入的Spring定义的事务通知，需要使用aop:advisor -->
-        <aop:advisor advice-ref="txAdvice"
-            pointcut="execution(* cn.hhoj.judger.service.*.*(..))"
-        />
-    </aop:config>
+	<tx:annotation-driven transaction-manager="transactionManager" />
     
     <!-- 配置与判题机通讯的服务器 -->
  	<bean id="mqServer" class="com.hhoj.judger.redis.mq.MQServer" destroy-method="close">
