@@ -25,8 +25,31 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 </sql>
 	
 	<select id="findSubmits"  resultMap="submitMap" >
+		select <include refid="fields"></include> from t_submit 
+		<where>
+			
+			<if test="submit.user!=null and submit.user.uid!=''">
+    		    and uid=#{submit.user.uid}
+	    	</if>
+	  		<if test="submit.problem!=null and submit.problem.pid!=null">
+	  			and pid=#{submit.problem.pid}
+	  		</if>
+	  		<if test="submit.language!=null and submit.language.languageId!=null"> 
+	  			and languageId=#{submit.language.languageId}
+	  		</if>
+	  		<if test="submit.judged!=null">
+	  			and judged=#{submit.judged}
+	  		</if>
+	  		<if test="submit.result!=null and submit.result!=''">
+	  			and result=#{submit.result}
+	  		</if>
+	  		<if test="submit.contestId!=null">
+	  			and contestId=#{submit.contestId}
+	  		</if>
+	  		and sid&lt;=
+		</where>
 		
-		select <include refid="fields"></include> from t_submit
+		( select sid from t_submit
 		<where>
 			
 			<if test="submit.user!=null and submit.user.uid!=''">
@@ -48,10 +71,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 	  			and contestId=#{submit.contestId}
 	  		</if>
 		</where>
-		 order by sid desc 
-		<if test="pageBean!=null">
-			limit #{pageBean.start},#{pageBean.size}
-		</if>
+		 order by sid desc  limit #{pageBean.start},1) order by sid desc limit #{pageBean.size}
 	</select>
 	
     <select id="findSubmitById" parameterType="Integer" resultMap="submitMap"  >

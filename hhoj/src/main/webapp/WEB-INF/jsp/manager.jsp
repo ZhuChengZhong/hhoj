@@ -73,6 +73,7 @@
           <li><a href="${pageContext.request.contextPath }/manager/submit/list/1"><span class="am-icon-table"></span> 提交管理</a></li>
           <li><a href="${pageContext.request.contextPath }/manager/contest/list/1"><span class="am-icon-table"></span> 竞赛管理</a></li>
             <li><a href="${pageContext.request.contextPath }/manager/type/list"><span class="am-icon-table"></span> 题目类型管理</a></li>
+            <li><a href="${pageContext.request.contextPath }/manager/monitor/list"><span class="am-icon-table"></span> 判题机管理</a></li>
           <li><a href="admin-404.html"><span class="am-icon-bug"></span> 404</a></li>
         </ul>
       </li>

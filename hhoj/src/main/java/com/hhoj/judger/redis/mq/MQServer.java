@@ -18,6 +18,8 @@ public class MQServer {
 		pool=new JedisPool(redisHost);
 		consumer=new MessageConsumer(pool, resultQueue);
 		producer=new MessageProducer(pool, submitQueue);
+		SubcribeThread subcribeThread=new SubcribeThread(pool.getResource());
+		subcribeThread.start();
 	}
 	
 	public void close() {
