@@ -18,8 +18,9 @@ public class Executor {
 	/**
 	 * 容器池
 	 */
-	private BlockingPool<String> pool = ContainerPoolFactory.newLocalContainerPool();
+	//private BlockingPool<String> pool = ContainerPoolFactory.newLocalContainerPool();
 
+	private BlockingPool<String> pool;
 	private static Executor executor = new Executor();
 
 	public static Executor instance() {
@@ -73,6 +74,8 @@ public class Executor {
 	}
 
 	public void close() {
-		pool.shutdown();
+		if(pool!=null){
+			pool.shutdown();
+		}
 	}
 }

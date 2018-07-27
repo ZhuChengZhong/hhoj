@@ -18,6 +18,7 @@ public interface Handler {
 	
 	public Map<String, Object> prepare(Submit submit) throws IOException;
 	
+	
 	public boolean compare(JudgeResult js,Map<String,Object>paths,Submit submit);
 	
 

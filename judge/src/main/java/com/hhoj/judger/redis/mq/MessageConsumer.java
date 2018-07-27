@@ -9,6 +9,8 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.hhoj.judger.core.JudgeTask;
 import com.hhoj.judger.entity.Submit;
+import com.zhu.lzip.Compressor;
+import com.zhu.lzip.LzipCompressor;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
@@ -24,7 +26,7 @@ public class MessageConsumer {
 	private static Logger logger = LoggerFactory.getLogger(JudgeTask.class);
 	private JedisPool pool;
 	private String messageQueue;
-
+	private Compressor compressor=new LzipCompressor();
 	public MessageConsumer(JedisPool pool, String messageQueue) {
 		this.pool = pool;
 		this.messageQueue = messageQueue;
@@ -39,7 +41,10 @@ public class MessageConsumer {
 			List<String> message = jedis.blpop(messageQueue, time + "");
 			if (message != null && message.size() > 1) {
 				String json = message.get(1);
-				res = JSON.parseObject(json, Submit.class);
+				//解码
+				byte[] bts = compressor.decompress(json.getBytes());
+				String content=new String(bts);
+				res = JSON.parseObject(content, Submit.class);
 			}
 		} catch (JSONException e) {
 			logger.error("消息格式不正确！！无法转换成Submit！！");
